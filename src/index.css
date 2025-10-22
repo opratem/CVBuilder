@@ -1,0 +1,251 @@
+/* ATS Export Styles - Professional PDF formatting */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ats-export #cv-template,
+.ats-export #cv-template * {
+  font-family: 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  font-variant-ligatures: normal !important;
+  font-feature-settings: "kern" 1, "liga" 1 !important;
+  font-kerning: normal !important;
+  text-size-adjust: 100% !important;
+}
+
+.ats-export #cv-template {
+  background: #ffffff !important;
+  color: #000000 !important;
+  line-height: 1.4 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  transform: none !important;
+  zoom: 1 !important;
+  min-height: auto !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.ats-export #cv-template h1 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+  font-size: 28px !important;
+  line-height: 1.1 !important;
+  margin: 0 0 8px 0 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+}
+
+.ats-export #cv-template h2 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  margin: 20px 0 12px 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  border-bottom: 1px solid #000000 !important;
+  padding-bottom: 3px !important;
+}
+
+.ats-export #cv-template h3 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+  margin: 0 0 3px 0 !important;
+}
+
+.ats-export #cv-template p,
+.ats-export #cv-template li,
+.ats-export #cv-template span,
+.ats-export #cv-template div {
+  font-family: 'Inter', sans-serif !important;
+  color: #000000 !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  font-weight: 400 !important;
+}
+
+.ats-export #cv-template .text-sm {
+  color: #000000 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+}
+
+.ats-export #cv-template ul {
+  margin: 6px 0 12px 0 !important;
+  padding-left: 16px !important;
+}
+
+.ats-export #cv-template li {
+  margin-bottom: 4px !important;
+  line-height: 1.4 !important;
+  color: #000000 !important;
+  font-size: 12px !important;
+}
+
+.ats-export #cv-template .border-b-2 {
+  border-bottom: 1px solid #000000 !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 16px !important;
+}
+
+.ats-export #cv-template .border-b {
+  border-bottom: 1px solid #000000 !important;
+}
+
+.ats-export #cv-template .shadow-lg,
+.ats-export #cv-template .shadow,
+.ats-export #cv-template .rounded-lg,
+.ats-export #cv-template .rounded,
+.ats-export #cv-template .bg-gradient-to-r,
+.ats-export #cv-template .bg-blue-100,
+.ats-export #cv-template .bg-blue-600,
+.ats-export #cv-template .from-blue-600,
+.ats-export #cv-template .to-blue-800 {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.ats-export #cv-template .text-white,
+.ats-export #cv-template .text-blue-100,
+.ats-export #cv-template .text-blue-800,
+.ats-export #cv-template .text-blue-700,
+.ats-export #cv-template .text-blue-600,
+.ats-export #cv-template .text-gray-800,
+.ats-export #cv-template .text-gray-700,
+.ats-export #cv-template .text-gray-600,
+.ats-export #cv-template .text-black {
+  color: #000000 !important;
+}
+
+.ats-export #cv-template * {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+}
+
+/* Remove unwanted borders and decorations during PDF export */
+.ats-export #cv-template .border-b-2,
+.ats-export #cv-template .border-2,
+.ats-export #cv-template .border-t,
+.ats-export #cv-template .border-l,
+.ats-export #cv-template .border-r {
+  border: none !important;
+}
+
+/* Only keep essential section dividers */
+.ats-export #cv-template h2.border-b {
+  border-bottom: 1px solid #000000 !important;
+  padding-bottom: 4px !important;
+  margin-bottom: 12px !important;
+}
+
+/* Ensure contact information is properly formatted in PDF */
+.ats-export #cv-template .contact-item {
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* Fix text alignment and spacing for PDF export */
+.ats-export #cv-template .text-center {
+  text-align: center !important;
+}
+
+.ats-export #cv-template .gap-x-6,
+.ats-export #cv-template .gap-y-2,
+.ats-export #cv-template .space-x-4 {
+  gap: 0 !important;
+}
+
+/* React DatePicker Custom Styles */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.react-datepicker__input-container input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Animation utilities for better UX */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Enhanced form focus states */
+.form-input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  transform: translateY(-1px);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Improved button hover states */
+.btn-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Progress indicator animations */
+.progress-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+/* Tooltip animations */
+.tooltip-enter {
+  animation: fadeIn 0.2s ease-out;
+}
