@@ -157,7 +157,7 @@ export class EnhancedPDFGenerator {
     const line2 = [];
     if (personalInfo.github) line2.push(personalInfo.github);
     if (personalInfo.linkedin) line2.push(personalInfo.linkedin);
-    if (line2.length > 0) contactLines.push({ text: line2.join(' | '), color: [0, 0, 255] }); // Blue color
+    if (line2.length > 0) contactLines.push({ text: line2.join(' | '), color: this.colors.accent }); // Blue color
 
     // Add contact lines
     contactLines.forEach(lineObj => {

@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase'
 import type { CVData } from '../types/cv'
+import type { PostgrestSingleResponse } from '@supabase/supabase-js'
 
 export interface CVRecord {
   id: string
@@ -19,11 +20,11 @@ export interface CVResponse {
 }
 
 // Helper function to timeout async operations
-const withTimeout = async <T>(promise: Promise<T>, timeoutMs = 10000): Promise<T> => {
+const withTimeout = async <T>(promise: Promise<T> | PromiseLike<T>, timeoutMs = 10000): Promise<T> => {
   const timeout = new Promise<never>((_, reject) =>
     setTimeout(() => reject(new Error('Operation timed out')), timeoutMs)
   )
-  return Promise.race([promise, timeout])
+  return Promise.race([Promise.resolve(promise), timeout])
 }
 
 class CVDataService {
@@ -64,7 +65,7 @@ class CVDataService {
       }
 
       // Check if user has existing CV data with timeout
-      const { data: existing, error: selectError } = await withTimeout(
+      const selectResult: PostgrestSingleResponse<CVRecord | null> = await withTimeout(
         supabase
           .from('cv_data')
           .select('*')
@@ -74,12 +75,14 @@ class CVDataService {
         10000 // 10 second timeout
       )
 
+      const { data: existing, error: selectError } = selectResult
+
       if (selectError) {
         console.error('Error checking existing CV:', selectError)
         return { success: false, error: `Database error: ${selectError.message}` }
       }
 
-      let result
+      let result: PostgrestSingleResponse<CVRecord>
 
       if (existing) {
         // Update existing CV with timeout
@@ -337,4 +340,3 @@ class CVDataService {
 }
 
 export const cvDataService = new CVDataService()
-
