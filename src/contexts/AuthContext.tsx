@@ -1,6 +1,6 @@
 import type React from 'react';
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
-import { authService, type AuthUser } from '../services/authService'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { authService, type AuthUser } from '../services/authService';
 
 interface User {
   id: string;
@@ -17,8 +17,11 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
   updateProfile: (updates: Partial<{ fullName: string; phone: string }>) => Promise<{ success: boolean; error?: string }>;
+  updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string }>;
   isLoading: boolean;
   isAuthenticated: boolean;
+  continueAsGuest: () => void;
+  isGuestMode: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,6 +41,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGuestMode, setIsGuestMode] = useState(false);
 
   // Session management helper functions
   const saveRememberedSession = (email: string) => {
@@ -54,6 +58,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return localStorage.getItem('remembered_device') === 'true';
   };
 
+  // Guest mode function
+  const continueAsGuest = () => {
+    setIsGuestMode(true);
+    setIsLoading(false);
+    localStorage.setItem('guest_mode', 'true');
+  };
+
   useEffect(() => {
     let isMounted = true;
     let loadingTimeout: NodeJS.Timeout;
@@ -61,6 +72,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Check for existing user session on app start with better error handling
     const initializeAuth = async () => {
       try {
+        // Check if guest mode is enabled
+        const guestMode = localStorage.getItem('guest_mode');
+        if (guestMode === 'true') {
+          console.log('Guest mode enabled');
+          setIsGuestMode(true);
+          setIsLoading(false);
+          return;
+        }
+
         // Set a longer timeout for initial auth check with proper error handling
         loadingTimeout = setTimeout(() => {
           if (isMounted && isLoading) {
@@ -178,7 +198,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await authService.signOut();
       setUser(null);
+      setIsGuestMode(false);
       clearRememberedSession();
+      localStorage.removeItem('guest_mode');
     } finally {
       setIsLoading(false);
     }
@@ -205,6 +227,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return result;
   };
 
+  const updatePassword = async (newPassword: string) => {
+    const result = await authService.updatePassword(newPassword);
+    // Password is not stored in user object for security reasons
+    return result;
+  };
+
   const value: AuthContextType = {
     user,
     login,
@@ -213,8 +241,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     resetPassword,
     resendVerification,
     updateProfile,
+    updatePassword,
     isLoading,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    continueAsGuest,
+    isGuestMode
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

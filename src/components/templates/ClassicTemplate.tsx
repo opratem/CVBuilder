@@ -346,7 +346,9 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                       color: '#000000'
                     }}
                   >
-                    {project.technologies.join(', ')}
+                    {Array.isArray(project.technologies)
+                      ? project.technologies.join(', ')
+                      : project.technologies}
                   </p>
                 )}
                 <p

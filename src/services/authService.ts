@@ -32,7 +32,7 @@ export interface SignInData {
 
 class AuthService {
   // Timeout wrapper to prevent hanging requests with improved timeout
-  private async withTimeout<T>(promise: Promise<T>, timeoutMs = 8000): Promise<T> {
+  private async withTimeout<T>(promise: Promise<T>, timeoutMs = 15000): Promise<T> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject(new Error(`Request timeout after ${timeoutMs}ms`));

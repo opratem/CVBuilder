@@ -99,9 +99,9 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
   };
 
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+    <div className="bg-teal-900/20 border border-teal-700/50 rounded-lg p-4 mb-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-blue-900">
+        <h3 className="text-sm font-semibold text-white">
           Skill Suggestions
         </h3>
         <div className="flex gap-2">
@@ -110,8 +110,8 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
             onClick={() => setActiveTab('role')}
             className={`text-xs px-2 py-1 rounded ${
               activeTab === 'role'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-blue-600 border border-blue-300'
+                ? 'bg-teal-600 text-white'
+                : 'bg-gray-700 text-gray-200 border border-gray-600 hover:bg-gray-600'
             }`}
           >
             For Your Role
@@ -121,8 +121,8 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
             onClick={() => setActiveTab('trending')}
             className={`text-xs px-2 py-1 rounded ${
               activeTab === 'trending'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-blue-600 border border-blue-300'
+                ? 'bg-teal-600 text-white'
+                : 'bg-gray-700 text-gray-200 border border-gray-600 hover:bg-gray-600'
             }`}
           >
             Trending
@@ -133,8 +133,8 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
               onClick={() => setActiveTab('analysis')}
               className={`text-xs px-2 py-1 rounded ${
                 activeTab === 'analysis'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600 border border-blue-300'
+                  ? 'bg-teal-600 text-white'
+                  : 'bg-gray-700 text-gray-200 border border-gray-600 hover:bg-gray-600'
               }`}
             >
               Smart Suggestions
@@ -143,7 +143,7 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
         </div>
       </div>
 
-      <p className="text-xs text-blue-700 mb-3">
+      <p className="text-xs text-gray-300 mb-3">
         {activeTab === 'trending'
           ? 'Popular skills in high demand across industries'
           : activeTab === 'analysis'
@@ -156,22 +156,22 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
 
       {/* Skills Analysis Summary */}
       {activeTab === 'analysis' && skillsAnalysis && (
-        <div className="mb-4 p-3 bg-white rounded border border-blue-200">
+        <div className="mb-4 p-3 bg-gray-800/50 rounded border border-gray-600">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div>
-              <span className="font-medium text-blue-900">Foundation:</span>
+              <span className="font-medium text-gray-200">Foundation:</span>
               <span className={`ml-2 px-2 py-1 rounded ${
                 skillsAnalysis.hasStrongFoundation
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-red-100 text-red-800'
+                  ? 'bg-green-900/40 text-green-300'
+                  : 'bg-red-900/40 text-red-300'
               }`}>
                 {skillsAnalysis.hasStrongFoundation ? 'Strong' : 'Needs Work'}
               </span>
             </div>
             {skillsAnalysis.competitiveAdvantage.length > 0 && (
               <div>
-                <span className="font-medium text-blue-900">Advantage:</span>
-                <span className="ml-2 text-green-700">
+                <span className="font-medium text-gray-200">Advantage:</span>
+                <span className="ml-2 text-green-300">
                   {skillsAnalysis.competitiveAdvantage[0]}
                 </span>
               </div>
@@ -180,8 +180,8 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
 
           {skillsAnalysis.missingCritical.length > 0 && (
             <div className="mt-2 text-xs">
-              <span className="font-medium text-red-700">Missing Critical:</span>
-              <span className="ml-2 text-red-600">
+              <span className="font-medium text-red-300">Missing Critical:</span>
+              <span className="ml-2 text-red-400">
                 {skillsAnalysis.missingCritical.slice(0, 3).join(', ')}
               </span>
             </div>
@@ -195,16 +195,16 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
             <button
               type="button"
               onClick={() => handleAddSkill(skill)}
-              className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-blue-300 rounded-full text-xs text-blue-700 hover:bg-blue-100 hover:border-blue-400 transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1.5 bg-gray-700 border border-gray-600 rounded-full text-xs text-gray-200 hover:bg-teal-700 hover:border-teal-600 transition-colors"
               title={`Add ${skill.name} to your skills`}
             >
               <span>+</span>
               <span>{skill.name}</span>
               {skill.trending && (
-                <span className="text-orange-500 text-xs font-bold">*</span>
+                <span className="text-orange-400 text-xs font-bold">*</span>
               )}
-              {'matchScore' in skill && skill.matchScore >= 8 && (
-                <span className="text-green-600 text-xs font-bold">★</span>
+              {'matchScore' in skill && typeof skill.matchScore === 'number' && skill.matchScore >= 8 && (
+                <span className="text-green-400 text-xs font-bold">★</span>
               )}
             </button>
 
@@ -217,7 +217,7 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
                     {getDifficultyBadge(skill as EnhancedSkillSuggestion)}
                   </div>
                   {(skill as EnhancedSkillSuggestion).certificationAvailable && (
-                    <div className="mt-1 text-blue-200">Certification available</div>
+                    <div className="mt-1 text-teal-300">Certification available</div>
                   )}
                 </div>
               </div>
@@ -226,17 +226,17 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
         ))}
       </div>
 
-      <div className="mt-3 text-xs text-blue-600">
+      <div className="mt-3 text-xs text-gray-300">
         <div className="flex flex-wrap gap-4">
           <span>
             <span className="font-medium">Tip:</span> Click any skill to add it to your CV.
           </span>
           <span>
-            <span className="text-orange-500 font-bold">*</span> = Trending
+            <span className="text-orange-400 font-bold">*</span> = Trending
           </span>
           {activeTab === 'analysis' && (
             <span>
-              <span className="text-green-600 font-bold">★</span> = High match score
+              <span className="text-green-400 font-bold">★</span> = High match score
             </span>
           )}
         </div>

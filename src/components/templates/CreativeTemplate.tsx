@@ -90,7 +90,7 @@ const CreativeTemplate: React.FC<CreativeTemplateProps> = ({ cv }) => {
                   </div>
                   {project.technologies && project.technologies.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {project.technologies.map((tech, index) => (
+                      {(Array.isArray(project.technologies) ? project.technologies : [project.technologies]).map((tech, index) => (
                         <span key={index} className="bg-white/80 text-purple-700 px-2 py-1 rounded-full text-xs font-medium">
                           {tech}
                         </span>

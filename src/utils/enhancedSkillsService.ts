@@ -34,7 +34,7 @@ export interface JobSkillsMatch {
 }
 
 export class EnhancedSkillsService {
-  private static skillMarketData = {
+  private static skillMarketData: Record<string, { demand: 'high' | 'medium' | 'low', difficulty: 'easy' | 'medium' | 'hard', certification: boolean }> = {
     'JavaScript': { demand: 'high' as const, difficulty: 'medium' as const, certification: true },
     'Python': { demand: 'high' as const, difficulty: 'easy' as const, certification: true },
     'TypeScript': { demand: 'high' as const, difficulty: 'medium' as const, certification: false },
@@ -51,7 +51,7 @@ export class EnhancedSkillsService {
     'Leadership': { demand: 'high' as const, difficulty: 'medium' as const, certification: true },
   };
 
-  private static skillRelationships = {
+  private static skillRelationships: Record<string, string[]> = {
     'JavaScript': ['TypeScript', 'React', 'Node.js', 'Vue.js', 'Angular'],
     'Python': ['Django', 'Flask', 'Machine Learning', 'Data Analysis', 'FastAPI'],
     'React': ['JavaScript', 'TypeScript', 'Next.js', 'Redux', 'GraphQL'],
@@ -201,7 +201,7 @@ export class EnhancedSkillsService {
     const relatedSkills = this.skillRelationships[skillName] || [];
     const currentSkillsLower = currentSkills.map(s => s.toLowerCase());
 
-    const synergyCount = relatedSkills.filter(related =>
+    const synergyCount = relatedSkills.filter((related: string) =>
       currentSkillsLower.includes(related.toLowerCase())
     ).length;
 
@@ -385,7 +385,7 @@ export class EnhancedSkillsService {
 
         recommendations.push({
           name: skill.name,
-          category: skill.category,
+          category: skill.category === 'domain' ? 'industry' : skill.category,
           trending: skill.importance === 'critical',
           relevance: skill.importance === 'critical' ? 10 : skill.importance === 'important' ? 8 : 6,
           matchScore: skill.importance === 'critical' ? 10 : skill.importance === 'important' ? 8 : 6,
@@ -406,7 +406,12 @@ export class EnhancedSkillsService {
     effort: 'low' | 'medium' | 'high';
     timeline: string;
   }> {
-    const actions = [];
+    const actions: Array<{
+      action: string;
+      impact: 'high' | 'medium' | 'low';
+      effort: 'low' | 'medium' | 'high';
+      timeline: string;
+    }> = [];
     const userSkills = cvData.skills.map(s => s.name.toLowerCase());
 
     // Critical missing skills

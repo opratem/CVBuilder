@@ -142,7 +142,9 @@ const AcademicTemplate: React.FC<AcademicTemplateProps> = ({ cv }) => {
                 </div>
                 {project.technologies && project.technologies.length > 0 && (
                   <p className="text-sm text-gray-600 font-medium mb-2">
-                    <span className="font-semibold">Methods & Tools:</span> {project.technologies.join(', ')}
+                    <span className="font-semibold">Methods & Tools:</span> {Array.isArray(project.technologies)
+                      ? project.technologies.join(', ')
+                      : project.technologies}
                   </p>
                 )}
                 <p className="text-gray-800 leading-relaxed text-justify">{project.description}</p>

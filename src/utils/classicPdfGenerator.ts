@@ -176,41 +176,41 @@ export class ClassicPDFGenerator {
       this.currentY += this.fonts.title * this.lineHeight * 0.35 + 4;
     }
 
-    // Classic ATS: Two-column contact layout and contact arrays setup
-    const contactLeft = [];
-    const contactRight = [];
+    // Contact information in single line format: Email | Phone | GitHub | LinkedIn
+    const contactInfo = [];
 
-    if (personalInfo.email) contactLeft.push(`Email: ${personalInfo.email}`);
-    if (personalInfo.phone) contactLeft.push(`Phone: ${personalInfo.phone}`);
-    if (personalInfo.website) contactLeft.push(`Website: ${personalInfo.website}`);
-    if (personalInfo.location) contactRight.push(`Location: ${personalInfo.location}`);
-    if (personalInfo.linkedin) contactRight.push(`LinkedIn: ${personalInfo.linkedin}`);
-    if (personalInfo.github) contactRight.push(`GitHub: ${personalInfo.github}`);
+    if (personalInfo.email) contactInfo.push(personalInfo.email);
+    if (personalInfo.phone) contactInfo.push(personalInfo.phone);
 
-    // Left column contact info rendering
-    if (contactLeft.length > 0) {
-      contactLeft.forEach(contact => {
-        this.addText(contact, this.margins.left, this.fonts.contact, 'normal');
-        this.currentY += this.fonts.contact * this.lineHeight * 0.35;
-      });
+    // Build first contact line
+    const contactLine = contactInfo.join(' | ');
+
+    // Second line for GitHub and LinkedIn with blue color
+    const socialLinks = [];
+    if (personalInfo.github) socialLinks.push(personalInfo.github);
+    if (personalInfo.linkedin) socialLinks.push(personalInfo.linkedin);
+
+    // Render first contact line (email, phone)
+    if (contactLine) {
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(0, 0, 0);
+      this.pdf.text(contactLine, this.margins.left, this.currentY);
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
     }
 
-    // Reset Y position for right column
-    const rightStartY = this.currentY - (contactLeft.length * this.fonts.contact * this.lineHeight * 0.35);
-    let tempY = rightStartY;
-
-    // Right column contact info
-    if (contactRight.length > 0) {
-      contactRight.forEach(contact => {
-        this.pdf.setFontSize(this.fonts.contact);
-        this.pdf.setFont('helvetica', 'normal');
-        this.pdf.text(contact, this.pageWidth / 2 + 10, tempY);
-        tempY += this.fonts.contact * this.lineHeight * 0.35;
-      });
+    // Render second line (GitHub and LinkedIn) in blue
+    if (socialLinks.length > 0) {
+      const socialLine = socialLinks.join(' | ');
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(0, 0, 255); // Blue color for links
+      this.pdf.text(socialLine, this.margins.left, this.currentY);
+      this.pdf.setTextColor(0, 0, 0); // Reset to black
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
     }
 
-    // Ensure we're past both columns
-    this.currentY = Math.max(this.currentY, tempY) + 6;
+    this.currentY += 4;
 
     // Professional Summary
     if (personalInfo.summary) {
@@ -250,11 +250,8 @@ export class ClassicPDFGenerator {
       }
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
 
-      let companyText = exp.company;
-      if (exp.location) {
-        companyText += ` | ${exp.location}`;
-      }
-      this.addText(companyText, this.margins.left, this.fonts.body, 'normal');
+      // Company name only (without location)
+      this.addText(exp.company, this.margins.left, this.fonts.body, 'normal');
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 3;
 
       exp.bulletPoints.forEach(bullet => {
@@ -348,14 +345,30 @@ export class ClassicPDFGenerator {
     cv.projects.forEach((project, index) => {
       this.checkPageBreak(30);
 
+      // Project Name (Bold)
       this.addText(project.name, this.margins.left, this.fonts.body, 'bold');
-      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
+      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 2;
 
-      if (project.technologies) {
-        this.addText(`Technologies: ${project.technologies}`, this.margins.left, this.fonts.small, 'normal');
+      // Technologies Used
+      if (project.technologies && project.technologies.length > 0) {
+        const techString = Array.isArray(project.technologies)
+          ? project.technologies.join(', ')
+          : project.technologies;
+
+        // "Technologies:" in bold
+        this.pdf.setFontSize(this.fonts.small);
+        this.pdf.setFont('helvetica', 'bold');
+        this.pdf.text('Technologies: ', this.margins.left, this.currentY);
+
+        // Technology list in normal font
+        this.pdf.setFont('helvetica', 'normal');
+        const techLabelWidth = this.pdf.getTextWidth('Technologies: ');
+        this.pdf.text(techString, this.margins.left + techLabelWidth, this.currentY);
+
         this.currentY += this.fonts.small * this.lineHeight * 0.35 + 2;
       }
 
+      // Project Description
       if (project.description) {
         this.addMultilineText(
           project.description,
@@ -363,16 +376,27 @@ export class ClassicPDFGenerator {
           this.pageWidth - this.margins.left - this.margins.right,
           this.fonts.body
         );
-        this.currentY += 1;
+        this.currentY += 2;
       }
 
+      // Project Link
       if (project.link) {
-        this.addText(`Link: ${project.link}`, this.margins.left, this.fonts.small, 'normal');
-        this.currentY += this.fonts.small * this.lineHeight * 0.35;
+        this.pdf.setFontSize(this.fonts.small);
+        this.pdf.setFont('helvetica', 'bold');
+        this.pdf.text('Link: ', this.margins.left, this.currentY);
+
+        this.pdf.setFont('helvetica', 'normal');
+        this.pdf.setTextColor(0, 0, 255);
+        const linkLabelWidth = this.pdf.getTextWidth('Link: ');
+        this.pdf.text(project.link, this.margins.left + linkLabelWidth, this.currentY);
+        this.pdf.setTextColor(0, 0, 0);
+
+        this.currentY += this.fonts.small * this.lineHeight * 0.35 + 2;
       }
 
+      // Add spacing between projects
       if (index < cv.projects.length - 1) {
-        this.currentY += 5;
+        this.currentY += 4;
       }
     });
   }

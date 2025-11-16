@@ -176,22 +176,37 @@ export class MinimalPDFGenerator {
       this.currentY += this.fonts.title * this.lineHeight * 0.35 + 6;
     }
 
-    // Minimal template: Simple contact info, one per line
+    // Minimal template: Simple contact info, formatted lines
     const contactInfo = [];
     if (personalInfo.email) contactInfo.push(personalInfo.email);
     if (personalInfo.phone) contactInfo.push(personalInfo.phone);
-    if (personalInfo.location) contactInfo.push(personalInfo.location);
-    if (personalInfo.linkedin) contactInfo.push(personalInfo.linkedin);
-    if (personalInfo.website) contactInfo.push(personalInfo.website);
-    if (personalInfo.github) contactInfo.push(personalInfo.github);
 
+    const socialLinks = [];
+    if (personalInfo.github) socialLinks.push(personalInfo.github);
+    if (personalInfo.linkedin) socialLinks.push(personalInfo.linkedin);
+
+    // Render first contact line (email, phone) in black
     if (contactInfo.length > 0) {
-      contactInfo.forEach(contact => {
-        this.addText(contact, this.margins.left, this.fonts.contact, 'normal');
-        this.currentY += this.fonts.contact * this.lineHeight * 0.35;
-      });
-      this.currentY += 6;
+      const contactLine = contactInfo.join(' | ');
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(0, 0, 0);
+      this.pdf.text(contactLine, this.margins.left, this.currentY);
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
     }
+
+    // Render second line (GitHub and LinkedIn) in blue
+    if (socialLinks.length > 0) {
+      const socialLine = socialLinks.join(' | ');
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(0, 0, 255); // Blue color for links
+      this.pdf.text(socialLine, this.margins.left, this.currentY);
+      this.pdf.setTextColor(0, 0, 0); // Reset to black
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
+    }
+
+    this.currentY += 6;
 
     // Professional Summary
     if (personalInfo.summary) {
@@ -237,13 +252,7 @@ export class MinimalPDFGenerator {
       }
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 2;
 
-      // Location if provided
-      if (exp.location) {
-        this.addText(exp.location, this.margins.left, this.fonts.small, 'normal');
-        this.currentY += this.fonts.small * this.lineHeight * 0.35 + 2;
-      }
-
-      // Bullet points with minimal styling
+      // Bullet points
       exp.bulletPoints.forEach(bullet => {
         this.checkPageBreak(15);
         this.addText('•', this.margins.left + 2, this.fonts.body);
@@ -340,7 +349,7 @@ export class MinimalPDFGenerator {
       this.checkPageBreak(30);
 
       this.addText(project.name, this.margins.left, this.fonts.body, 'bold');
-      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
+      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 2;
 
       if (project.description) {
         this.addMultilineText(
@@ -349,21 +358,24 @@ export class MinimalPDFGenerator {
           this.pageWidth - this.margins.left - this.margins.right,
           this.fonts.body
         );
-        this.currentY += 1;
+        this.currentY += 2;
       }
 
-      if (project.technologies) {
-        this.addText(`Tech: ${project.technologies}`, this.margins.left, this.fonts.small, 'normal');
-        this.currentY += this.fonts.small * this.lineHeight * 0.35;
+      if (project.technologies && project.technologies.length > 0) {
+        const techString = Array.isArray(project.technologies)
+          ? project.technologies.join(', ')
+          : project.technologies;
+        this.addText(`Tech: ${techString}`, this.margins.left, this.fonts.small, 'normal');
+        this.currentY += this.fonts.small * this.lineHeight * 0.35 + 1;
       }
 
       if (project.link) {
         this.addText(project.link, this.margins.left, this.fonts.small, 'normal');
-        this.currentY += this.fonts.small * this.lineHeight * 0.35;
+        this.currentY += this.fonts.small * this.lineHeight * 0.35 + 1;
       }
 
       if (index < cv.projects.length - 1) {
-        this.currentY += 6;
+        this.currentY += 5;
       }
     });
   }

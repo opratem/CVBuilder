@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build --outDir dist",
     "lint": "bunx biome lint --write && bunx tsc --noEmit",
     "format": "bunx biome format --write",
-    "preview": "vite preview"
+    "preview": "vite preview --host 0.0.0.0 --port 5173"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
@@ -19,6 +19,7 @@
     "@types/jspdf": "^2.0.0",
     "@types/react-datepicker": "^7.0.0",
     "autoprefixer": "^10.4.21",
+    "caniuse-lite": "^1.0.30001753",
     "docx": "^9.5.0",
     "file-saver": "^2.0.5",
     "html2pdf.js": "^0.10.1",

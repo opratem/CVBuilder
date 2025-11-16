@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { useCVStore } from '../../store/cvStore';
 import Input from '../ui/Input';
 import TextArea from '../ui/TextArea';
@@ -12,14 +12,18 @@ const ProjectsForm: React.FC = () => {
 
   const handleChange = (id: string, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
+    // For technologies, keep as string during editing
     if (name === 'technologies') {
-      // Convert comma-separated string to array
-      const techArray = value.split(',').map(tech => tech.trim()).filter(tech => tech.length > 0);
-      updateProject(id, { [name]: techArray });
+      updateProject(id, { technologies: value as any }); // Temporarily store as string
     } else {
       updateProject(id, { [name]: value });
     }
+  };
+
+  const handleTechnologiesBlur = (id: string, value: string) => {
+    // Only convert to array when user leaves the field (onBlur)
+    const techArray = value.split(',').map(tech => tech.trim()).filter(tech => tech.length > 0);
+    updateProject(id, { technologies: techArray });
   };
 
   const handleAddProject = () => {
@@ -84,12 +88,14 @@ const ProjectsForm: React.FC = () => {
 
               <div className="md:col-span-2">
                 <Input
-                  label="Technologies Used"
+                  label="Technologies Used (separate with commas)"
                   name="technologies"
-                  value={project.technologies.join(', ')}
+                  value={Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || '')}
                   onChange={(e) => handleChange(project.id, e)}
-                  placeholder="React, Node.js, MongoDB"
+                  onBlur={(e) => handleTechnologiesBlur(project.id, e.target.value)}
+                  placeholder="React, Node.js, MongoDB, Python"
                   fullWidth
+                  autoComplete="off"
                 />
               </div>
 

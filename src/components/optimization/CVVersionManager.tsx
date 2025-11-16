@@ -85,7 +85,9 @@ const CVVersionManager: React.FC = () => {
         // Load the full CV data
         const loadResponse = await cvDataService.loadCVData();
         if (loadResponse.success && loadResponse.data) {
-          updateCV(loadResponse.data.cv_data);
+          if (!Array.isArray(loadResponse.data)) {
+            updateCV(loadResponse.data.cv_data);
+          }
           showSuccess('Version Loaded!', `Loaded CV version: ${version.title}`);
         }
       } else {
@@ -195,11 +197,11 @@ const CVVersionManager: React.FC = () => {
       <Card className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
-              <FileText className="w-6 h-6 mr-2 text-blue-600" />
+            <h2 className="text-2xl font-bold text-white mb-2 flex items-center">
+              <FileText className="w-6 h-6 mr-2 text-teal-400" />
               CV Version Manager
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-300">
               Manage multiple versions of your CV optimized for different job applications.
             </p>
           </div>
@@ -233,30 +235,30 @@ const CVVersionManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-4">
           <div className="flex items-center">
-            <FileText className="w-8 h-8 text-blue-500 mr-3" />
+            <FileText className="w-8 h-8 text-blue-400 mr-3" />
             <div>
-              <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
-              <div className="text-sm text-gray-600">Total Versions</div>
+              <div className="text-2xl font-bold text-white">{stats.total}</div>
+              <div className="text-sm text-gray-300">Total Versions</div>
             </div>
           </div>
         </Card>
         <Card className="p-4">
           <div className="flex items-center">
-            <Target className="w-8 h-8 text-green-500 mr-3" />
+            <Target className="w-8 h-8 text-green-400 mr-3" />
             <div>
-              <div className="text-2xl font-bold text-gray-900">{stats.active}</div>
-              <div className="text-sm text-gray-600">Active Version</div>
+              <div className="text-2xl font-bold text-white">{stats.active}</div>
+              <div className="text-sm text-gray-300">Active Version</div>
             </div>
           </div>
         </Card>
         <Card className="p-4">
           <div className="flex items-center">
-            <Clock className="w-8 h-8 text-purple-500 mr-3" />
+            <Clock className="w-8 h-8 text-purple-400 mr-3" />
             <div>
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-2xl font-bold text-white">
                 {versions.length > 0 ? formatDate(versions[0].updated_at).split(',')[0] : 'N/A'}
               </div>
-              <div className="text-sm text-gray-600">Last Updated</div>
+              <div className="text-sm text-gray-300">Last Updated</div>
             </div>
           </div>
         </Card>
@@ -266,15 +268,15 @@ const CVVersionManager: React.FC = () => {
       <div className="space-y-4">
         {loading ? (
           <Card className="p-12 text-center">
-            <Loader className="w-16 h-16 text-gray-300 mx-auto mb-4 animate-spin" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading CV Versions...</h3>
-            <p className="text-gray-600">Please wait while we fetch your saved versions.</p>
+            <Loader className="w-16 h-16 text-gray-400 mx-auto mb-4 animate-spin" />
+            <h3 className="text-lg font-semibold text-white mb-2">Loading CV Versions...</h3>
+            <p className="text-gray-300">Please wait while we fetch your saved versions.</p>
           </Card>
         ) : versions.length === 0 ? (
           <Card className="p-12 text-center">
-            <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No CV Versions Yet</h3>
-            <p className="text-gray-600 mb-4">
+            <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-white mb-2">No CV Versions Yet</h3>
+            <p className="text-gray-300 mb-4">
               Create your first CV version to start managing different optimizations for various job applications.
             </p>
             <Button
@@ -288,28 +290,28 @@ const CVVersionManager: React.FC = () => {
           </Card>
         ) : (
           versions.map((version) => (
-            <Card key={version.id} className={`p-6 ${version.is_active ? 'ring-2 ring-blue-500' : ''}`}>
+            <Card key={version.id} className={`p-6 ${version.is_active ? 'ring-2 ring-teal-500' : ''}`}>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center mb-2">
-                    <h3 className="text-lg font-semibold text-gray-900 mr-3">{version.title}</h3>
+                    <h3 className="text-lg font-semibold text-white mr-3">{version.title}</h3>
                     {version.is_active && (
-                      <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                      <span className="px-2 py-1 text-xs rounded-full bg-green-900/40 text-green-300">
                         Active
                       </span>
                     )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-300">
                       <Building2 className="w-4 h-4 mr-2" />
                       Template: {version.template}
                     </div>
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-300">
                       <Calendar className="w-4 h-4 mr-2" />
                       Created: {formatDate(version.created_at)}
                     </div>
-                    <div className="flex items-center text-sm text-gray-600">
+                    <div className="flex items-center text-sm text-gray-300">
                       <Clock className="w-4 h-4 mr-2" />
                       Updated: {formatDate(version.updated_at)}
                     </div>
@@ -340,11 +342,11 @@ const CVVersionManager: React.FC = () => {
                     >
                       •••
                     </Button>
-                    <div className="absolute right-0 top-8 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                    <div className="absolute right-0 top-8 w-48 bg-gray-800 border border-gray-600 rounded-md shadow-lg z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                       <div className="py-1">
                         <button
                           onClick={() => duplicateVersion(version)}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                          className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700 flex items-center"
                           disabled={actionLoading === `duplicate-${version.id}`}
                         >
                           {actionLoading === `duplicate-${version.id}` ? (
@@ -354,10 +356,10 @@ const CVVersionManager: React.FC = () => {
                           )}
                           Duplicate
                         </button>
-                        <hr className="my-1" />
+                        <hr className="my-1 border-gray-600" />
                         <button
                           onClick={() => deleteVersion(version)}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
+                          className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-900/20 flex items-center"
                           disabled={actionLoading === `delete-${version.id}`}
                         >
                           {actionLoading === `delete-${version.id}` ? (
@@ -381,11 +383,11 @@ const CVVersionManager: React.FC = () => {
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <Card className="p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Create New CV Version</h3>
+            <h3 className="text-lg font-semibold text-white mb-4">Create New CV Version</h3>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-200 mb-2">
                   Version Name
                 </label>
                 <input
@@ -398,7 +400,7 @@ const CVVersionManager: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-200 mb-2">
                   Job Title (Optional)
                 </label>
                 <input
@@ -411,7 +413,7 @@ const CVVersionManager: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-200 mb-2">
                   Company (Optional)
                 </label>
                 <input

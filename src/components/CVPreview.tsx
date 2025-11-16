@@ -14,7 +14,7 @@ import { Download, Eye, Shield, FileText, FileSpreadsheet } from 'lucide-react';
 import { verifyATSCompatibility } from '../utils/atsVerification';
 import { generateTemplatePDF, type TemplatePDFOptions } from '../utils/templatePdfService';
 import { generateDocCV, type DocExportOptions } from '../utils/docGenerator';
-import { downloadLinkedInProfile, downloadPlainTextCV, downloadEmailHTML, downloadJSONExport, type ATSExportOptions } from '../utils/enhancedExportFormats';
+import { downloadPlainTextCV, downloadEmailHTML, downloadJSONExport, type ATSExportOptions } from '../utils/enhancedExportFormats';
 
 interface CVPreviewProps {
   isMobile?: boolean;
@@ -110,17 +110,18 @@ const CVPreview: React.FC<CVPreviewProps> = ({ isMobile = false }) => {
     setShowATSPanel(!showATSPanel);
   };
 
-  const handleDownloadLinkedIn = () => {
-    try {
-      const fileName = cv.personalInfo.fullName
-        ? `${cv.personalInfo.fullName.replace(/\s+/g, '_')}_LinkedIn_Profile.json`
-        : 'LinkedIn_Profile.json';
-      downloadLinkedInProfile(cv, fileName);
-    } catch (error) {
-      console.error('Error generating LinkedIn format:', error);
-      alert('Failed to generate LinkedIn format. Please try again.');
-    }
-  };
+  // Reserved for future use
+  // const handleDownloadLinkedIn = () => {
+  //   try {
+  //     const fileName = cv.personalInfo.fullName
+  //       ? `${cv.personalInfo.fullName.replace(/\s+/g, '_')}_LinkedIn_Profile.json`
+  //       : 'LinkedIn_Profile.json';
+  //     downloadLinkedInProfile(cv, fileName);
+  //   } catch (error) {
+  //     console.error('Error generating LinkedIn format:', error);
+  //     alert('Failed to generate LinkedIn format. Please try again.');
+  //   }
+  // };
 
   const handleDownloadPlainText = (optimized = true) => {
     try {
@@ -185,19 +186,25 @@ const CVPreview: React.FC<CVPreviewProps> = ({ isMobile = false }) => {
         <>
           <div className="mb-4 space-y-3">
             {/* ATS Check Button */}
-            <Button
+            <button
               onClick={handleATSCheck}
-              variant="outline"
-              className="flex items-center w-full"
+              type="button"
+              style={{
+                backgroundColor: '#1A1B26',
+                color: '#E5E7EB',
+                borderColor: '#4EAA93',
+                borderWidth: '2px'
+              }}
+              className="flex items-center w-full px-4 py-2 rounded-lg border-2 font-medium transition-colors hover:bg-[#252A30] focus:outline-none focus:ring-2 focus:ring-[#4EAA93]"
             >
-              <Shield className="w-4 h-4 mr-2" />
-              ATS Check ({atsResult.score}%)
-            </Button>
+              <Shield className="w-4 h-4 mr-2" style={{ color: '#4EAA93' }} />
+              <span style={{ color: '#E5E7EB' }}>ATS Check ({atsResult.score}%)</span>
+            </button>
 
             {/* Export Options */}
-            <div className="bg-white rounded-lg border p-4">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                <Download className="w-4 h-4 mr-2" />
+            <div className="bg-secondary rounded-lg border border-secondary-light p-4">
+              <h3 className="text-sm font-semibold text-text-primary mb-3 flex items-center">
+                <Download className="w-4 h-4 mr-2 text-accent" />
                 Export Options
               </h3>
 
@@ -225,8 +232,8 @@ const CVPreview: React.FC<CVPreviewProps> = ({ isMobile = false }) => {
               </div>
 
               {/* Enhanced Export Formats */}
-              <div className="border-t pt-3">
-                <h4 className="text-xs font-medium text-gray-600 mb-2">Enhanced Export Formats</h4>
+              <div className="border-t border-secondary-light pt-3">
+                <h4 className="text-xs font-medium text-text-muted mb-2">Enhanced Export Formats</h4>
                 <div className="grid grid-cols-2 gap-2 mb-2">
                   <Button
                     onClick={() => handleDownloadPlainText(true)}
@@ -269,24 +276,24 @@ const CVPreview: React.FC<CVPreviewProps> = ({ isMobile = false }) => {
               </div>
 
               <div className="mt-3 space-y-2">
-                <div className="text-xs text-center text-green-600 bg-green-50 p-2 rounded border border-green-200">
+                <div className="text-xs text-center text-accent-light bg-accent/10 p-2 rounded border border-accent/30">
                   <strong>PDF:</strong> Professional format, ATS-compatible, ideal for applications
                 </div>
 
-                <div className="text-xs text-center text-blue-600 bg-blue-50 p-2 rounded border border-blue-200">
+                <div className="text-xs text-center text-text-secondary bg-primary/30 p-2 rounded border border-accent/20">
                   <strong>Enhanced Formats:</strong> ATS Optimized (keyword-rich), LinkedIn (profile import), Email (styled HTML), JSON (API integration)
                 </div>
               </div>
             </div>
 
             {!atsResult.passed && (
-              <div className="text-xs text-center text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+              <div className="text-xs text-center text-text-secondary bg-accent-dark/20 p-2 rounded border border-accent-dark/50">
                 ATS Score: {atsResult.score}% - Consider improvements before applying
               </div>
             )}
 
             {isExporting && (
-              <div className="text-xs text-center text-purple-600 bg-purple-50 p-2 rounded border border-purple-200">
+              <div className="text-xs text-center text-accent-light bg-accent/10 p-2 rounded border border-accent/30">
                 Generating high-quality document... Please wait
               </div>
             )}
@@ -301,7 +308,7 @@ const CVPreview: React.FC<CVPreviewProps> = ({ isMobile = false }) => {
             </div>
           )}
 
-          <div className="bg-gray-100 p-4 rounded-lg overflow-auto">
+          <div className="bg-secondary/30 p-4 rounded-lg overflow-auto border border-secondary-light">
             <div className="transform scale-[0.8] origin-top">
               {renderTemplate()}
             </div>

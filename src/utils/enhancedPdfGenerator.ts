@@ -149,24 +149,19 @@ export class EnhancedPDFGenerator {
 
     // Line 1: Email and Phone
     const line1 = [];
-    if (personalInfo.email) line1.push(`Email: ${personalInfo.email}`);
-    if (personalInfo.phone) line1.push(`Phone: ${personalInfo.phone}`);
-    if (line1.length > 0) contactLines.push(line1.join('  •  '));
+    if (personalInfo.email) line1.push(personalInfo.email);
+    if (personalInfo.phone) line1.push(personalInfo.phone);
+    if (line1.length > 0) contactLines.push({ text: line1.join(' | '), color: this.colors.text });
 
-    // Line 2: Location and LinkedIn
+    // Line 2: GitHub and LinkedIn (in blue)
     const line2 = [];
-    if (personalInfo.location) line2.push(`Location: ${personalInfo.location}`);
-    if (personalInfo.linkedin) line2.push(`LinkedIn: ${personalInfo.linkedin}`);
-    if (line2.length > 0) contactLines.push(line2.join('  •  '));
-
-    // Line 3: Website
-    if (personalInfo.website) {
-      contactLines.push(`Website: ${personalInfo.website}`);
-    }
+    if (personalInfo.github) line2.push(personalInfo.github);
+    if (personalInfo.linkedin) line2.push(personalInfo.linkedin);
+    if (line2.length > 0) contactLines.push({ text: line2.join(' | '), color: [0, 0, 255] }); // Blue color
 
     // Add contact lines
-    contactLines.forEach(line => {
-      this.addText(line, this.margins.left, this.fonts.small, 'normal', this.colors.text);
+    contactLines.forEach(lineObj => {
+      this.addText(lineObj.text, this.margins.left, this.fonts.small, 'normal', lineObj.color);
       this.currentY += this.fonts.small * this.lineHeight * 0.35 + 1;
     });
 
@@ -198,16 +193,12 @@ export class EnhancedPDFGenerator {
       this.addText(titleCompanyText, this.margins.left, this.fonts.body, 'bold', this.colors.primary);
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
 
-      // Date Range and Location
+      // Date Range only (without location)
       const dateText = exp.isCurrentJob
         ? `${exp.startDate} - Present`
         : `${exp.startDate} - ${exp.endDate || 'Present'}`;
 
-      const locationDateText = exp.location
-        ? `${exp.location}  •  ${dateText}`
-        : dateText;
-
-      this.addText(locationDateText, this.margins.left, this.fonts.small, 'normal', this.colors.secondary);
+      this.addText(dateText, this.margins.left, this.fonts.small, 'normal', this.colors.secondary);
       this.currentY += this.fonts.small * this.lineHeight * 0.35 + 3;
 
       // Bullet Points with professional formatting
@@ -311,7 +302,12 @@ export class EnhancedPDFGenerator {
 
       // Technologies and Timeline
       const details = [];
-      if (project.technologies) details.push(`Technologies: ${project.technologies}`);
+      if (project.technologies && project.technologies.length > 0) {
+        const techString = Array.isArray(project.technologies)
+          ? project.technologies.join(', ')
+          : project.technologies;
+        details.push(`Technologies: ${techString}`);
+      }
       if (project.startDate) {
         const dateRange = project.endDate
           ? `${project.startDate} - ${project.endDate}`
@@ -332,12 +328,13 @@ export class EnhancedPDFGenerator {
           this.pageWidth - this.margins.left - this.margins.right,
           this.fonts.body
         );
+        this.currentY += 2;
       }
 
       // Project URL
       if (project.url) {
         this.addText(`URL: ${project.url}`, this.margins.left, this.fonts.small, 'normal', this.colors.accent);
-        this.currentY += this.fonts.small * this.lineHeight * 0.35;
+        this.currentY += this.fonts.small * this.lineHeight * 0.35 + 1;
       }
 
       if (index < cv.projects.length - 1) {
@@ -386,7 +383,7 @@ export class EnhancedPDFGenerator {
       // Activity Name and Organization
       const activityText = activity.organization
         ? `${activity.name} • ${activity.organization}`
-        : activity.name;
+        : (activity.name || '');
       this.addText(activityText, this.margins.left, this.fonts.body, 'bold', this.colors.primary);
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
 

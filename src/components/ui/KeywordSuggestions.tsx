@@ -227,56 +227,56 @@ const KeywordSuggestions: React.FC<KeywordSuggestionsProps> = ({ className = '' 
   return (
     <Card className={className}>
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center">
-          <Tag className="w-5 h-5 mr-2 text-blue-600" />
+        <h3 className="text-lg font-semibold text-text-primary mb-2 flex items-center">
+          <Tag className="w-5 h-5 mr-2 text-accent" />
           Keyword Suggestions
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-text-secondary mb-4">
           Enter a job title to get ATS-friendly keywords from various industries
         </p>
 
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-muted" />
           <input
             type="text"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
             placeholder="e.g., Software Engineer, Nurse, Teacher, Sales Manager"
-            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            className="w-full pl-10 pr-3 py-2 border border-secondary-light bg-surface text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm placeholder:text-text-muted"
           />
         </div>
       </div>
 
       {keywords.length > 0 && (
         <div>
-          <h4 className="font-medium text-gray-700 mb-3">
+          <h4 className="font-medium text-text-primary mb-3">
             Recommended Keywords for "{jobTitle}":
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {keywords.map((keyword, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-2 border border-gray-200 rounded-md hover:bg-gray-50 group"
+                className="flex items-center justify-between p-2 border border-secondary-light rounded-md hover:bg-surface-hover group"
               >
-                <span className="text-sm text-gray-700 flex-1">{keyword}</span>
+                <span className="text-sm text-text-primary flex-1">{keyword}</span>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={() => copyKeyword(keyword)}
                   className="opacity-0 group-hover:opacity-100 transition-opacity p-1 h-auto"
                 >
                   {copiedKeywords.includes(keyword) ? (
-                    <Check className="w-3 h-3 text-green-600" />
+                    <Check className="w-3 h-3 text-green-500" />
                   ) : (
-                    <Copy className="w-3 h-3 text-gray-400" />
+                    <Copy className="w-3 h-3 text-text-muted" />
                   )}
                 </Button>
               </div>
             ))}
           </div>
-          <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-xs text-blue-700 flex items-center">
-              <Lightbulb className="w-3 h-3 mr-1 text-blue-600" />
+          <div className="mt-3 p-3 bg-accent/10 rounded-lg border border-accent/20">
+            <p className="text-xs text-text-primary flex items-center">
+              <Lightbulb className="w-3 h-3 mr-1 text-accent" />
               <strong>Tip:</strong> Click the copy icon to copy keywords, then paste them into your skills,
               experience descriptions, or summary sections where relevant.
             </p>
@@ -286,7 +286,7 @@ const KeywordSuggestions: React.FC<KeywordSuggestionsProps> = ({ className = '' 
 
       {jobTitle && keywords.length === 0 && (
         <div className="text-center py-4">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-text-muted">
             No specific keywords found for "{jobTitle}". Try job titles from various industries like
             "Software Engineer", "Nurse", "Teacher", "Sales Manager", "Accountant", etc.
           </p>

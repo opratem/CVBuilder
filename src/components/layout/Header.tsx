@@ -47,7 +47,11 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
         // Load the full CV data
         const loadResponse = await cvDataService.loadCVData();
         if (loadResponse.success && loadResponse.data) {
-          updateCV(loadResponse.data.cv_data);
+          if (!Array.isArray(loadResponse.data)) {
+            if (!Array.isArray(loadResponse.data)) {
+            updateCV(loadResponse.data.cv_data);
+          }
+          }
           setCurrentVersion(version);
           await loadVersions(); // Refresh versions list
         }
@@ -70,13 +74,13 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <header className="bg-primary-light shadow-lg border-b border-secondary-light px-6 py-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
-          <FileText className="w-8 h-8 text-blue-600" />
+          <FileText className="w-8 h-8 text-accent" />
           <div>
-            <h1 className="text-xl font-bold text-gray-900">CV Builder</h1>
-            <p className="text-sm text-gray-500">Professional Resume Creator</p>
+            <h1 className="text-xl font-bold text-text-primary">CV Builder</h1>
+            <p className="text-sm text-text-muted">Professional Resume Creator</p>
           </div>
         </div>
 
@@ -86,22 +90,22 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
             <button
               type="button"
               onClick={() => setShowVersionDropdown(!showVersionDropdown)}
-              className="flex items-center space-x-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-md border border-gray-200 transition-colors"
+              className="flex items-center space-x-2 px-3 py-2 bg-secondary hover:bg-secondary-light rounded-md border border-secondary-light transition-colors"
             >
               <div className="flex items-center space-x-2">
-                <Star className={`w-4 h-4 ${currentVersion?.is_active ? 'text-green-500' : 'text-gray-400'}`} />
-                <span className="text-sm font-medium text-gray-700">
+                <Star className={`w-4 h-4 ${currentVersion?.is_active ? 'text-accent' : 'text-text-muted'}`} />
+                <span className="text-sm font-medium text-text-primary">
                   {currentVersion?.title || 'Select Version'}
                 </span>
               </div>
-              <ChevronDown className="w-4 h-4 text-gray-500" />
+              <ChevronDown className="w-4 h-4 text-text-muted" />
             </button>
 
             {showVersionDropdown && (
-              <div className="absolute top-full mt-1 left-0 w-80 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+              <div className="absolute top-full mt-1 left-0 w-80 bg-secondary border border-secondary-light rounded-md shadow-lg z-50">
                 <div className="py-1 max-h-64 overflow-y-auto">
-                  <div className="px-3 py-2 border-b border-gray-100">
-                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                  <div className="px-3 py-2 border-b border-secondary-light">
+                    <p className="text-xs font-medium text-text-muted uppercase tracking-wide">
                       Select Version ({versions.length})
                     </p>
                   </div>
@@ -111,29 +115,29 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
                       type="button"
                       onClick={() => switchToVersion(version)}
                       disabled={loading}
-                      className={`w-full text-left px-3 py-3 hover:bg-gray-50 transition-colors ${
-                        version.is_active ? 'bg-blue-50 border-l-2 border-blue-500' : ''
+                      className={`w-full text-left px-3 py-3 hover:bg-surface-hover transition-colors ${
+                        version.is_active ? 'bg-accent/10 border-l-2 border-accent' : ''
                       }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className="text-sm font-medium text-text-primary">
                               {version.title}
                             </span>
                             {version.is_active && (
-                              <span className="px-2 py-0.5 text-xs bg-green-100 text-green-800 rounded-full">
+                              <span className="px-2 py-0.5 text-xs bg-accent/20 text-accent-light rounded-full">
                                 Active
                               </span>
                             )}
                           </div>
                           <div className="flex items-center space-x-3 mt-1">
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-text-muted">
                               Template: {version.template}
                             </span>
                             <div className="flex items-center space-x-1">
-                              <Clock className="w-3 h-3 text-gray-400" />
-                              <span className="text-xs text-gray-500">
+                              <Clock className="w-3 h-3 text-text-muted" />
+                              <span className="text-xs text-text-muted">
                                 {formatDate(version.updated_at)}
                               </span>
                             </div>
@@ -144,14 +148,14 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
                   ))}
 
                   {onVersionSelect && (
-                    <div className="border-t border-gray-100 px-3 py-2">
+                    <div className="border-t border-secondary-light px-3 py-2">
                       <button
                         type="button"
                         onClick={() => {
                           onVersionSelect();
                           setShowVersionDropdown(false);
                         }}
-                        className="w-full text-left text-sm text-blue-600 hover:text-blue-800 font-medium"
+                        className="w-full text-left text-sm text-accent hover:text-accent-light font-medium"
                       >
                         Manage All Versions →
                       </button>

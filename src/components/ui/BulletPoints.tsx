@@ -6,6 +6,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  type DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -41,12 +42,12 @@ const BulletPoints: React.FC<BulletPointsProps> = ({
     })
   );
 
-  const handleDragEnd = (event: { active: { id: string }, over: { id: string } }) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      const oldIndex = points.findIndex((point) => point.id === active.id);
-      const newIndex = points.findIndex((point) => point.id === over.id);
+    if (over && active.id !== over.id) {
+      const oldIndex = points.findIndex((point) => point.id === String(active.id));
+      const newIndex = points.findIndex((point) => point.id === String(over.id));
       onChange(arrayMove(points, oldIndex, newIndex));
     }
   };

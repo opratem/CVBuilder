@@ -18,11 +18,23 @@ export interface CVResponse {
   error?: string
 }
 
+// Helper function to timeout async operations
+const withTimeout = async <T>(promise: Promise<T>, timeoutMs = 10000): Promise<T> => {
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error('Operation timed out')), timeoutMs)
+  )
+  return Promise.race([promise, timeout])
+}
+
 class CVDataService {
   // Check if user is authenticated and provide better error messages
   private async ensureAuthenticated() {
     try {
-      const { data: { user }, error } = await supabase.auth.getUser()
+      // Add timeout to authentication check
+      const { data: { user }, error } = await withTimeout(
+        supabase.auth.getUser(),
+        5000 // 5 second timeout for auth check
+      )
 
       if (error) {
         console.error('Authentication error:', error)
@@ -36,6 +48,9 @@ class CVDataService {
       return { user, error: null }
     } catch (error) {
       console.error('Error checking authentication:', error)
+      if (error instanceof Error && error.message === 'Operation timed out') {
+        return { user: null, error: 'Connection timeout. Saving locally only.' }
+      }
       return { user: null, error: 'Unable to verify authentication. Check your connection.' }
     }
   }
@@ -48,13 +63,16 @@ class CVDataService {
         return { success: false, error: authResult.error }
       }
 
-      // Check if user has existing CV data
-      const { data: existing, error: selectError } = await supabase
-        .from('cv_data')
-        .select('*')
-        .eq('user_id', authResult.user.id)
-        .eq('is_active', true)
-        .maybeSingle()  // Use maybeSingle instead of single to avoid errors when no record exists
+      // Check if user has existing CV data with timeout
+      const { data: existing, error: selectError } = await withTimeout(
+        supabase
+          .from('cv_data')
+          .select('*')
+          .eq('user_id', authResult.user.id)
+          .eq('is_active', true)
+          .maybeSingle(),
+        10000 // 10 second timeout
+      )
 
       if (selectError) {
         console.error('Error checking existing CV:', selectError)
@@ -64,31 +82,37 @@ class CVDataService {
       let result
 
       if (existing) {
-        // Update existing CV
-        result = await supabase
-          .from('cv_data')
-          .update({
-            cv_data: cvData,
-            template,
-            title,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', existing.id)
-          .select()
-          .single()
+        // Update existing CV with timeout
+        result = await withTimeout(
+          supabase
+            .from('cv_data')
+            .update({
+              cv_data: cvData,
+              template,
+              title,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', existing.id)
+            .select()
+            .single(),
+          10000 // 10 second timeout
+        )
       } else {
-        // Create new CV
-        result = await supabase
-          .from('cv_data')
-          .insert([{
-            user_id: authResult.user.id,
-            cv_data: cvData,
-            template,
-            title,
-            is_active: true
-          }])
-          .select()
-          .single()
+        // Create new CV with timeout
+        result = await withTimeout(
+          supabase
+            .from('cv_data')
+            .insert([{
+              user_id: authResult.user.id,
+              cv_data: cvData,
+              template,
+              title,
+              is_active: true
+            }])
+            .select()
+            .single(),
+          10000 // 10 second timeout
+        )
       }
 
       if (result.error) {
@@ -99,6 +123,9 @@ class CVDataService {
       return { success: true, data: result.data }
     } catch (error) {
       console.error('Unexpected error saving CV data:', error)
+      if (error instanceof Error && error.message === 'Operation timed out') {
+        return { success: false, error: 'Connection timeout. Your changes are saved locally.' }
+      }
       return { success: false, error: 'An unexpected error occurred while saving your CV.' }
     }
   }
@@ -145,7 +172,7 @@ class CVDataService {
 
       const { data, error } = await supabase
         .from('cv_data')
-        .select('id, title, template, created_at, updated_at, is_active, cv_data')
+        .select('id, user_id, title, template, created_at, updated_at, is_active, cv_data')
         .eq('user_id', authResult.user.id)
         .order('updated_at', { ascending: false })
 
@@ -310,3 +337,4 @@ class CVDataService {
 }
 
 export const cvDataService = new CVDataService()
+

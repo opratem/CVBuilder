@@ -11,7 +11,8 @@ import type {
   Project,
   Certification,
   Extracurricular,
-  TemplateId
+  TemplateId,
+  CVSectionOrder
 } from '../types/cv';
 import { defaultCV } from '../types/cv';
 
@@ -60,6 +61,9 @@ interface CVStore {
   // Template actions
   setTemplateId: (templateId: string) => void;
 
+  // Section order actions
+  updateSectionOrder: (sectionOrder: CVSectionOrder[]) => void;
+
   // Save actions
   saveCV: (retryCount?: number) => Promise<{ success: boolean; error?: string }>;
   loadCV: () => Promise<void>;
@@ -72,6 +76,33 @@ interface CVStore {
 }
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
+
+// LocalStorage helpers for guest mode
+const LOCALSTORAGE_KEY = 'cv_builder_data';
+
+const saveToLocalStorage = (cvData: CVData): boolean => {
+  try {
+    localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(cvData));
+    console.log('✅ CV saved to localStorage');
+    return true;
+  } catch (error) {
+    console.error('❌ Failed to save to localStorage:', error);
+    return false;
+  }
+};
+
+const loadFromLocalStorage = (): CVData | null => {
+  try {
+    const saved = localStorage.getItem(LOCALSTORAGE_KEY);
+    if (saved) {
+      console.log('✅ CV loaded from localStorage');
+      return JSON.parse(saved);
+    }
+  } catch (error) {
+    console.error('❌ Failed to load from localStorage:', error);
+  }
+  return null;
+};
 
 const triggerAutoSave = (getState: () => CVStore) => {
   if (autoSaveTimeout) {
@@ -406,41 +437,36 @@ export const useCVStore = create<CVStore>((set, get) => ({
     return newState;
   }),
 
+  // Section order actions
+  updateSectionOrder: (sectionOrder) => set((state) => {
+    const newState = { cv: { ...state.cv, sectionOrder } };
+    triggerAutoSave(get);
+    return newState;
+  }),
+
   // Save actions
   saveCV: async (retryCount = 0) => {
     const state = get();
 
-    // Don't save if already saving
-    if (state.saveStatus === 'saving') {
+    // Don't save if already saving (but allow retries)
+    if (state.saveStatus === 'saving' && retryCount === 0) {
+      console.log('⚠️ Save already in progress, skipping...');
       return { success: false, error: 'Save already in progress' };
     }
 
-    set({ saveStatus: 'saving' });
-
-    // Reduce timeout to 15 seconds and add better progress tracking
-    const saveTimeout = setTimeout(() => {
-      console.warn('Save operation timed out after 15 seconds');
-      set({ saveStatus: 'error' });
-      setTimeout(() => set({ saveStatus: 'idle' }), 3000);
-    }, 15000); // 15 second timeout
+    // Only set to 'saving' on initial attempt, not on retries
+    if (retryCount === 0) {
+      set({ saveStatus: 'saving' });
+    }
 
     try {
-      // Validate CV data before saving
-      if (!state.cv.personalInfo.fullName.trim()) {
-        console.warn('Cannot save CV without a name');
-        clearTimeout(saveTimeout);
-        set({ saveStatus: 'error' });
-        setTimeout(() => set({ saveStatus: 'idle' }), 3000);
-        return { success: false, error: 'Name is required to save CV' };
-      }
-
       // Create a clean copy of CV data to avoid circular references
       const cleanCVData = JSON.parse(JSON.stringify(state.cv));
 
       // Add additional validation and cleanup
-      cleanCVData.workExperience = cleanCVData.workExperience.map(exp => ({
+      cleanCVData.workExperience = cleanCVData.workExperience.map((exp: WorkExperience) => ({
         ...exp,
-        bulletPoints: exp.bulletPoints.filter(bp => bp && bp.text && bp.text.trim())
+        bulletPoints: exp.bulletPoints.filter((bp: BulletPoint) => bp && bp.text && bp.text.trim())
       }));
 
       // Clean up any undefined or null values
@@ -460,13 +486,16 @@ export const useCVStore = create<CVStore>((set, get) => ({
 
       const sanitizedData = sanitizeObject(cleanCVData);
 
+      // Always save to localStorage as backup
+      const localSaveSuccess = saveToLocalStorage(sanitizedData);
+
+      // Try to save to Supabase for authenticated users
       const result = await cvDataService.saveCVData(sanitizedData, state.cv.templateId, 'My CV');
 
-      clearTimeout(saveTimeout);
-
       if (result.success) {
+        // Supabase save succeeded
+        console.log('✅ CV saved to Supabase and localStorage');
         set({ saveStatus: 'saved' });
-        // Reset status to idle after 2 seconds
         setTimeout(() => {
           const currentState = get();
           if (currentState.saveStatus === 'saved') {
@@ -475,21 +504,45 @@ export const useCVStore = create<CVStore>((set, get) => ({
         }, 2000);
         return { success: true };
       } else {
+        // Supabase save failed (user might be guest or network issue)
+        if (result.error?.includes('not logged in') || result.error?.includes('must be logged in')) {
+          // User is in guest mode - localStorage save is enough
+          if (localSaveSuccess) {
+            console.log('✅ CV saved to localStorage (Guest mode)');
+            set({ saveStatus: 'saved' });
+            setTimeout(() => {
+              const currentState = get();
+              if (currentState.saveStatus === 'saved') {
+                set({ saveStatus: 'idle' });
+              }
+            }, 2000);
+            return { success: true };
+          }
+        }
+
         // Retry once for network issues
-        if (retryCount < 1 && (result.error?.includes('network') || result.error?.includes('timeout'))) {
-          console.log('Retrying save due to network issue...');
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+        if (retryCount < 1 && (result.error?.includes('network') || result.error?.includes('timeout') || result.error?.includes('timed out'))) {
+          console.log(`🔄 Retrying save (attempt ${retryCount + 1})...`);
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Retry without resetting the saving status
           return get().saveCV(retryCount + 1);
         }
 
-        console.error('Save failed:', result.error);
+        // Show error but still consider it saved if localStorage worked
+        if (localSaveSuccess) {
+          console.warn('⚠️ Supabase save failed but localStorage saved:', result.error);
+          set({ saveStatus: 'saved' });
+          setTimeout(() => set({ saveStatus: 'idle' }), 2000);
+          return { success: true, error: result.error };
+        }
+
+        console.error('❌ Save failed:', result.error);
         set({ saveStatus: 'error' });
         setTimeout(() => set({ saveStatus: 'idle' }), 4000);
         return { success: false, error: result.error };
       }
     } catch (error) {
-      clearTimeout(saveTimeout);
-      console.error('Save error:', error);
+      console.error('❌ Save error:', error);
       set({ saveStatus: 'error' });
       setTimeout(() => set({ saveStatus: 'idle' }), 4000);
       return { success: false, error: 'Failed to save CV' };
@@ -499,19 +552,49 @@ export const useCVStore = create<CVStore>((set, get) => ({
   loadCV: async () => {
     set({ isLoading: true });
     try {
+      // Try to load from Supabase first (for authenticated users)
       const result = await cvDataService.loadCVData();
-      if (result.success && result.data) {
+
+      if (result.success && result.data && !Array.isArray(result.data)) {
+        console.log('✅ CV loaded from Supabase');
         set({
           cv: result.data.cv_data,
+          isLoading: false,
+          saveStatus: 'idle'
+        });
+        return;
+      }
+
+      // If Supabase load failed or user is guest, try localStorage
+      const localData = loadFromLocalStorage();
+      if (localData) {
+        console.log('✅ CV loaded from localStorage');
+        set({
+          cv: localData,
+          isLoading: false,
+          saveStatus: 'idle'
+        });
+        return;
+      }
+
+      // No data found, use default
+      console.log('No CV data found, using default');
+      set({ isLoading: false });
+    } catch (error) {
+      console.error('Error loading CV:', error);
+
+      // Try localStorage as fallback on error
+      const localData = loadFromLocalStorage();
+      if (localData) {
+        console.log('✅ CV loaded from localStorage (fallback)');
+        set({
+          cv: localData,
           isLoading: false,
           saveStatus: 'idle'
         });
       } else {
         set({ isLoading: false });
       }
-    } catch (error) {
-      console.error('Error loading CV:', error);
-      set({ isLoading: false });
     }
   },
 

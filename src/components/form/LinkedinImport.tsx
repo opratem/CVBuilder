@@ -11,7 +11,7 @@ import LinkedInImportService, {
   type LinkedInImportResult,
   LINKEDIN_IMPORT_GUIDE
 } from '../../utils/linkedinImportService';
-import { LinkedIn, Upload, CheckCircle, AlertTriangle, Info, X, FileText, Download } from 'lucide-react';
+import { Linkedin, Upload, CheckCircle, AlertTriangle, Info, X, FileText, Download } from 'lucide-react';
 
 interface LinkedInImportProps {
   onClose?: () => void;
@@ -108,25 +108,25 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
   const renderGuideStep = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <LinkedIn className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+        <Linkedin className="w-12 h-12 text-blue-600 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Import from LinkedIn</h2>
         <p className="text-gray-600">
           Quickly fill your CV with information from your LinkedIn profile
         </p>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-900 mb-2">{LINKEDIN_IMPORT_GUIDE.title}</h3>
+      <div className="bg-teal-900/20 border border-teal-700/50 rounded-lg p-4">
+        <h3 className="font-semibold text-white mb-2">{LINKEDIN_IMPORT_GUIDE.title}</h3>
         <div className="space-y-3">
           {LINKEDIN_IMPORT_GUIDE.steps.map((step, index) => (
             <div key={index} className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
                 {index + 1}
               </div>
               <div>
-                <h4 className="font-medium text-blue-900">{step.title}</h4>
-                <p className="text-blue-700 text-sm">{step.description}</p>
-                <p className="text-blue-600 text-xs mt-1">{step.detail}</p>
+                <h4 className="font-medium text-white">{step.title}</h4>
+                <p className="text-gray-200 text-sm">{step.description}</p>
+                <p className="text-gray-300 text-xs mt-1">{step.detail}</p>
               </div>
             </div>
           ))}
@@ -270,12 +270,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
             )}
 
             {importResult.suggestions.length > 0 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="bg-teal-900/20 border border-teal-700/50 rounded-lg p-3">
                 <div className="flex items-center space-x-2 mb-2">
-                  <Info className="w-4 h-4 text-blue-600" />
-                  <h4 className="font-medium text-blue-900">Suggestions</h4>
+                  <Info className="w-4 h-4 text-teal-400" />
+                  <h4 className="font-medium text-white">Suggestions</h4>
                 </div>
-                <ul className="text-blue-700 text-sm space-y-1">
+                <ul className="text-gray-200 text-sm space-y-1">
                   {importResult.suggestions.map((suggestion, index) => (
                     <li key={index}>• {suggestion}</li>
                   ))}
@@ -460,7 +460,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-900">Review Import Data</h2>
           <div className="flex items-center space-x-2">
-            {importResult.data && 'completeness' in importResult && (
+            {importResult.data && 'completeness' in importResult && typeof importResult.completeness === 'number' && (
               <div className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
                 {importResult.completeness}% Complete
               </div>
@@ -505,12 +505,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         )}
 
         {importResult.suggestions.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-teal-900/20 border border-teal-700/50 rounded-lg p-4">
             <div className="flex items-center space-x-2 mb-2">
-              <Info className="w-5 h-5 text-blue-600" />
-              <h3 className="font-medium text-blue-900">Suggestions</h3>
+              <Info className="w-5 h-5 text-teal-600" />
+              <h3 className="font-medium text-white">Suggestions</h3>
             </div>
-            <ul className="text-blue-700 text-sm space-y-1">
+            <ul className="text-gray-200 text-sm space-y-1">
               {importResult.suggestions.map((suggestion, index) => (
                 <li key={index}>• {suggestion}</li>
               ))}

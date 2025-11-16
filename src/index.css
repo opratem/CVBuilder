@@ -1,9 +1,66 @@
-/* ATS Export Styles - Professional PDF formatting */
+/* Google Fonts & Material Icons */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* CSS Variables - Dark Navy + Teal Theme */
+:root {
+  /* Primary Colors */
+  --color-primary: #13141C;
+  --color-primary-light: #1A1B26;
+  --color-primary-dark: #0D0E14;
+
+  /* Accent Colors */
+  --color-accent: #4EAA93;
+  --color-accent-light: #5CC4A8;
+  --color-accent-dark: #3D8977;
+  --color-accent-hover: #205A4F;
+
+  /* Secondary Colors */
+  --color-secondary: #353B42;
+  --color-secondary-light: #454B52;
+  --color-secondary-dark: #252A30;
+
+  /* Text Colors */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #E5E7EB;
+  --color-text-muted: #9CA3AF;
+  --color-text-disabled: #6B7280;
+
+  /* Background & Surfaces */
+  --color-bg-main: #13141C;
+  --color-bg-elevated: #1A1B26;
+  --color-bg-input: #252A30;
+  --color-bg-hover: rgba(78, 170, 147, 0.1);
+
+  /* Functional Colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Borders */
+  --color-border: #454B52;
+  --color-border-light: #353B42;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* Base Styles */
+body {
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+  font-family: 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 .ats-export #cv-template,
 .ats-export #cv-template * {
@@ -173,7 +230,7 @@
   gap: 0 !important;
 }
 
-/* React DatePicker Custom Styles */
+/* React DatePicker Custom Styles - Dark Theme */
 .react-datepicker-wrapper {
   width: 100%;
 }
@@ -181,16 +238,126 @@
 .react-datepicker__input-container input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-secondary-light);
   border-radius: 6px;
   font-size: 14px;
-  background-color: white;
+  background-color: var(--color-secondary-dark);
+  color: var(--color-text-primary);
+}
+
+.react-datepicker__input-container input::placeholder {
+  color: var(--color-text-muted);
 }
 
 .react-datepicker__input-container input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(78, 170, 147, 0.2);
+}
+
+/* DatePicker Calendar Popup - Dark Theme */
+.react-datepicker {
+  background-color: var(--color-secondary) !important;
+  border: 1px solid var(--color-secondary-light) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-lg) !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.react-datepicker__header {
+  background-color: var(--color-secondary-dark) !important;
+  border-bottom: 1px solid var(--color-secondary-light) !important;
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  padding: 12px 0 !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  color: var(--color-text-primary) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: var(--color-text-secondary) !important;
+  width: 2rem !important;
+  line-height: 2rem !important;
+  margin: 0.2rem !important;
+}
+
+.react-datepicker__day:hover,
+.react-datepicker__month-text:hover,
+.react-datepicker__quarter-text:hover,
+.react-datepicker__year-text:hover {
+  background-color: var(--color-bg-hover) !important;
+  color: var(--color-accent) !important;
+  border-radius: 4px !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--keyboard-selected {
+  background-color: var(--color-accent) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+}
+
+.react-datepicker__day--disabled,
+.react-datepicker__month-text--disabled,
+.react-datepicker__quarter-text--disabled,
+.react-datepicker__year-text--disabled {
+  color: var(--color-text-disabled) !important;
+  cursor: not-allowed !important;
+}
+
+.react-datepicker__navigation {
+  top: 12px !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: var(--color-text-secondary) !important;
+}
+
+.react-datepicker__navigation:hover *::before {
+  border-color: var(--color-accent) !important;
+}
+
+.react-datepicker__month {
+  background-color: var(--color-secondary) !important;
+  padding: 8px !important;
+}
+
+.react-datepicker__day--today {
+  font-weight: 600 !important;
+  color: var(--color-accent) !important;
+  border: 1px solid var(--color-accent) !important;
+  border-radius: 4px !important;
+}
+
+.react-datepicker__month-text,
+.react-datepicker__quarter-text,
+.react-datepicker__year-text {
+  color: var(--color-text-secondary) !important;
+  padding: 0.5rem !important;
+  border-radius: 4px !important;
+}
+
+.react-datepicker__month-container {
+  background-color: var(--color-secondary) !important;
+}
+
+.react-datepicker__triangle {
+  display: none !important;
 }
 
 /* Animation utilities for better UX */
@@ -248,4 +415,62 @@
 /* Tooltip animations */
 .tooltip-enter {
   animation: fadeIn 0.2s ease-out;
+}
+
+/* Custom Scrollbar Styles */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-secondary-light);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Improved card hover effects */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Responsive utilities */
+@media (max-width: 1024px) {
+  .sticky {
+    position: relative !important;
+    top: auto !important;
+  }
+}
+
+/* Better mobile spacing */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

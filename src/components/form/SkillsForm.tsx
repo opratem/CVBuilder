@@ -58,13 +58,13 @@ const SkillsForm: React.FC = () => {
                 <Input
                   label="Skill Name"
                   value={skill.name}
-                  onChange={(value) => updateSkill(skill.id, { name: value })}
+                  onChange={(e) => updateSkill(skill.id, { name: e.target.value })}
                   placeholder="e.g., JavaScript, Project Management, Communication"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-text-primary">
                   Proficiency Level
                 </label>
                 <div className="flex items-center gap-2">
@@ -114,9 +114,9 @@ const SkillsForm: React.FC = () => {
 
       {/* Skills Tips */}
       {skills.length === 0 && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-blue-900 mb-2">Tips for Skills Section:</h3>
-          <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
+        <div className="bg-accent/10 border border-accent/20 rounded-lg p-4">
+          <h3 className="text-sm font-semibold text-text-primary mb-2">Tips for Skills Section:</h3>
+          <ul className="text-sm text-text-primary space-y-1 list-disc list-inside">
             <li>Include both technical skills (programming languages, tools) and soft skills (communication, leadership)</li>
             <li>Be honest about your skill levels - it helps with job matching</li>
             <li>Add skills that are specifically mentioned in job descriptions you're targeting</li>

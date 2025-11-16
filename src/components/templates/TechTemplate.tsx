@@ -124,7 +124,7 @@ const TechTemplate: React.FC<TechTemplateProps> = ({ cv }) => {
                     <div className="mb-3">
                       <span className="text-gray-600 text-sm">Stack: </span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {project.technologies.map((tech, index) => (
+                        {(Array.isArray(project.technologies) ? project.technologies : [project.technologies]).map((tech, index) => (
                           <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
                             {tech}
                           </span>

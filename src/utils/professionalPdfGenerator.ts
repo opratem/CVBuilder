@@ -32,6 +32,9 @@ export class ProfessionalPDFGenerator {
       precision: 2
     });
 
+    // Set default font to Times (Times New Roman equivalent)
+    this.pdf.setFont('times', 'normal');
+
     this.pageWidth = this.pdf.internal.pageSize.getWidth();
     this.pageHeight = this.pdf.internal.pageSize.getHeight();
     // Improved margins for better professional look
@@ -42,9 +45,9 @@ export class ProfessionalPDFGenerator {
 
     // Professional font sizes optimized for modern CVs and ATS
     this.fonts = {
-      name: 20,           // Full name - prominent
-      title: 12,          // Job title
-      sectionHeader: 12,  // Section headers - consistent with title
+      name: 22,           // Full name - prominent (increased from 20)
+      title: 11,          // Job title
+      sectionHeader: 12,  // Section headers - bold with underline
       body: 10,           // Body text - readable
       small: 9,           // Dates, details
       contact: 10         // Contact information
@@ -179,39 +182,41 @@ export class ProfessionalPDFGenerator {
       this.currentY += this.fonts.title * this.lineHeight * 0.35 + 4;
     }
 
-    // Contact Information - Clean layout
-    const contactLeft = [];
-    const contactRight = [];
+    // Contact information in single line format: Email | Phone | GitHub | LinkedIn
+    const contactInfo = [];
 
-    if (personalInfo.email) contactLeft.push(`Email: ${personalInfo.email}`);
-    if (personalInfo.phone) contactLeft.push(`Phone: ${personalInfo.phone}`);
-    if (personalInfo.location) contactRight.push(`Location: ${personalInfo.location}`);
-    if (personalInfo.linkedin) contactRight.push(`LinkedIn: ${personalInfo.linkedin}`);
+    if (personalInfo.email) contactInfo.push(personalInfo.email);
+    if (personalInfo.phone) contactInfo.push(personalInfo.phone);
 
-    // Left column contact info
-    if (contactLeft.length > 0) {
-      contactLeft.forEach(contact => {
-        this.addText(contact, this.margins.left, this.fonts.contact, 'normal');
-        this.currentY += this.fonts.contact * this.lineHeight * 0.35;
-      });
+    // Build first contact line
+    const contactLine = contactInfo.join(' | ');
+
+    // Second line for GitHub and LinkedIn with blue color
+    const socialLinks = [];
+    if (personalInfo.github) socialLinks.push(personalInfo.github);
+    if (personalInfo.linkedin) socialLinks.push(personalInfo.linkedin);
+
+    // Render first contact line (email, phone)
+    if (contactLine) {
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(0, 0, 0);
+      this.pdf.text(contactLine, this.margins.left, this.currentY);
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
     }
 
-    // Reset Y position for right column
-    const rightStartY = this.currentY - (contactLeft.length * this.fonts.contact * this.lineHeight * 0.35);
-    let tempY = rightStartY;
-
-    // Right column contact info
-    if (contactRight.length > 0) {
-      contactRight.forEach(contact => {
-        this.pdf.setFontSize(this.fonts.contact);
-        this.pdf.setFont('helvetica', 'normal');
-        this.pdf.text(contact, this.pageWidth / 2 + 10, tempY);
-        tempY += this.fonts.contact * this.lineHeight * 0.35;
-      });
+    // Render second line (GitHub and LinkedIn) in blue
+    if (socialLinks.length > 0) {
+      const socialLine = socialLinks.join(' | ');
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(0, 0, 255); // Blue color for links
+      this.pdf.text(socialLine, this.margins.left, this.currentY);
+      this.pdf.setTextColor(0, 0, 0); // Reset to black
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
     }
 
-    // Ensure we're past both columns
-    this.currentY = Math.max(this.currentY, tempY) + 6;
+    this.currentY += 4;
 
     // Professional Summary/Objective
     if (personalInfo.summary) {
@@ -254,12 +259,8 @@ export class ProfessionalPDFGenerator {
       }
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
 
-      // Company and Location
-      let companyText = exp.company;
-      if (exp.location) {
-        companyText += ` | ${exp.location}`;
-      }
-      this.addText(companyText, this.margins.left, this.fonts.body, 'normal');
+      // Company name only (without location)
+      this.addText(exp.company, this.margins.left, this.fonts.body, 'normal');
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 3;
 
       // Bullet points with proper formatting
@@ -363,11 +364,22 @@ export class ProfessionalPDFGenerator {
 
       // Project name - Bold
       this.addText(project.name, this.margins.left, this.fonts.body, 'bold');
-      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
+      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 2;
 
-      // Technologies on same line as name
-      if (project.technologies) {
-        this.addText(`Technologies: ${project.technologies}`, this.margins.left, this.fonts.small, 'normal');
+      // Technologies Used
+      if (project.technologies && project.technologies.length > 0) {
+        const techString = Array.isArray(project.technologies)
+          ? project.technologies.join(', ')
+          : project.technologies;
+
+        this.pdf.setFontSize(this.fonts.small);
+        this.pdf.setFont('helvetica', 'bold');
+        this.pdf.text('Technologies: ', this.margins.left, this.currentY);
+
+        this.pdf.setFont('helvetica', 'normal');
+        const techLabelWidth = this.pdf.getTextWidth('Technologies: ');
+        this.pdf.text(techString, this.margins.left + techLabelWidth, this.currentY);
+
         this.currentY += this.fonts.small * this.lineHeight * 0.35 + 2;
       }
 
@@ -379,16 +391,26 @@ export class ProfessionalPDFGenerator {
           this.pageWidth - this.margins.left - this.margins.right,
           this.fonts.body
         );
+        this.currentY += 2;
       }
 
       // URL
       if (project.link) {
-        this.addText(`Link: ${project.link}`, this.margins.left, this.fonts.small, 'normal');
-        this.currentY += this.fonts.small * this.lineHeight * 0.35;
+        this.pdf.setFontSize(this.fonts.small);
+        this.pdf.setFont('helvetica', 'bold');
+        this.pdf.text('Link: ', this.margins.left, this.currentY);
+
+        this.pdf.setFont('helvetica', 'normal');
+        this.pdf.setTextColor(0, 0, 255);
+        const linkLabelWidth = this.pdf.getTextWidth('Link: ');
+        this.pdf.text(project.link, this.margins.left + linkLabelWidth, this.currentY);
+        this.pdf.setTextColor(0, 0, 0);
+
+        this.currentY += this.fonts.small * this.lineHeight * 0.35 + 2;
       }
 
       if (index < cv.projects.length - 1) {
-        this.currentY += 5;
+        this.currentY += 4;
       }
     });
   }

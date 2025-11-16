@@ -115,17 +115,32 @@ export class TextBasedPDFGenerator {
 
     // Contact Information
     const contactInfo = [];
-    if (personalInfo.email) contactInfo.push(`Email: ${personalInfo.email}`);
-    if (personalInfo.phone) contactInfo.push(`Phone: ${personalInfo.phone}`);
-    if (personalInfo.location) contactInfo.push(`Location: ${personalInfo.location}`);
-    if (personalInfo.linkedin) contactInfo.push(`LinkedIn: ${personalInfo.linkedin}`);
-    if (personalInfo.website) contactInfo.push(`Website: ${personalInfo.website}`);
+    if (personalInfo.email) contactInfo.push(personalInfo.email);
+    if (personalInfo.phone) contactInfo.push(personalInfo.phone);
 
-    const contactText = contactInfo.join(' | ');
-    if (contactText) {
+    const socialLinks = [];
+    if (personalInfo.github) socialLinks.push(personalInfo.github);
+    if (personalInfo.linkedin) socialLinks.push(personalInfo.linkedin);
+
+    // Render first contact line (email, phone)
+    if (contactInfo.length > 0) {
+      const contactText = contactInfo.join(' | ');
       this.addWrappedText(contactText, this.margins.left, this.pageWidth - this.margins.left - this.margins.right, this.fontSizes.body);
-      this.currentY += 3;
+      this.currentY += this.fontSizes.body * this.lineHeight * 0.35;
     }
+
+    // Render second line (GitHub and LinkedIn) in blue
+    if (socialLinks.length > 0) {
+      const socialText = socialLinks.join(' | ');
+      this.pdf.setFontSize(this.fontSizes.body);
+      this.pdf.setFont('helvetica', 'normal');
+      this.pdf.setTextColor(0, 0, 255); // Blue color for links
+      this.pdf.text(socialText, this.margins.left, this.currentY);
+      this.pdf.setTextColor(this.colors.text[0], this.colors.text[1], this.colors.text[2]); // Reset to default text color
+      this.currentY += this.fontSizes.body * this.lineHeight * 0.35;
+    }
+
+    this.currentY += 3;
 
     // Professional Summary
     if (personalInfo.summary) {
@@ -148,12 +163,11 @@ export class TextBasedPDFGenerator {
       this.addText(titleText, this.margins.left, this.fontSizes.body, 'bold', this.colors.primary);
       this.currentY += this.fontSizes.body * this.lineHeight * 0.35;
 
-      // Date and Location
+      // Date only (without location)
       const dateText = exp.isCurrentJob
         ? `${exp.startDate} - Present`
         : `${exp.startDate} - ${exp.endDate || 'Present'}`;
-      const locationText = exp.location ? ` | ${exp.location}` : '';
-      this.addText(dateText + locationText, this.margins.left, this.fontSizes.small, 'normal', this.colors.text);
+      this.addText(dateText, this.margins.left, this.fontSizes.small, 'normal', this.colors.text);
       this.currentY += this.fontSizes.small * this.lineHeight * 0.35 + 2;
 
       // Bullet Points
@@ -226,11 +240,16 @@ export class TextBasedPDFGenerator {
 
       // Project Name
       this.addText(project.name, this.margins.left, this.fontSizes.body, 'bold', this.colors.primary);
-      this.currentY += this.fontSizes.body * this.lineHeight * 0.35;
+      this.currentY += this.fontSizes.body * this.lineHeight * 0.35 + 1;
 
       // Technologies and Date
       const details = [];
-      if (project.technologies) details.push(`Technologies: ${project.technologies}`);
+      if (project.technologies && project.technologies.length > 0) {
+        const techString = Array.isArray(project.technologies)
+          ? project.technologies.join(', ')
+          : project.technologies;
+        details.push(`Technologies: ${techString}`);
+      }
       if (project.startDate) {
         const dateRange = project.endDate
           ? `${project.startDate} - ${project.endDate}`
@@ -246,12 +265,13 @@ export class TextBasedPDFGenerator {
       // Description
       if (project.description) {
         this.addWrappedText(project.description, this.margins.left, this.pageWidth - this.margins.left - this.margins.right, this.fontSizes.body);
+        this.currentY += 1;
       }
 
       // Project URL
       if (project.url) {
         this.addText(`URL: ${project.url}`, this.margins.left, this.fontSizes.small, 'normal', this.colors.accent);
-        this.currentY += this.fontSizes.small * this.lineHeight * 0.35;
+        this.currentY += this.fontSizes.small * this.lineHeight * 0.35 + 1;
       }
 
       if (index < cv.projects.length - 1) {
@@ -300,7 +320,7 @@ export class TextBasedPDFGenerator {
       // Activity Name and Organization
       const activityText = activity.organization
         ? `${activity.name} - ${activity.organization}`
-        : activity.name;
+        : (activity.name || '');
       this.addText(activityText, this.margins.left, this.fontSizes.body, 'bold', this.colors.primary);
       this.currentY += this.fontSizes.body * this.lineHeight * 0.35;
 

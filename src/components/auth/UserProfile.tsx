@@ -77,9 +77,9 @@ const UserProfile: React.FC = () => {
               className="bg-gray-50"
             />
             {user.emailVerified ? (
-              <Shield className="w-5 h-5 text-green-600" title="Email verified" />
+              <span title="Email verified"><Shield className="w-5 h-5 text-green-600" /></span>
             ) : (
-              <Shield className="w-5 h-5 text-red-600" title="Email not verified" />
+              <span title="Email not verified"><Shield className="w-5 h-5 text-red-600" /></span>
             )}
           </div>
           {!user.emailVerified && (
@@ -121,7 +121,7 @@ const UserProfile: React.FC = () => {
               className={!isEditing ? 'bg-gray-50' : ''}
             />
             {user.phoneVerified && phone ? (
-              <Shield className="w-5 h-5 text-green-600" title="Phone verified" />
+              <span title="Phone verified"><Shield className="w-5 h-5 text-green-600" /></span>
             ) : null}
           </div>
         </div>

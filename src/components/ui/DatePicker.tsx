@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -45,13 +45,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       placeholderText: placeholder,
       dateFormat: getDateFormat(),
       showTimeSelect,
-      className: `
-        w-full px-3 py-2 border border-gray-300 rounded-md
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-        ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
-        text-sm
-      `,
-      calendarClassName: "shadow-lg border border-gray-200 rounded-md"
+      wrapperClassName: "w-full"
     };
 
     switch (dateFormat) {
@@ -73,9 +67,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   return (
     <div className={`${fullWidth ? 'w-full' : ''}`}>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-text-secondary mb-1">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-error ml-1">*</span>}
       </label>
       <ReactDatePicker {...getPickerProps()} />
     </div>

@@ -26,7 +26,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(isDeviceRemembered());
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | React.ReactNode>('');
   const [success, setSuccess] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -129,8 +129,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     return (
       <Card className="max-w-md mx-auto">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Reset Password</h2>
-          <p className="text-gray-600">Enter your email to receive reset instructions</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Reset Password</h2>
+          <p className="text-gray-400">Enter your email to receive reset instructions</p>
         </div>
 
         <form onSubmit={handleForgotPassword} className="space-y-4">
@@ -154,23 +154,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="p-3 bg-red-900/20 border border-red-500/30 rounded-md">
+              <p className="text-sm text-red-400">{error}</p>
             </div>
           )}
 
           {success && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-md">
+            <div className="p-4 bg-green-900/20 border border-green-500/30 rounded-md">
               <div className="flex items-start">
-                <Mail className="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                <Mail className="w-5 h-5 text-green-400 mr-2 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm text-green-700">{success}</p>
+                  <p className="text-sm text-green-400">{success}</p>
 
                   {/* Spam Warning for Reset Emails */}
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-md p-2 mt-2">
+                  <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-md p-2 mt-2">
                     <div className="flex items-start">
-                      <AlertTriangle className="w-4 h-4 text-yellow-600 mr-2 mt-0.5 flex-shrink-0" />
-                      <p className="text-xs text-yellow-700">
+                      <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2 mt-0.5 flex-shrink-0" />
+                      <p className="text-xs text-yellow-400">
                         <strong>Check spam folder:</strong> Our emails sometimes end up in spam/junk folders.
                       </p>
                     </div>
@@ -210,8 +210,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   return (
     <Card className="max-w-md mx-auto">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-        <p className="text-gray-600">Sign in to access your CV builder</p>
+        <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
+        <p className="text-gray-400">Sign in to access your CV builder</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -270,30 +270,30 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
               type="checkbox"
               checked={rememberDevice}
               onChange={(e) => setRememberDevice(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="h-4 w-4 text-[#4EAA93] focus:ring-[#4EAA93] border-gray-600 bg-[#252A30] rounded"
             />
-            <label htmlFor="rememberDevice" className="ml-2 block text-sm text-gray-700">
+            <label htmlFor="rememberDevice" className="ml-2 block text-sm text-gray-300">
               Remember this device
             </label>
           </div>
           <button
             type="button"
             onClick={() => setShowForgotPassword(true)}
-            className="text-sm text-blue-600 hover:text-blue-800"
+            className="text-sm text-[#4EAA93] hover:text-[#5CC4A8]"
           >
             Forgot password?
           </button>
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            <div className="text-sm text-red-600">{error}</div>
+          <div className="p-3 bg-red-900/20 border border-red-500/30 rounded-md">
+            <div className="text-sm text-red-400">{error}</div>
           </div>
         )}
 
         {success && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-            <p className="text-sm text-green-600">{success}</p>
+          <div className="p-3 bg-green-900/20 border border-green-500/30 rounded-md">
+            <p className="text-sm text-green-400">{success}</p>
           </div>
         )}
 
@@ -314,23 +314,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-400">
           Don't have an account?{' '}
           <button
             onClick={onSwitchToRegister}
-            className="text-blue-600 hover:text-blue-800 font-medium"
+            className="text-[#4EAA93] hover:text-[#5CC4A8] font-medium"
           >
             Create one here
           </button>
         </p>
       </div>
 
-      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+      <div className="mt-4 p-3 bg-[#252A30] border border-[#353B42] rounded-md">
         <div className="flex items-start">
-          <Info className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+          <Info className="w-4 h-4 text-[#4EAA93] mr-2 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-xs text-blue-700">
-              <strong>Secure Login:</strong> Your account is protected with encrypted authentication.
+            <p className="text-xs text-gray-400">
+              <strong className="text-gray-300">Secure Login:</strong> Your account is protected with encrypted authentication.
               Use "Remember device" for convenient access on trusted devices.
             </p>
           </div>

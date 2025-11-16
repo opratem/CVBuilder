@@ -132,7 +132,11 @@ const MinimalTemplate: React.FC<MinimalTemplateProps> = ({ cv }) => {
                 )}
               </div>
               {project.technologies && project.technologies.length > 0 && (
-                <p className="text-sm text-gray-600 mb-1">{project.technologies.join(', ')}</p>
+                <p className="text-sm text-gray-600 mb-1">
+                  {Array.isArray(project.technologies)
+                    ? project.technologies.join(', ')
+                    : project.technologies}
+                </p>
               )}
               <p className="text-gray-700 text-sm">{project.description}</p>
             </div>

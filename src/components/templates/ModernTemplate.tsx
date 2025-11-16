@@ -135,7 +135,11 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ cv }) => {
                   )}
                 </div>
                 {project.technologies && project.technologies.length > 0 && (
-                  <p className="text-sm text-black font-semibold mb-2">{project.technologies.join(', ')}</p>
+                  <p className="text-sm text-black font-semibold mb-2">
+                    {Array.isArray(project.technologies)
+                      ? project.technologies.join(', ')
+                      : project.technologies}
+                  </p>
                 )}
                 <p className="text-black leading-relaxed text-sm">{project.description}</p>
               </div>

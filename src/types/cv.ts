@@ -21,6 +21,7 @@ export interface Education {
   endDate: string;
   gpa?: string;
   description?: string;
+  location?: string;
 }
 
 export interface BulletPoint {
@@ -32,6 +33,7 @@ export interface WorkExperience {
   id: string;
   company: string;
   position: string;
+  jobTitle?: string;
   location?: string;
   startDate: string;
   endDate: string;
@@ -53,6 +55,9 @@ export interface Project {
   description: string;
   technologies: string[];
   url?: string;
+  link?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface Certification {
@@ -63,6 +68,8 @@ export interface Certification {
   expiryDate?: string;
   credentialId?: string;
   credentialUrl?: string;
+  url?: string;
+  organization?: string;
 }
 
 export interface Extracurricular {
@@ -72,6 +79,10 @@ export interface Extracurricular {
   startDate: string;
   endDate: string;
   description: string;
+  name?: string;
+  role?: string;
+  activity?: string;
+  isOngoing?: boolean;
 }
 
 export interface CVSectionOrder {
@@ -122,14 +133,13 @@ export const defaultCV: CV = {
   extracurricular: [],
   templateId: 'modern',
   sectionOrder: [
-    { id: 'personalInfo', name: 'Personal Information', enabled: true, order: 0 },
-    { id: 'summary', name: 'Professional Summary', enabled: true, order: 1 },
-    { id: 'workExperience', name: 'Work Experience', enabled: true, order: 2 },
+    { id: 'personal', name: 'Personal Information', enabled: true, order: 0 },
+    { id: 'work', name: 'Work Experience', enabled: true, order: 1 },
+    { id: 'education', name: 'Education', enabled: true, order: 2 },
     { id: 'skills', name: 'Skills', enabled: true, order: 3 },
-    { id: 'education', name: 'Education', enabled: true, order: 4 },
-    { id: 'projects', name: 'Projects', enabled: true, order: 5 },
-    { id: 'certifications', name: 'Certifications', enabled: true, order: 6 },
-    { id: 'extracurricular', name: 'Extracurricular Activities', enabled: true, order: 7 }
+    { id: 'projects', name: 'Projects', enabled: true, order: 4 },
+    { id: 'certifications', name: 'Certifications', enabled: true, order: 5 },
+    { id: 'extracurricular', name: 'Extracurricular Activities', enabled: true, order: 6 }
   ]
 };
 

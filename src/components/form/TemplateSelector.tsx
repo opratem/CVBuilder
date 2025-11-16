@@ -125,9 +125,9 @@ const TemplateSelector: React.FC = () => {
         <Layout className="mr-2" /> Choose Your Template
       </h2>
 
-      <div className="mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <p className="text-blue-800 text-sm flex items-center">
-          <Lightbulb className="w-4 h-4 mr-2 text-blue-600" />
+      <div className="mb-4 p-4 bg-teal-900/20 rounded-lg border border-teal-700/50">
+        <p className="text-gray-200 text-sm flex items-center">
+          <Lightbulb className="w-4 h-4 mr-2 text-teal-400" />
           <strong>Pro Tip:</strong> For most job applications, we recommend the "Classic (ATS-Optimized)" template
           as it's designed to pass through Applicant Tracking Systems used by most companies.
         </p>
@@ -142,8 +142,8 @@ const TemplateSelector: React.FC = () => {
               className={`
                 border rounded-xl p-5 cursor-pointer transition-all hover:shadow-lg
                 ${cv.templateId === template.id
-                  ? 'border-blue-500 bg-blue-50 shadow-md ring-2 ring-blue-200'
-                  : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'}
+                  ? 'border-teal-500 bg-teal-900/20 shadow-md ring-2 ring-teal-700/50'
+                  : 'border-gray-600 hover:border-teal-500 hover:bg-teal-900/10'}
               `}
               onClick={() => setTemplateId(template.id)}
             >
@@ -157,18 +157,18 @@ const TemplateSelector: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     {getTemplateIcon(template.id)}
-                    <h3 className="font-semibold text-gray-900">{template.name}</h3>
+                    <h3 className="font-semibold text-white">{template.name}</h3>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${category.color}`}>
                     {category.category}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-600 leading-relaxed">{template.description}</p>
+                <p className="text-sm text-gray-300 leading-relaxed">{template.description}</p>
 
                 {cv.templateId === template.id && (
-                  <div className="flex items-center text-blue-600 text-sm font-medium">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mr-2"></div>
+                  <div className="flex items-center text-teal-400 text-sm font-medium">
+                    <div className="w-2 h-2 bg-teal-400 rounded-full mr-2"></div>
                     Currently selected
                   </div>
                 )}
@@ -178,9 +178,9 @@ const TemplateSelector: React.FC = () => {
         })}
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-        <h4 className="font-medium text-gray-900 mb-2">Need help choosing?</h4>
-        <div className="text-sm text-gray-600 space-y-1">
+      <div className="mt-6 p-4 bg-gray-800/30 rounded-lg">
+        <h4 className="font-medium text-white mb-2">Need help choosing?</h4>
+        <div className="text-sm text-gray-300 space-y-1">
           <p>• <strong>Corporate/Finance:</strong> Classic or Executive</p>
           <p>• <strong>Tech/Engineering:</strong> Tech Professional or Modern</p>
           <p>• <strong>Design/Marketing:</strong> Creative or Modern</p>

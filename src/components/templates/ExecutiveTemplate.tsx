@@ -174,7 +174,9 @@ const ExecutiveTemplate: React.FC<ExecutiveTemplateProps> = ({ cv }) => {
                 </div>
                 {project.technologies && project.technologies.length > 0 && (
                   <p className="text-sm text-amber-700 font-semibold mb-2">
-                    Technologies: {project.technologies.join(', ')}
+                    Technologies: {Array.isArray(project.technologies)
+                      ? project.technologies.join(', ')
+                      : project.technologies}
                   </p>
                 )}
                 <p className="text-gray-800 leading-relaxed">{project.description}</p>

@@ -349,18 +349,19 @@ const createClassicContactInfo = (personalInfo: CVData['personalInfo']) => {
 // Modern contact info - centered header with single line contact info (matches PDF exactly)
 const createModernContactInfo = (personalInfo: CVData['personalInfo']) => {
   const contactInfo = [];
+  const socialLinks = [];
 
-  // Collect all contact info exactly like the PDF generator
+  // Collect email and phone
   if (personalInfo.email) contactInfo.push(personalInfo.email);
   if (personalInfo.phone) contactInfo.push(personalInfo.phone);
-  if (personalInfo.location) contactInfo.push(personalInfo.location);
-  if (personalInfo.linkedin) contactInfo.push(personalInfo.linkedin);
-  if (personalInfo.website) contactInfo.push(personalInfo.website);
-  if (personalInfo.github) contactInfo.push(personalInfo.github);
+
+  // Collect social links
+  if (personalInfo.github) socialLinks.push(personalInfo.github);
+  if (personalInfo.linkedin) socialLinks.push(personalInfo.linkedin);
 
   const contactElements = [];
 
-  // Single centered line with | separators (exactly like PDF and template)
+  // First line: Email | Phone (black)
   if (contactInfo.length > 0) {
     contactElements.push(
       new Paragraph({
@@ -371,7 +372,23 @@ const createModernContactInfo = (personalInfo: CVData['personalInfo']) => {
             font: 'Helvetica'
           })
         ],
-        alignment: AlignmentType.CENTER,
+        spacing: { after: 100 }
+      })
+    );
+  }
+
+  // Second line: GitHub | LinkedIn (blue)
+  if (socialLinks.length > 0) {
+    contactElements.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: socialLinks.join(' | '),
+            size: 20,
+            font: 'Helvetica',
+            color: '0000FF' // Blue color for links
+          })
+        ],
         spacing: { after: 300 }
       })
     );
@@ -382,119 +399,51 @@ const createModernContactInfo = (personalInfo: CVData['personalInfo']) => {
 
 // Main contact info function that matches classic PDF layout exactly
 const createContactInfo = (personalInfo: CVData['personalInfo']) => {
-  const contactLeft = [];
-  const contactRight = [];
+  const contactInfo = [];
+  const socialLinks = [];
 
-  // Match the exact PDF layout: Email and Phone on left, Location and LinkedIn on right
-  if (personalInfo.email) contactLeft.push(`Email: ${personalInfo.email}`);
-  if (personalInfo.phone) contactLeft.push(`Phone: ${personalInfo.phone}`);
-  if (personalInfo.location) contactRight.push(`Location: ${personalInfo.location}`);
-  if (personalInfo.linkedin) contactRight.push(`LinkedIn: ${personalInfo.linkedin}`);
+  // Collect email and phone
+  if (personalInfo.email) contactInfo.push(personalInfo.email);
+  if (personalInfo.phone) contactInfo.push(personalInfo.phone);
 
-  // Additional items go to left or right based on available space
-  if (personalInfo.website) {
-    if (contactLeft.length <= contactRight.length) {
-      contactLeft.push(`Website: ${personalInfo.website}`);
-    } else {
-      contactRight.push(`Website: ${personalInfo.website}`);
-    }
-  }
-  if (personalInfo.github) {
-    if (contactLeft.length <= contactRight.length) {
-      contactLeft.push(`GitHub: ${personalInfo.github}`);
-    } else {
-      contactRight.push(`GitHub: ${personalInfo.github}`);
-    }
-  }
-  if (personalInfo.portfolio) {
-    if (contactLeft.length <= contactRight.length) {
-      contactLeft.push(`Portfolio: ${personalInfo.portfolio}`);
-    } else {
-      contactRight.push(`Portfolio: ${personalInfo.portfolio}`);
-    }
-  }
+  // Collect social links
+  if (personalInfo.github) socialLinks.push(personalInfo.github);
+  if (personalInfo.linkedin) socialLinks.push(personalInfo.linkedin);
 
   const contactElements = [];
 
-  // Create table for exact two-column layout to match PDF
-  if (contactLeft.length > 0 || contactRight.length > 0) {
-    const maxRows = Math.max(contactLeft.length, contactRight.length);
-
-    const table = new Table({
-      width: {
-        size: 100,
-        type: WidthType.PERCENTAGE
-      },
-      borders: {
-        top: { style: BorderStyle.NONE },
-        bottom: { style: BorderStyle.NONE },
-        left: { style: BorderStyle.NONE },
-        right: { style: BorderStyle.NONE },
-        insideHorizontal: { style: BorderStyle.NONE },
-        insideVertical: { style: BorderStyle.NONE }
-      },
-      rows: Array.from({ length: maxRows }, (_, i) =>
-        new TableRow({
-          children: [
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: contactLeft[i] || '',
-                      size: 20, // Match PDF font size
-                      font: 'Helvetica'
-                    })
-                  ],
-                  spacing: { after: 80 }
-                })
-              ],
-              width: { size: 50, type: WidthType.PERCENTAGE },
-              margins: { top: 0, bottom: 0, left: 0, right: 200 },
-              borders: {
-                top: { style: BorderStyle.NONE },
-                bottom: { style: BorderStyle.NONE },
-                left: { style: BorderStyle.NONE },
-                right: { style: BorderStyle.NONE }
-              }
-            }),
-            new TableCell({
-              children: [
-                new Paragraph({
-                  children: [
-                    new TextRun({
-                      text: contactRight[i] || '',
-                      size: 20, // Match PDF font size
-                      font: 'Helvetica'
-                    })
-                  ],
-                  spacing: { after: 80 }
-                })
-              ],
-              width: { size: 50, type: WidthType.PERCENTAGE },
-              margins: { top: 0, bottom: 0, left: 200, right: 0 },
-              borders: {
-                top: { style: BorderStyle.NONE },
-                bottom: { style: BorderStyle.NONE },
-                left: { style: BorderStyle.NONE },
-                right: { style: BorderStyle.NONE }
-              }
-            })
-          ]
-        })
-      )
-    });
-
-    contactElements.push(table);
+  // First line: Email | Phone (black)
+  if (contactInfo.length > 0) {
+    contactElements.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: contactInfo.join(' | '),
+            size: 20,
+            font: 'Helvetica'
+          })
+        ],
+        spacing: { after: 100 }
+      })
+    );
   }
 
-  // Add spacing after contact section to match PDF
-  contactElements.push(
-    new Paragraph({
-      text: '',
-      spacing: { after: 400 }
-    })
-  );
+  // Second line: GitHub | LinkedIn (blue)
+  if (socialLinks.length > 0) {
+    contactElements.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: socialLinks.join(' | '),
+            size: 20,
+            font: 'Helvetica',
+            color: '0000FF' // Blue color for links
+          })
+        ],
+        spacing: { after: 300 }
+      })
+    );
+  }
 
   return contactElements;
 };
@@ -683,11 +632,8 @@ const createWorkExperienceSection = (workExperience: CVData['workExperience']) =
     const endDate = exp.isCurrentJob ? 'Present' : (exp.endDate || '');
     const dateRange = endDate ? `${startDate} - ${endDate}` : startDate;
 
-    // Company with location (like PDF format)
-    let companyText = exp.company;
-    if (exp.location) {
-      companyText += ` | ${exp.location}`;
-    }
+    // Company name only (without location)
+    const companyText = exp.company;
 
     return [
       // Position (bold) - matches PDF
@@ -723,7 +669,7 @@ const createWorkExperienceSection = (workExperience: CVData['workExperience']) =
         children: [
           new TextRun({
             text: companyText,
-            italic: true,
+            italics: true,
             size: 20,
             font: 'Helvetica'
           })
@@ -796,16 +742,16 @@ const createEducationSection = (education: CVData['education']) => [
       children: [
         new TextRun({
           text: `${edu.institution} | `,
-          italic: true
+          italics: true
         }),
         new TextRun({
           text: `${edu.startDate} - ${edu.endDate || 'Present'}`,
-          italic: true
+          italics: true
         }),
         ...(edu.gpa ? [
           new TextRun({
             text: ` | GPA: ${edu.gpa}`,
-            italic: true
+            italics: true
           })
         ] : [])
       ]
@@ -882,7 +828,7 @@ const createProjectsSection = (projects: CVData['projects']) => [
         children: [
           new TextRun({
             text: `${project.url}`,
-            italic: true
+            italics: true
           })
         ]
       })
@@ -923,12 +869,12 @@ const createCertificationsSection = (certifications: CVData['certifications']) =
         }),
         new TextRun({
           text: ` - ${cert.issuer}`,
-          italic: true
+          italics: true
         }),
         ...(cert.date ? [
           new TextRun({
             text: ` (${cert.date})`,
-            italic: true
+            italics: true
           })
         ] : [])
       ],
@@ -961,11 +907,11 @@ const createExtracurricularSection = (extracurricular: CVData['extracurricular']
       children: [
         new TextRun({
           text: `${activity.organization} | `,
-          italic: true
+          italics: true
         }),
         new TextRun({
           text: `${activity.startDate} - ${activity.endDate || 'Present'}`,
-          italic: true
+          italics: true
         })
       ]
     }),

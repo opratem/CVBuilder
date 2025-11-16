@@ -79,7 +79,7 @@ export class ModernPDFGenerator {
     align: 'left' | 'center' | 'right' = 'left'
   ): void {
     this.pdf.setFontSize(fontSize);
-    this.pdf.setFont('helvetica', fontWeight);
+    this.pdf.setFont('times', fontWeight);
     this.pdf.setTextColor(0, 0, 0);
 
     if (align === 'center') {
@@ -101,7 +101,7 @@ export class ModernPDFGenerator {
     if (!text.trim()) return;
 
     this.pdf.setFontSize(fontSize);
-    this.pdf.setFont('helvetica', fontWeight);
+    this.pdf.setFont('times', fontWeight);
     this.pdf.setTextColor(0, 0, 0);
 
     const lines = this.pdf.splitTextToSize(text.trim(), maxWidth);
@@ -181,26 +181,40 @@ export class ModernPDFGenerator {
       this.currentY += this.fonts.title * this.lineHeight * 0.35 + 4;
     }
 
-    // Modern template: Contact info in a single centered line
+    // Modern template: Contact info wrapped across multiple centered lines if needed
+    // Order: Email | Phone | GitHub | LinkedIn (no location, no website)
     const contactInfo = [];
     if (personalInfo.email) contactInfo.push(personalInfo.email);
     if (personalInfo.phone) contactInfo.push(personalInfo.phone);
-    if (personalInfo.location) contactInfo.push(personalInfo.location);
-    if (personalInfo.linkedin) contactInfo.push(personalInfo.linkedin);
-    if (personalInfo.website) contactInfo.push(personalInfo.website);
-    if (personalInfo.github) contactInfo.push(personalInfo.github);
 
+    const socialLinks = [];
+    if (personalInfo.github) socialLinks.push(personalInfo.github);
+    if (personalInfo.linkedin) socialLinks.push(personalInfo.linkedin);
+
+    // Render first contact line (email, phone) in black
     if (contactInfo.length > 0) {
       const contactLine = contactInfo.join(' | ');
-      this.addText(
-        contactLine,
-        this.pageWidth / 2,
-        this.fonts.contact,
-        'normal',
-        'center'
-      );
-      this.currentY += this.fonts.contact * this.lineHeight * 0.35 + 6;
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('times', 'normal');
+      this.pdf.setTextColor(0, 0, 0);
+      const textWidth = this.pdf.getTextWidth(contactLine);
+      this.pdf.text(contactLine, (this.pageWidth - textWidth) / 2, this.currentY);
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
     }
+
+    // Render second line (GitHub and LinkedIn) in blue
+    if (socialLinks.length > 0) {
+      const socialLine = socialLinks.join(' | ');
+      this.pdf.setFontSize(this.fonts.contact);
+      this.pdf.setFont('times', 'normal');
+      this.pdf.setTextColor(0, 0, 255); // Blue color for links
+      const textWidth = this.pdf.getTextWidth(socialLine);
+      this.pdf.text(socialLine, (this.pageWidth - textWidth) / 2, this.currentY);
+      this.pdf.setTextColor(0, 0, 0); // Reset to black
+      this.currentY += this.fonts.contact * this.lineHeight * 0.35;
+    }
+
+    this.currentY += 6;
 
     // Professional Summary
     if (personalInfo.summary) {
@@ -241,12 +255,8 @@ export class ModernPDFGenerator {
       }
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
 
-      // Company and Location
-      let companyText = exp.company;
-      if (exp.location) {
-        companyText += ` | ${exp.location}`;
-      }
-      this.addText(companyText, this.margins.left, this.fonts.body, 'normal');
+      // Company name only (without location)
+      this.addText(exp.company, this.margins.left, this.fonts.body, 'normal');
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 3;
 
       // Bullet points
@@ -297,7 +307,7 @@ export class ModernPDFGenerator {
         this.currentY += this.fonts.small * this.lineHeight * 0.35 + 1;
       }
 
-      let institutionText = edu.institution;
+      const institutionText = edu.institution;
 
       this.addText(institutionText, this.margins.left, this.fonts.body, 'normal');
       this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
@@ -343,14 +353,28 @@ export class ModernPDFGenerator {
     cv.projects.forEach((project, index) => {
       this.checkPageBreak(30);
 
+      // Project Name (Bold)
       this.addText(project.name, this.margins.left, this.fonts.body, 'bold');
-      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 1;
+      this.currentY += this.fonts.body * this.lineHeight * 0.35 + 2;
 
-      if (project.technologies) {
-        this.addText(`Technologies: ${project.technologies}`, this.margins.left, this.fonts.small, 'normal');
+      // Technologies Used
+      if (project.technologies && project.technologies.length > 0) {
+        const techString = Array.isArray(project.technologies)
+          ? project.technologies.join(', ')
+          : project.technologies;
+
+        this.pdf.setFontSize(this.fonts.small);
+        this.pdf.setFont('times', 'bold');
+        this.pdf.text('Technologies: ', this.margins.left, this.currentY);
+
+        this.pdf.setFont('times', 'normal');
+        const techLabelWidth = this.pdf.getTextWidth('Technologies: ');
+        this.pdf.text(techString, this.margins.left + techLabelWidth, this.currentY);
+
         this.currentY += this.fonts.small * this.lineHeight * 0.35 + 2;
       }
 
+      // Project Description
       if (project.description) {
         this.addMultilineText(
           project.description,
@@ -358,16 +382,26 @@ export class ModernPDFGenerator {
           this.pageWidth - this.margins.left - this.margins.right,
           this.fonts.body
         );
-        this.currentY += 1;
+        this.currentY += 2;
       }
 
+      // Project Link
       if (project.link) {
-        this.addText(`Link: ${project.link}`, this.margins.left, this.fonts.small, 'normal');
-        this.currentY += this.fonts.small * this.lineHeight * 0.35;
+        this.pdf.setFontSize(this.fonts.small);
+        this.pdf.setFont('times', 'bold');
+        this.pdf.text('Link: ', this.margins.left, this.currentY);
+
+        this.pdf.setFont('times', 'normal');
+        this.pdf.setTextColor(0, 0, 255);
+        const linkLabelWidth = this.pdf.getTextWidth('Link: ');
+        this.pdf.text(project.link, this.margins.left + linkLabelWidth, this.currentY);
+        this.pdf.setTextColor(0, 0, 0);
+
+        this.currentY += this.fonts.small * this.lineHeight * 0.35 + 2;
       }
 
       if (index < cv.projects.length - 1) {
-        this.currentY += 5;
+        this.currentY += 4;
       }
     });
   }

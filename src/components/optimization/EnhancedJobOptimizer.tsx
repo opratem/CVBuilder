@@ -152,8 +152,8 @@ const EnhancedJobOptimizer: React.FC = () => {
       <div className={`rounded-lg p-6 border-2 ${getMatchScoreBg(analysis!.matchScore)}`}>
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-bold text-gray-900">CV Match Score</h3>
-            <p className="text-sm text-gray-600 mt-1">Based on job requirements analysis</p>
+            <h3 className="text-xl font-bold text-white">CV Match Score</h3>
+            <p className="text-sm text-gray-200 mt-1">Based on job requirements analysis</p>
           </div>
           <div className="text-right">
             <div className={`text-4xl font-bold ${getMatchScoreColor(analysis!.matchScore)}`}>
@@ -165,19 +165,19 @@ const EnhancedJobOptimizer: React.FC = () => {
 
         <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-lg font-semibold text-gray-700">{analysis!.requiredSkills.length}</div>
+            <div className="text-lg font-semibold text-white">{analysis!.requiredSkills.length}</div>
             <div className="text-xs text-gray-500">Required Skills</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-semibold text-gray-700">{analysis!.optionalSkills.length}</div>
+            <div className="text-lg font-semibold text-white">{analysis!.optionalSkills.length}</div>
             <div className="text-xs text-gray-500">Optional Skills</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-semibold text-gray-700">{analysis!.keywords.length}</div>
+            <div className="text-lg font-semibold text-white">{analysis!.keywords.length}</div>
             <div className="text-xs text-gray-500">Keywords</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-semibold text-gray-700">{analysis!.industries.length}</div>
+            <div className="text-lg font-semibold text-white">{analysis!.industries.length}</div>
             <div className="text-xs text-gray-500">Industries</div>
           </div>
         </div>
@@ -186,7 +186,7 @@ const EnhancedJobOptimizer: React.FC = () => {
       {/* Industries */}
       {analysis!.industries.length > 0 && (
         <Card className="p-4">
-          <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+          <h4 className="font-semibold text-white mb-3 flex items-center">
             <Building2 className="w-4 h-4 mr-2 text-blue-500" />
             Identified Industries
           </h4>
@@ -205,7 +205,7 @@ const EnhancedJobOptimizer: React.FC = () => {
 
       {/* Required Skills */}
       <Card className="p-4">
-        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+        <h4 className="font-semibold text-white mb-3 flex items-center">
           <AlertCircle className="w-4 h-4 mr-2 text-red-500" />
           Critical Skills ({analysis!.requiredSkills.length})
         </h4>
@@ -242,7 +242,7 @@ const EnhancedJobOptimizer: React.FC = () => {
       {/* Experience Requirements */}
       {analysis!.experienceRequirements.length > 0 && (
         <Card className="p-4">
-          <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+          <h4 className="font-semibold text-white mb-3 flex items-center">
             <Clock className="w-4 h-4 mr-2 text-orange-500" />
             Experience Requirements
           </h4>
@@ -278,7 +278,7 @@ const EnhancedJobOptimizer: React.FC = () => {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center mb-2">
-                  <h5 className="font-medium text-gray-900">{suggestion.title}</h5>
+                  <h5 className="font-medium text-white">{suggestion.title}</h5>
                   <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
                     suggestion.priority === 'high' ? 'bg-red-100 text-red-800' :
                     suggestion.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
@@ -292,28 +292,28 @@ const EnhancedJobOptimizer: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-600 mb-2">{suggestion.description}</p>
+                <p className="text-sm text-gray-200 mb-2">{suggestion.description}</p>
                 <p className="text-xs text-gray-500">{suggestion.action}</p>
 
                 {suggestion.specifics && (
                   <div className="mt-3 space-y-2">
                     {suggestion.specifics.skillsToAdd && (
                       <div>
-                        <span className="text-xs font-medium text-gray-700">Skills to add: </span>
-                        <span className="text-xs text-gray-600">{suggestion.specifics.skillsToAdd.join(', ')}</span>
+                        <span className="text-xs font-medium text-white">Skills to add: </span>
+                        <span className="text-xs text-gray-200">{suggestion.specifics.skillsToAdd.join(', ')}</span>
                       </div>
                     )}
                     {suggestion.specifics.keywordsToInclude && (
                       <div>
-                        <span className="text-xs font-medium text-gray-700">Keywords: </span>
-                        <span className="text-xs text-gray-600">{suggestion.specifics.keywordsToInclude.join(', ')}</span>
+                        <span className="text-xs font-medium text-white">Keywords: </span>
+                        <span className="text-xs text-gray-200">{suggestion.specifics.keywordsToInclude.join(', ')}</span>
                       </div>
                     )}
                   </div>
                 )}
               </div>
               <div className="ml-4 text-right">
-                <div className="text-sm font-medium text-gray-900">+{suggestion.impact}%</div>
+                <div className="text-sm font-medium text-white">+{suggestion.impact}%</div>
                 <div className="text-xs text-gray-500">Impact</div>
               </div>
             </div>
@@ -347,15 +347,15 @@ const EnhancedJobOptimizer: React.FC = () => {
       {analysis!.competencyGaps.length === 0 ? (
         <Card className="p-6 text-center">
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No Major Competency Gaps!</h3>
-          <p className="text-gray-600">Your skills align well with the job requirements.</p>
+          <h3 className="text-lg font-semibold text-white mb-2">No Major Competency Gaps!</h3>
+          <p className="text-gray-200">Your skills align well with the job requirements.</p>
         </Card>
       ) : (
         analysis!.competencyGaps.map((gap, index) => (
           <Card key={index} className="p-4">
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h5 className="font-medium text-gray-900">{gap.skill}</h5>
+                <h5 className="font-medium text-white">{gap.skill}</h5>
                 <span className={`inline-block px-2 py-1 text-xs rounded-full ${
                   gap.category === 'technical' ? 'bg-blue-100 text-blue-800' :
                   gap.category === 'soft' ? 'bg-green-100 text-green-800' :
@@ -365,7 +365,7 @@ const EnhancedJobOptimizer: React.FC = () => {
                 </span>
               </div>
               <div className="text-right">
-                <div className="text-sm font-medium text-gray-900">
+                <div className="text-sm font-medium text-white">
                   {gap.currentLevel}/{gap.requiredLevel}
                 </div>
                 <div className="text-xs text-gray-500">Skill Level</div>
@@ -373,7 +373,7 @@ const EnhancedJobOptimizer: React.FC = () => {
             </div>
 
             <div className="mb-3">
-              <div className="flex justify-between text-xs text-gray-600 mb-1">
+              <div className="flex justify-between text-xs text-gray-200 mb-1">
                 <span>Current Level</span>
                 <span>Required Level</span>
               </div>
@@ -386,13 +386,13 @@ const EnhancedJobOptimizer: React.FC = () => {
             </div>
 
             <div>
-              <h6 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
+              <h6 className="text-sm font-medium text-white mb-2 flex items-center">
                 <Lightbulb className="w-4 h-4 mr-1" />
                 Improvement Recommendations
               </h6>
               <ul className="space-y-1">
                 {gap.recommendations.map((rec, recIndex) => (
-                  <li key={recIndex} className="text-xs text-gray-600 flex items-start">
+                  <li key={recIndex} className="text-xs text-gray-200 flex items-start">
                     <ArrowRight className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0" />
                     {rec}
                   </li>
@@ -408,7 +408,7 @@ const EnhancedJobOptimizer: React.FC = () => {
   const renderKeywordsTab = () => (
     <div className="space-y-4">
       <Card className="p-4">
-        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+        <h4 className="font-semibold text-white mb-3 flex items-center">
           <Target className="w-4 h-4 mr-2 text-blue-500" />
           Important Keywords ({analysis!.keywords.length})
         </h4>
@@ -433,7 +433,7 @@ const EnhancedJobOptimizer: React.FC = () => {
       </Card>
 
       <Card className="p-4">
-        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+        <h4 className="font-semibold text-white mb-3 flex items-center">
           <Star className="w-4 h-4 mr-2 text-yellow-500" />
           Optional Skills ({analysis!.optionalSkills.length})
         </h4>
@@ -446,7 +446,7 @@ const EnhancedJobOptimizer: React.FC = () => {
                   <span className={`w-2 h-2 rounded-full mr-2 ${userHasSkill ? 'bg-green-500' : 'bg-gray-300'}`} />
                   <span className="text-sm">{skill.name}</span>
                   <span className={`ml-2 px-1 py-0.5 text-xs rounded ${
-                    skill.importance === 'important' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-600'
+                    skill.importance === 'important' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-200'
                   }`}>
                     {skill.importance}
                   </span>
@@ -463,11 +463,11 @@ const EnhancedJobOptimizer: React.FC = () => {
   return (
     <Card className="p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center">
+        <h2 className="text-2xl font-bold text-white mb-2 flex items-center">
           <Target className="w-6 h-6 mr-2 text-blue-600" />
           Enhanced Job-Specific CV Optimizer
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-200">
           Advanced AI-powered analysis to optimize your CV for specific job positions with detailed insights and recommendations.
         </p>
       </div>
@@ -476,7 +476,7 @@ const EnhancedJobOptimizer: React.FC = () => {
         {/* Job Details Input */}
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               Job Title
             </label>
             <input
@@ -488,7 +488,7 @@ const EnhancedJobOptimizer: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               Company
             </label>
             <input
@@ -503,7 +503,7 @@ const EnhancedJobOptimizer: React.FC = () => {
 
         {/* Job Description Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-white mb-2">
             Job Description
           </label>
           <TextArea
@@ -550,7 +550,7 @@ const EnhancedJobOptimizer: React.FC = () => {
                   className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm ${
                     activeTab === tab.id
                       ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      : 'border-transparent text-gray-500 hover:text-white hover:border-gray-300'
                   }`}
                 >
                   <tab.icon className="w-4 h-4 mr-2" />

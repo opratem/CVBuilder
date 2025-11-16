@@ -96,15 +96,15 @@ export const verifyATSCompatibility = (cv: CV): ATSCheckResult => {
     id: 'work-descriptions',
     name: 'Work Experience Descriptions',
     category: 'important',
-    passed: workExpWithBullets >= cv.workExperience.length * 0.8,
-    message: workExpWithBullets >= cv.workExperience.length * 0.8
+    passed: cv.workExperience.length > 0 && workExpWithBullets >= cv.workExperience.length * 0.8,
+    message: cv.workExperience.length > 0 && workExpWithBullets >= cv.workExperience.length * 0.8
       ? 'Most work experiences have detailed descriptions'
       : 'Add bullet points to describe your achievements and responsibilities',
     weight: 15
   });
 
   // Date Format Check
-  const hasValidDates = cv.workExperience.every(exp =>
+  const hasValidDates = cv.workExperience.length > 0 && cv.workExperience.every(exp =>
     exp.startDate && (exp.endDate || exp.isCurrentJob)
   );
   checks.push({
@@ -424,8 +424,8 @@ export const formatATSFriendlyContent = (element: HTMLElement): void => {
   const allElements = element.querySelectorAll('*');
   allElements.forEach(el => {
     const htmlEl = el as HTMLElement;
-    htmlEl.style.webkitFontSmoothing = 'antialiased';
-    htmlEl.style.mozOsxFontSmoothing = 'grayscale';
+    (htmlEl.style as any).webkitFontSmoothing = 'antialiased';
+    (htmlEl.style as any).mozOsxFontSmoothing = 'grayscale';
     htmlEl.style.textRendering = 'optimizeLegibility';
     htmlEl.style.fontKerning = 'normal';
 
@@ -485,10 +485,10 @@ const checkRequiredSections = (cv: CV): { score: number, missing: string[] } => 
   ];
 
   let score = 0;
-  const missing = [];
+  const missing: string[] = [];
 
   requiredSections.forEach(section => {
-    if (!cv[section]) {
+    if (!cv[section as keyof CV]) {
       missing.push(section);
     } else {
       score += 1;
@@ -499,6 +499,9 @@ const checkRequiredSections = (cv: CV): { score: number, missing: string[] } => 
 };
 
 const checkDateConsistency = (cv: CV): boolean => {
+  // Return false if no work experience exists
+  if (cv.workExperience.length === 0) return false;
+
   const dateFormats = [
     'MM/YYYY', 'MM/YY', 'YYYY/MM', 'YYYY/YY', 'MM/DD', 'DD/MM', 'DD/MM/YYYY', 'MM/DD/YYYY'
   ];

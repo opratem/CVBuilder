@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { useCVStore } from '../../store/cvStore';
 import Input from '../ui/Input';
 import DatePicker from '../ui/DatePicker';
@@ -44,7 +44,7 @@ const WorkExperienceForm: React.FC = () => {
   const parseDate = (dateString: string): Date | null => {
     if (!dateString) return null;
     const [year, month] = dateString.split('-');
-    return new Date(parseInt(year), parseInt(month) - 1);
+    return new Date(Number.parseInt(year), Number.parseInt(month) - 1);
   };
 
   return (
@@ -150,7 +150,7 @@ const WorkExperienceForm: React.FC = () => {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-text-primary mb-1">
                   Description & Responsibilities
                 </label>
                 <BulletPoints
