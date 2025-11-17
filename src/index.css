@@ -1,65 +1,93 @@
-/* Google Fonts & Material Icons */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+/* Google Fonts - Poppins for modern, beautiful typography */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables - Dark Navy + Teal Theme */
+/* CSS Variables - Black & Vibrant Green Theme */
 :root {
-  /* Primary Colors */
-  --color-primary: #13141C;
-  --color-primary-light: #1A1B26;
-  --color-primary-dark: #0D0E14;
+  /* Primary Colors - Pure Black */
+  --color-primary: #000000;
+  --color-primary-light: #0A0A0A;
+  --color-primary-dark: #000000;
 
-  /* Accent Colors */
-  --color-accent: #4EAA93;
-  --color-accent-light: #5CC4A8;
-  --color-accent-dark: #3D8977;
-  --color-accent-hover: #205A4F;
+  /* Accent Colors - Vibrant Neon Green */
+  --color-accent: #00FF88;
+  --color-accent-light: #33FFa3;
+  --color-accent-dark: #00CC6E;
+  --color-accent-hover: #00E67A;
 
-  /* Secondary Colors */
-  --color-secondary: #353B42;
-  --color-secondary-light: #454B52;
-  --color-secondary-dark: #252A30;
+  /* Secondary Colors - Dark Grays */
+  --color-secondary: #1A1A1A;
+  --color-secondary-light: #2A2A2A;
+  --color-secondary-dark: #0F0F0F;
 
   /* Text Colors */
   --color-text-primary: #FFFFFF;
-  --color-text-secondary: #E5E7EB;
-  --color-text-muted: #9CA3AF;
-  --color-text-disabled: #6B7280;
+  --color-text-secondary: #E8E8E8;
+  --color-text-muted: #A0A0A0;
+  --color-text-disabled: #666666;
 
   /* Background & Surfaces */
-  --color-bg-main: #13141C;
-  --color-bg-elevated: #1A1B26;
-  --color-bg-input: #252A30;
-  --color-bg-hover: rgba(78, 170, 147, 0.1);
-
-  /* Functional Colors */
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-error: #EF4444;
-  --color-info: #3B82F6;
+  --color-bg-main: #000000;
+  --color-bg-elevated: #121212;
+  --color-bg-input: #1F1F1F;
+  --color-bg-hover: rgba(0, 255, 136, 0.08);
 
   /* Borders */
-  --color-border: #454B52;
-  --color-border-light: #353B42;
+  --color-border: #2A2A2A;
+  --color-border-light: #333333;
+  --color-border-accent: #00FF88;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  /* Functional Colors */
+  --color-success: #00FF88;
+  --color-warning: #FFB800;
+  --color-error: #FF3B3B;
+  --color-info: #00BFFF;
+
+  /* Shadows & Glows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px rgba(0, 255, 136, 0.3);
+  --shadow-glow-lg: 0 0 40px rgba(0, 255, 136, 0.4);
 }
 
 /* Base Styles */
 body {
   background-color: var(--color-primary);
   color: var(--color-text-primary);
-  font-family: 'Inter', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+}
+
+/* Responsive Base Font Size */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 475px) {
+  html {
+    font-size: 13px;
+  }
 }
 
 .ats-export #cv-template,
@@ -470,7 +498,53 @@ html {
 /* Better mobile spacing */
 @media (max-width: 768px) {
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: clamp(0.75rem, 2vw, 1rem);
+    padding-right: clamp(0.75rem, 2vw, 1rem);
   }
+}
+
+/* Responsive padding and margins */
+.responsive-padding {
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.responsive-margin {
+  margin: clamp(0.5rem, 2vw, 1.5rem);
+}
+
+/* Glow effect for accent elements */
+.glow-accent {
+  box-shadow: var(--shadow-glow);
+}
+
+.glow-accent-lg {
+  box-shadow: var(--shadow-glow-lg);
+}
+
+/* Text glow effect */
+.text-glow {
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+/* Improved button hover states with glow */
+.btn-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Improved card hover effects with glow */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  border-color: var(--color-accent) !important;
 }

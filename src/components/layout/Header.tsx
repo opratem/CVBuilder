@@ -74,23 +74,23 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
   };
 
   return (
-    <header className="bg-primary-light shadow-lg border-b border-secondary-light px-6 py-4 flex items-center justify-between">
-      <div className="flex items-center space-x-4">
-        <div className="flex items-center space-x-2">
-          <FileText className="w-8 h-8 text-accent" />
+    <header className="bg-black shadow-dark-lg border-b border-border px-3 md:px-6 py-3 md:py-4 flex items-center justify-between sticky top-0 z-50 backdrop-blur-sm">
+      <div className="flex items-center space-x-2 md:space-x-4">
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <FileText className="w-6 h-6 md:w-8 md:h-8 text-accent glow-accent" />
           <div>
-            <h1 className="text-xl font-bold text-text-primary">CV Builder</h1>
-            <p className="text-sm text-text-muted">Professional Resume Creator</p>
+            <h1 className="text-base md:text-xl lg:text-2xl font-bold text-text-primary">CV Builder</h1>
+            <p className="text-xs md:text-sm text-text-muted hidden sm:block">Professional Resume Creator</p>
           </div>
         </div>
 
         {/* Version Selector - Only show in builder tab */}
         {activeTab === 'builder' && versions.length > 0 && (
-          <div className="relative">
+          <div className="relative hidden lg:block">
             <button
               type="button"
               onClick={() => setShowVersionDropdown(!showVersionDropdown)}
-              className="flex items-center space-x-2 px-3 py-2 bg-secondary hover:bg-secondary-light rounded-md border border-secondary-light transition-colors"
+              className="flex items-center space-x-2 px-3 py-2 bg-secondary hover:bg-secondary-light rounded-lg border border-border hover:border-accent/50 transition-all duration-200"
             >
               <div className="flex items-center space-x-2">
                 <Star className={`w-4 h-4 ${currentVersion?.is_active ? 'text-accent' : 'text-text-muted'}`} />
@@ -102,9 +102,9 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
             </button>
 
             {showVersionDropdown && (
-              <div className="absolute top-full mt-1 left-0 w-80 bg-secondary border border-secondary-light rounded-md shadow-lg z-50">
-                <div className="py-1 max-h-64 overflow-y-auto">
-                  <div className="px-3 py-2 border-b border-secondary-light">
+              <div className="absolute top-full mt-2 left-0 w-80 bg-secondary border border-border rounded-lg shadow-dark-lg shadow-glow z-50">
+                <div className="py-1 max-h-64 overflow-y-auto scrollbar-thin">
+                  <div className="px-3 py-2 border-b border-border">
                     <p className="text-xs font-medium text-text-muted uppercase tracking-wide">
                       Select Version ({versions.length})
                     </p>
@@ -126,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
                               {version.title}
                             </span>
                             {version.is_active && (
-                              <span className="px-2 py-0.5 text-xs bg-accent/20 text-accent-light rounded-full">
+                              <span className="px-2 py-0.5 text-xs bg-accent/20 text-accent rounded-full">
                                 Active
                               </span>
                             )}
@@ -148,14 +148,14 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
                   ))}
 
                   {onVersionSelect && (
-                    <div className="border-t border-secondary-light px-3 py-2">
+                    <div className="border-t border-border px-3 py-2">
                       <button
                         type="button"
                         onClick={() => {
                           onVersionSelect();
                           setShowVersionDropdown(false);
                         }}
-                        className="w-full text-left text-sm text-accent hover:text-accent-light font-medium"
+                        className="w-full text-left text-sm text-accent hover:text-accent-light font-medium transition-colors"
                       >
                         Manage All Versions →
                       </button>
@@ -168,7 +168,7 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
         )}
       </div>
 
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 md:space-x-3">
         <SaveStatus status={saveStatus} />
 
         <Button
@@ -178,8 +178,8 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
           className="flex items-center"
           disabled={saveStatus === 'saving'}
         >
-          <Save className="w-4 h-4 mr-2" />
-          Save
+          <Save className="w-3 h-3 md:w-4 md:h-4 md:mr-2" />
+          <span className="hidden md:inline">Save</span>
         </Button>
 
         <Button
@@ -188,8 +188,8 @@ const Header: React.FC<HeaderProps> = ({ onExport, onSave, activeTab, onVersionS
           size="sm"
           className="flex items-center"
         >
-          <Download className="w-4 h-4 mr-2" />
-          Export
+          <Download className="w-3 h-3 md:w-4 md:h-4 md:mr-2" />
+          <span className="hidden md:inline">Export</span>
         </Button>
       </div>
     </header>

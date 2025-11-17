@@ -236,7 +236,7 @@ const CVVersionManager: React.FC = () => {
             </Button>
             <Button
               onClick={() => setShowCreateModal(true)}
-              variant="purple"
+              variant="primary"
               className="flex items-center"
             >
               <Plus className="w-5 h-5 mr-2" />
@@ -304,7 +304,7 @@ const CVVersionManager: React.FC = () => {
             </p>
             <Button
               onClick={() => setShowCreateModal(true)}
-              variant="purple"
+              variant="primary"
               className="flex items-center mx-auto"
             >
               <Plus className="w-5 h-5 mr-2" />
@@ -496,7 +496,7 @@ const CVVersionManager: React.FC = () => {
                   </Button>
                   <Button
                     onClick={createNewVersion}
-                    variant="purple"
+                    variant="primary"
                     disabled={actionLoading === 'create' || !newVersionName.trim()}
                     className="flex items-center"
                   >
