@@ -23,72 +23,89 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
       id="cv-template"
       className="bg-white w-full max-w-[21cm] min-h-[29.7cm] mx-auto overflow-hidden"
       style={{
-        fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-        fontSize: '13px',
-        lineHeight: '1.4',
+        fontFamily: 'Georgia, "Times New Roman", Times, serif',
+        fontSize: '10.5pt',
+        lineHeight: '1.2',
         color: '#000000'
       }}
     >
-      {/* Header Section - Left aligned to match PDF */}
-      <div className="px-12 py-10">
-        <div className="text-left mb-6">
+      {/* Header Section - Centered to match PDF */}
+      <div className="px-12 py-8">
+        <div className="text-center mb-3">
           <h1
-            className="font-bold text-black mb-2"
+            className="font-bold text-black mb-1"
             style={{
-              fontSize: '32px',
+              fontSize: '20pt',
               lineHeight: '1.1',
-              letterSpacing: '-0.5px',
+              letterSpacing: '0',
               fontWeight: '700',
-              margin: '0 0 8px 0'
+              margin: '0 0 4px 0'
             }}
           >
             {personalInfo.fullName || 'Your Name'}
           </h1>
           <p
-            className="text-black font-medium"
+            className="text-black"
             style={{
-              fontSize: '16px',
+              fontSize: '12pt',
               lineHeight: '1.2',
-              fontWeight: '500',
-              margin: '0 0 16px 0'
+              fontWeight: '400',
+              margin: '0 0 8px 0'
             }}
           >
             {personalInfo.jobTitle || 'Your Job Title'}
           </p>
         </div>
 
-        {/* Contact Information - Two Column Layout to match PDF */}
-        <div className="py-4 my-6">
-          <div className="grid grid-cols-2 gap-4 text-black text-sm">
-            <div className="space-y-1">
-              {personalInfo.email && <div>Email: {personalInfo.email}</div>}
-              {personalInfo.phone && <div>Phone: {personalInfo.phone}</div>}
-              {personalInfo.website && <div>Website: {personalInfo.website}</div>}
-            </div>
-            <div className="space-y-1">
-              {personalInfo.location && <div>Location: {personalInfo.location}</div>}
-              {personalInfo.linkedin && <div>LinkedIn: {personalInfo.linkedin}</div>}
-              {personalInfo.github && <div>GitHub: {personalInfo.github}</div>}
-            </div>
-          </div>
+        {/* Contact Information - Two lines to match PDF */}
+        <div className="text-center mb-4">
+          <p
+            className="text-black"
+            style={{
+              fontSize: '10pt',
+              lineHeight: '1.4',
+              margin: '0 0 2px 0'
+            }}
+          >
+            {personalInfo.email && personalInfo.phone && (
+              <>{personalInfo.email} | {personalInfo.phone}</>
+            )}
+            {personalInfo.email && !personalInfo.phone && personalInfo.email}
+            {!personalInfo.email && personalInfo.phone && personalInfo.phone}
+          </p>
+          {(personalInfo.github || personalInfo.linkedin) && (
+            <p
+              className="text-black"
+              style={{
+                fontSize: '10pt',
+                lineHeight: '1.4',
+                margin: '0',
+                color: '#0000EE'
+              }}
+            >
+              {personalInfo.github && personalInfo.github.replace('https://', '')}
+              {personalInfo.github && personalInfo.linkedin && ' | '}
+              {personalInfo.linkedin && personalInfo.linkedin.replace('https://', '')}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="px-12 pb-12 space-y-8">
+      <div className="px-12 pb-10 space-y-6">
         {/* Professional Summary */}
         {personalInfo.summary && (
           <div>
             <h2
-              className="font-bold text-black uppercase tracking-wider mb-4 border-b-2 border-black pb-1"
+              className="font-bold text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1"
               style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                letterSpacing: '1px',
-                borderBottomWidth: '2px',
+                fontSize: '12pt',
+                fontWeight: '700',
+                letterSpacing: '0.5px',
+                borderBottomWidth: '1px',
                 borderBottomColor: '#000000',
-                paddingBottom: '4px',
-                marginBottom: '16px'
+                paddingBottom: '2px',
+                marginBottom: '8px'
               }}
             >
               PROFESSIONAL SUMMARY
@@ -96,10 +113,10 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
             <p
               className="text-black leading-relaxed"
               style={{
-                fontSize: '13px',
-                lineHeight: '1.5',
+                fontSize: '10pt',
+                lineHeight: '1.4',
                 textAlign: 'justify',
-                color: '#333333'
+                color: '#000000'
               }}
             >
               {personalInfo.summary}
@@ -111,36 +128,36 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
         {workExperience.length > 0 && (
           <div>
             <h2
-              className="font-bold text-black uppercase tracking-wider mb-4 border-b-2 border-black pb-1"
+              className="font-bold text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1"
               style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                letterSpacing: '1px',
-                borderBottomWidth: '2px',
+                fontSize: '12pt',
+                fontWeight: '700',
+                letterSpacing: '0.5px',
+                borderBottomWidth: '1px',
                 borderBottomColor: '#000000',
-                paddingBottom: '4px',
-                marginBottom: '16px'
+                paddingBottom: '2px',
+                marginBottom: '8px'
               }}
             >
               WORK EXPERIENCE
             </h2>
             {workExperience.map((exp, index) => (
-              <div key={exp.id} className={`${index > 0 ? 'mt-6' : ''}`}>
-                <div className="mb-2">
+              <div key={exp.id} className={`${index > 0 ? 'mt-4' : ''}`}>
+                <div className="mb-1">
                   <h3
                     className="font-bold text-black"
                     style={{
-                      fontSize: '15px',
-                      fontWeight: '600',
+                      fontSize: '11pt',
+                      fontWeight: '700',
                       color: '#000000'
                     }}
                   >
                     {exp.position}
                   </h3>
                   <div
-                    className="text-black font-medium text-right mt-1"
+                    className="text-black font-medium text-right mt-0"
                     style={{
-                      fontSize: '13px',
+                      fontSize: '9pt',
                       fontWeight: '400',
                       color: '#000000'
                     }}
@@ -150,11 +167,11 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                       'Date range'}
                   </div>
                 </div>
-                <div className="mb-3">
+                <div className="mb-2">
                   <span
                     className="font-medium text-black italic"
                     style={{
-                      fontSize: '14px',
+                      fontSize: '10pt',
                       fontWeight: '400',
                       color: '#000000',
                       fontStyle: 'italic'
@@ -165,13 +182,13 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                 </div>
                 {exp.bulletPoints.length > 0 && (
                   <ul
-                    className="list-disc text-black space-y-2 ml-6"
+                    className="list-disc text-black space-y-1 ml-5"
                     style={{
-                      fontSize: '13px',
-                      lineHeight: '1.5',
-                      color: '#333333',
-                      paddingLeft: '20px',
-                      marginBottom: '16px'
+                      fontSize: '10pt',
+                      lineHeight: '1.4',
+                      color: '#000000',
+                      paddingLeft: '15px',
+                      marginBottom: '12px'
                     }}
                   >
                     {exp.bulletPoints.map((point) => (
@@ -179,8 +196,8 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                         key={point.id}
                         className="text-justify"
                         style={{
-                          marginBottom: '6px',
-                          lineHeight: '1.5'
+                          marginBottom: '4px',
+                          lineHeight: '1.4'
                         }}
                       >
                         {point.text}
@@ -197,27 +214,27 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
         {education.length > 0 && (
           <div>
             <h2
-              className="font-bold text-black uppercase tracking-wider mb-4 border-b-2 border-black pb-1"
+              className="font-bold text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1"
               style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                letterSpacing: '1px',
-                borderBottomWidth: '2px',
+                fontSize: '12pt',
+                fontWeight: '700',
+                letterSpacing: '0.5px',
+                borderBottomWidth: '1px',
                 borderBottomColor: '#000000',
-                paddingBottom: '4px',
-                marginBottom: '16px'
+                paddingBottom: '2px',
+                marginBottom: '8px'
               }}
             >
               EDUCATION
             </h2>
             {education.map((edu) => (
-              <div key={edu.id} className="mb-4">
-                <div className="flex justify-between items-start mb-2">
+              <div key={edu.id} className="mb-3">
+                <div className="flex justify-between items-start mb-1">
                   <h3
                     className="font-bold text-black"
                     style={{
-                      fontSize: '15px',
-                      fontWeight: '600',
+                      fontSize: '11pt',
+                      fontWeight: '700',
                       color: '#000000'
                     }}
                   >
@@ -226,7 +243,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                   <span
                     className="text-black font-medium"
                     style={{
-                      fontSize: '13px',
+                      fontSize: '9pt',
                       fontWeight: '400',
                       color: '#000000'
                     }}
@@ -237,9 +254,9 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                   </span>
                 </div>
                 <p
-                  className="font-semibold text-black mb-2"
+                  className="font-semibold text-black mb-1"
                   style={{
-                    fontSize: '14px',
+                    fontSize: '10pt',
                     fontWeight: '500',
                     color: '#000000'
                   }}
@@ -250,9 +267,9 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                   <p
                     className="text-gray-700"
                     style={{
-                      fontSize: '13px',
-                      lineHeight: '1.5',
-                      color: '#333333'
+                      fontSize: '10pt',
+                      lineHeight: '1.4',
+                      color: '#000000'
                     }}
                   >
                     {edu.description}
@@ -267,15 +284,15 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
         {skills.length > 0 && (
           <div>
             <h2
-              className="font-bold text-black uppercase tracking-wider mb-4 border-b-2 border-black pb-1"
+              className="font-bold text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1"
               style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                letterSpacing: '1px',
-                borderBottomWidth: '2px',
+                fontSize: '12pt',
+                fontWeight: '700',
+                letterSpacing: '0.5px',
+                borderBottomWidth: '1px',
                 borderBottomColor: '#000000',
-                paddingBottom: '4px',
-                marginBottom: '16px'
+                paddingBottom: '2px',
+                marginBottom: '8px'
               }}
             >
               SKILLS
@@ -283,9 +300,9 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
             <div
               className="text-black"
               style={{
-                fontSize: '13px',
-                lineHeight: '1.5',
-                color: '#333333'
+                fontSize: '10pt',
+                lineHeight: '1.4',
+                color: '#000000'
               }}
             >
               {skills.map((skill, index) => (
@@ -301,27 +318,27 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
         {projects.length > 0 && (
           <div>
             <h2
-              className="font-bold text-black uppercase tracking-wider mb-4 border-b-2 border-black pb-1"
+              className="font-bold text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1"
               style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                letterSpacing: '1px',
-                borderBottomWidth: '2px',
+                fontSize: '12pt',
+                fontWeight: '700',
+                letterSpacing: '0.5px',
+                borderBottomWidth: '1px',
                 borderBottomColor: '#000000',
-                paddingBottom: '4px',
-                marginBottom: '16px'
+                paddingBottom: '2px',
+                marginBottom: '8px'
               }}
             >
               PROJECTS
             </h2>
             {projects.map((project) => (
-              <div key={project.id} className="mb-4">
-                <div className="flex justify-between items-baseline mb-2">
+              <div key={project.id} className="mb-3">
+                <div className="flex justify-between items-baseline mb-1">
                   <h3
                     className="font-bold text-black"
                     style={{
-                      fontSize: '15px',
-                      fontWeight: '600',
+                      fontSize: '11pt',
+                      fontWeight: '700',
                       color: '#000000'
                     }}
                   >
@@ -333,6 +350,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-blue-600 hover:text-blue-800 underline break-all"
+                      style={{ fontSize: '9pt' }}
                     >
                       {project.url}
                     </a>
@@ -340,9 +358,9 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                 </div>
                 {project.technologies && project.technologies.length > 0 && (
                   <p
-                    className="text-black mb-2"
+                    className="text-black mb-1"
                     style={{
-                      fontSize: '12px',
+                      fontSize: '9pt',
                       color: '#000000'
                     }}
                   >
@@ -354,9 +372,9 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                 <p
                   className="text-gray-700"
                   style={{
-                    fontSize: '13px',
-                    lineHeight: '1.5',
-                    color: '#333333'
+                    fontSize: '10pt',
+                    lineHeight: '1.4',
+                    color: '#000000'
                   }}
                 >
                   {project.description}
@@ -370,27 +388,27 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
         {certifications.length > 0 && (
           <div>
             <h2
-              className="font-bold text-black uppercase tracking-wider mb-4 border-b-2 border-black pb-1"
+              className="font-bold text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1"
               style={{
-                fontSize: '16px',
-                fontWeight: '600',
-                letterSpacing: '1px',
-                borderBottomWidth: '2px',
+                fontSize: '12pt',
+                fontWeight: '700',
+                letterSpacing: '0.5px',
+                borderBottomWidth: '1px',
                 borderBottomColor: '#000000',
-                paddingBottom: '4px',
-                marginBottom: '16px'
+                paddingBottom: '2px',
+                marginBottom: '8px'
               }}
             >
               CERTIFICATIONS
             </h2>
             {certifications.map((cert) => (
-              <div key={cert.id} className="mb-3">
+              <div key={cert.id} className="mb-2">
                 <div className="flex justify-between items-start">
                   <h3
                     className="font-bold text-black"
                     style={{
-                      fontSize: '14px',
-                      fontWeight: '600',
+                      fontSize: '11pt',
+                      fontWeight: '700',
                       color: '#000000'
                     }}
                   >
@@ -399,7 +417,7 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                   <span
                     className="text-black"
                     style={{
-                      fontSize: '13px',
+                      fontSize: '9pt',
                       color: '#000000'
                     }}
                   >
@@ -409,8 +427,8 @@ const ClassicTemplate: React.FC<ClassicTemplateProps> = ({ cv }) => {
                 <p
                   className="text-gray-700"
                   style={{
-                    fontSize: '13px',
-                    color: '#333333'
+                    fontSize: '10pt',
+                    color: '#000000'
                   }}
                 >
                   {cert.issuer}

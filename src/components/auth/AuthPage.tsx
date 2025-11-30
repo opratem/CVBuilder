@@ -1,13 +1,28 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import { FileText, Shield, Zap, Users, CheckCircle, Sparkles, TrendingUp, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 const AuthPage: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  // Check localStorage flags to determine initial state
+  const showSignup = localStorage.getItem('show_signup') === 'true';
+  const showLogin = localStorage.getItem('show_login') === 'true';
+
+  const [isLogin, setIsLogin] = useState(!showSignup);
   const { continueAsGuest } = useAuth();
+
+  // Clear the flags after reading them
+  useEffect(() => {
+    if (showSignup) {
+      localStorage.removeItem('show_signup');
+      setIsLogin(false);
+    } else if (showLogin) {
+      localStorage.removeItem('show_login');
+      setIsLogin(true);
+    }
+  }, [showSignup, showLogin]);
 
   return (
     <div className="min-h-screen bg-[#13141C]">

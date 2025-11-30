@@ -25,6 +25,7 @@ import KeywordSuggestions from './components/ui/KeywordSuggestions';
 import ProgressIndicator from './components/ui/ProgressIndicator';
 import SaveStatus from './components/ui/SaveStatus';
 import SectionReorder from './components/ui/SectionReorder';
+import ExportPanel from './components/ui/ExportPanel';
 import { SupabaseConnectionTest } from './components/ui/SupabaseConnectionTest';
 import { useCVStore } from './store/cvStore';
 import { useProgressTracking } from './hooks/useProgressTracking';
@@ -65,11 +66,11 @@ const SortableSection: React.FC<SortableSectionProps> = ({ id, children, section
         }
       }}
       style={style}
-      className={`scroll-mt-20 bg-secondary rounded-lg shadow-lg border border-secondary-light p-6 transition-all duration-200 hover:border-accent/50 hover:shadow-xl hover-lift ${
+      className={`scroll-mt-20 bg-secondary rounded-lg shadow-lg border border-secondary-light p-8 transition-all duration-200 hover:border-accent/50 hover:shadow-xl hover-lift ${
         isDragging ? 'ring-2 ring-accent z-50' : ''
       }`}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-4">
         {/* Drag Handle */}
         <button
           type="button"
@@ -773,22 +774,30 @@ const CVBuilderApp: React.FC = () => {
 
                 {/* Mobile Preview Panel */}
                 {isMobilePreviewVisible && (
-                  <div className="mt-4 bg-secondary rounded-xl shadow-2xl border border-secondary-light overflow-hidden animate-slideIn">
-                    <div className="bg-gradient-to-r from-accent-dark to-accent p-4 flex items-center justify-between">
-                      <div className="flex items-center space-x-2 text-white">
-                        <FileText className="w-5 h-5" />
-                        <h3 className="font-bold">Live Preview</h3>
+                  <div className="mt-4 space-y-4 animate-slideIn">
+                    {/* CV Preview */}
+                    <div className="bg-secondary rounded-xl shadow-2xl border border-secondary-light overflow-hidden">
+                      <div className="bg-gradient-to-r from-accent-dark to-accent p-4 flex items-center justify-between">
+                        <div className="flex items-center space-x-2 text-white">
+                          <FileText className="w-5 h-5" />
+                          <h3 className="font-bold">Live Preview</h3>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setIsMobilePreviewVisible(false)}
+                          className="p-1.5 hover:bg-white/20 rounded-lg transition-colors text-white"
+                        >
+                          ✕
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setIsMobilePreviewVisible(false)}
-                        className="p-1.5 hover:bg-white/20 rounded-lg transition-colors text-white"
-                      >
-                        ✕
-                      </button>
+                      <div className="bg-white p-1">
+                        <CVPreview isMobile />
+                      </div>
                     </div>
-                    <div className="bg-white p-4">
-                      <CVPreview isMobile />
+
+                    {/* Export Panel */}
+                    <div className="bg-secondary rounded-xl shadow-2xl border border-secondary-light overflow-hidden">
+                      <ExportPanel />
                     </div>
                   </div>
                 )}
@@ -805,7 +814,7 @@ const CVBuilderApp: React.FC = () => {
                 {/* Form Sections with Drag and Drop */}
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={sectionOrder.map(s => s.id)} strategy={verticalListSortingStrategy}>
-                    <div className="space-y-5 pb-8">
+                    <div className="space-y-8 pb-8">
                       {sectionOrder
                         .filter(section => section.enabled)
                         .map((section) => {
@@ -829,12 +838,13 @@ const CVBuilderApp: React.FC = () => {
                 </DndContext>
               </div>
 
-              {/* Right: Preview Section - Fixed on desktop */}
+              {/* Right: Preview and Helper Sections */}
               <div className="hidden lg:block w-[480px] xl:w-[520px] flex-shrink-0">
-                <div className="sticky top-4 space-y-4" style={{ maxHeight: 'calc(100vh - 2rem)' }}>
+                <div className="space-y-4">
+                  {/* 1. Live Preview Section - CV Template Only */}
                   <div className="bg-secondary rounded-lg shadow-xl border border-secondary-light overflow-hidden hover-lift">
                     {/* Preview Header */}
-                    <div className="px-5 py-4 border-b border-secondary-light bg-gradient-to-r from-primary-dark to-primary-light flex items-center justify-between">
+                    <div className="px-5 py-3 border-b border-secondary-light bg-gradient-to-r from-primary-dark to-primary-light flex items-center justify-between">
                       <div className="flex items-center">
                         <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center mr-3">
                           <FileText className="w-5 h-5 text-accent" />
@@ -909,25 +919,34 @@ const CVBuilderApp: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Preview Content - Independently scrollable */}
+                    {/* Preview Content */}
                     <div
                       ref={previewRef}
-                      className="p-5 bg-gradient-to-br from-gray-50 to-white overflow-y-auto scrollbar-thin"
-                      style={{ maxHeight: 'calc(100vh - 16rem)' }}
+                      className="p-0 bg-gradient-to-br from-gray-50 to-white overflow-y-auto scrollbar-thin"
+                      style={{ maxHeight: '1000px', minHeight: '900px' }}
                     >
                       <div
-                        className="shadow-lg transition-transform duration-200 origin-top"
+                        className="transition-transform duration-200 origin-top"
                         style={{ transform: `scale(${previewZoom / 100})` }}
                       >
-                        <CVPreview />
+                        <CVPreview hideControls />
                       </div>
                     </div>
                   </div>
 
-                  {/* Guidance Cards below preview */}
-                  <div className="space-y-3 overflow-y-auto scrollbar-thin" style={{ maxHeight: 'calc(100vh - 28rem)' }}>
-                    <ATSGuidance className="bg-secondary rounded-lg shadow-lg border border-secondary-light hover-lift" />
-                    <KeywordSuggestions className="bg-secondary rounded-lg shadow-lg border border-secondary-light hover-lift" />
+                  {/* 2. ATS Check & Export Options Section */}
+                  <div className="bg-secondary rounded-lg shadow-xl border border-secondary-light overflow-hidden hover-lift">
+                    <ExportPanel />
+                  </div>
+
+                  {/* 3. Keyword Suggestions Section */}
+                  <div className="bg-secondary rounded-lg shadow-lg border border-secondary-light hover-lift">
+                    <KeywordSuggestions className="" />
+                  </div>
+
+                  {/* 4. ATS Optimization Guide Section */}
+                  <div className="bg-secondary rounded-lg shadow-lg border border-secondary-light hover-lift">
+                    <ATSGuidance className="" />
                   </div>
                 </div>
               </div>

@@ -4,30 +4,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Black & Vibrant Green Theme
+        // Black & Cool Green Theme
         primary: {
           DEFAULT: '#000000',
           light: '#0A0A0A',
           dark: '#000000',
         },
         accent: {
-          DEFAULT: '#00FF88', // Vibrant neon green
-          light: '#33FFa3',
-          dark: '#00CC6E',
-          hover: '#00E67A',
-          glow: 'rgba(0, 255, 136, 0.3)',
+          DEFAULT: '#0d9488', // Cool teal-green
+          light: '#14b8a6',
+          dark: '#0f766e',
+          hover: '#0ea39a',
+          glow: 'rgba(13, 148, 136, 0.3)',
         },
         emerald: {
-          50: '#E6FFF4',
-          100: '#B3FFE0',
-          200: '#80FFCC',
-          300: '#4DFFB8',
-          400: '#1AFFA4',
-          500: '#00FF88', // Main vibrant green
-          600: '#00CC6E',
-          700: '#009954',
-          800: '#00663A',
-          900: '#003320',
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          200: '#99f6e4',
+          300: '#5eead4',
+          400: '#2dd4bf',
+          500: '#0d9488', // Main cool green
+          600: '#0f766e',
+          700: '#115e59',
+          800: '#134e4a',
+          900: '#134e4a',
         },
         secondary: {
           DEFAULT: '#1A1A1A',
@@ -45,16 +45,17 @@ export default {
           elevated: '#121212',
           card: '#1A1A1A',
           input: '#1F1F1F',
-          hover: 'rgba(0, 255, 136, 0.08)',
+          hover: 'rgba(13, 148, 136, 0.08)',
         },
         border: {
           DEFAULT: '#2A2A2A',
           light: '#333333',
-          accent: '#00FF88',
+          accent: '#0d9488',
         },
       },
       fontFamily: {
         sans: ['Poppins', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Georgia', 'Times New Roman', 'Times', 'serif'],
         display: ['Poppins', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
@@ -97,9 +98,9 @@ export default {
         '3xl': '3rem',
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(0, 255, 136, 0.3)',
-        'glow-lg': '0 0 40px rgba(0, 255, 136, 0.4)',
-        'glow-sm': '0 0 10px rgba(0, 255, 136, 0.2)',
+        'glow': '0 0 20px rgba(13, 148, 136, 0.3)',
+        'glow-lg': '0 0 40px rgba(13, 148, 136, 0.4)',
+        'glow-sm': '0 0 10px rgba(13, 148, 136, 0.2)',
         'dark': '0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3)',
         'dark-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3)',
       },
@@ -119,8 +120,8 @@ export default {
           '100%': { opacity: '1' },
         },
         glow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(0, 255, 136, 0.3)' },
-          '50%': { boxShadow: '0 0 40px rgba(0, 255, 136, 0.5)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(13, 148, 136, 0.3)' },
+          '50%': { boxShadow: '0 0 40px rgba(13, 148, 136, 0.5)' },
         },
         pulseGlow: {
           '0%, 100%': { opacity: '1' },

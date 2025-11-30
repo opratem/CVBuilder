@@ -19,7 +19,7 @@
     "@types/jspdf": "^2.0.0",
     "@types/react-datepicker": "^7.0.0",
     "autoprefixer": "^10.4.21",
-    "caniuse-lite": "^1.0.30001753",
+    "caniuse-lite": "^1.0.30001757",
     "docx": "^9.5.0",
     "file-saver": "^2.0.5",
     "html2pdf.js": "^0.10.1",
@@ -32,8 +32,8 @@
     "react-datepicker": "^8.4.0",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
-    "zustand": "^4.5.2",
-    "same-runtime": "^0.0.1"
+    "same-runtime": "^0.0.1",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

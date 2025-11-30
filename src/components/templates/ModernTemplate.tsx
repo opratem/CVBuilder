@@ -9,38 +9,108 @@ const ModernTemplate: React.FC<ModernTemplateProps> = ({ cv }) => {
   const { personalInfo, education, workExperience, skills, projects } = cv;
 
   return (
-    <div id="cv-template" className="bg-white w-full max-w-[21cm] min-h-[29.7cm] mx-auto overflow-hidden font-sans text-black">
-      {/* Professional Header - Clean and ATS-friendly */}
-      <div className="text-center py-8 px-8">
-        <h1 className="text-4xl font-bold mb-2 tracking-wide text-black">
-          {personalInfo.fullName || 'YOUR NAME'}
-        </h1>
-        <p className="text-lg mb-6 text-black font-medium">
-          {personalInfo.jobTitle || 'Your Job Title'}
-        </p>
+    <div
+      id="cv-template"
+      className="bg-white w-full max-w-[21cm] min-h-[29.7cm] mx-auto overflow-hidden"
+      style={{
+        fontFamily: 'Georgia, "Times New Roman", Times, serif',
+        fontSize: '10.5pt',
+        lineHeight: '1.2',
+        color: '#000000'
+      }}
+    >
+      {/* Professional Header - Centered to match PDF */}
+      <div className="px-12 py-8">
+        <div className="text-center mb-3">
+          <h1
+            className="font-bold text-black mb-1"
+            style={{
+              fontSize: '20pt',
+              lineHeight: '1.1',
+              letterSpacing: '0',
+              fontWeight: '700',
+              margin: '0 0 4px 0'
+            }}
+          >
+            {personalInfo.fullName || 'Your Name'}
+          </h1>
+          <p
+            className="text-black"
+            style={{
+              fontSize: '12pt',
+              lineHeight: '1.2',
+              fontWeight: '400',
+              margin: '0 0 8px 0'
+            }}
+          >
+            {personalInfo.jobTitle || 'Your Job Title'}
+          </p>
+        </div>
 
-        {/* Contact Information - Clean horizontal layout with separators */}
-        <div className="text-sm text-black">
-          {[
-            personalInfo.email,
-            personalInfo.phone,
-            personalInfo.location,
-            personalInfo.linkedin,
-            personalInfo.website,
-            personalInfo.github
-          ].filter(Boolean).join(' | ')}
+        {/* Contact Information - Two lines to match PDF */}
+        <div className="text-center mb-4">
+          <p
+            className="text-black"
+            style={{
+              fontSize: '10pt',
+              lineHeight: '1.4',
+              margin: '0 0 2px 0'
+            }}
+          >
+            {personalInfo.email && personalInfo.phone && (
+              <>{personalInfo.email} | {personalInfo.phone}</>
+            )}
+            {personalInfo.email && !personalInfo.phone && personalInfo.email}
+            {!personalInfo.email && personalInfo.phone && personalInfo.phone}
+          </p>
+          {(personalInfo.github || personalInfo.linkedin) && (
+            <p
+              className="text-black"
+              style={{
+                fontSize: '10pt',
+                lineHeight: '1.4',
+                margin: '0',
+                color: '#0000EE'
+              }}
+            >
+              {personalInfo.github && personalInfo.github.replace('https://', '')}
+              {personalInfo.github && personalInfo.linkedin && ' | '}
+              {personalInfo.linkedin && personalInfo.linkedin.replace('https://', '')}
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Content */}
-      <div className="px-8 py-6">
-        {/* Summary */}
+      {/* Content Section */}
+      <div className="px-12 pb-10 space-y-6">
+        {/* Professional Summary */}
         {personalInfo.summary && (
-          <div className="mb-8">
-            <h2 className="text-lg font-bold text-black mb-3 uppercase tracking-wide border-b border-black pb-1">
+          <div>
+            <h2
+              className="font-bold text-black uppercase tracking-wider mb-3 border-b-2 border-black pb-1"
+              style={{
+                fontSize: '12pt',
+                fontWeight: '700',
+                letterSpacing: '0.5px',
+                borderBottomWidth: '1px',
+                borderBottomColor: '#000000',
+                paddingBottom: '2px',
+                marginBottom: '8px'
+              }}
+            >
               PROFESSIONAL SUMMARY
             </h2>
-            <p className="text-black leading-relaxed text-justify">{personalInfo.summary}</p>
+            <p
+              className="text-black leading-relaxed"
+              style={{
+                fontSize: '10pt',
+                lineHeight: '1.4',
+                textAlign: 'justify',
+                color: '#000000'
+              }}
+            >
+              {personalInfo.summary}
+            </p>
           </div>
         )}
 

@@ -6,18 +6,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables - Black & Vibrant Green Theme */
+/* CSS Variables - Black & Cool Green Theme */
 :root {
   /* Primary Colors - Pure Black */
   --color-primary: #000000;
   --color-primary-light: #0A0A0A;
   --color-primary-dark: #000000;
 
-  /* Accent Colors - Vibrant Neon Green */
-  --color-accent: #00FF88;
-  --color-accent-light: #33FFa3;
-  --color-accent-dark: #00CC6E;
-  --color-accent-hover: #00E67A;
+  /* Accent Colors - Cool Teal-Green */
+  --color-accent: #0d9488;
+  --color-accent-light: #14b8a6;
+  --color-accent-dark: #0f766e;
+  --color-accent-hover: #0ea39a;
 
   /* Secondary Colors - Dark Grays */
   --color-secondary: #1A1A1A;
@@ -34,15 +34,15 @@
   --color-bg-main: #000000;
   --color-bg-elevated: #121212;
   --color-bg-input: #1F1F1F;
-  --color-bg-hover: rgba(0, 255, 136, 0.08);
+  --color-bg-hover: rgba(13, 148, 136, 0.08);
 
   /* Borders */
   --color-border: #2A2A2A;
   --color-border-light: #333333;
-  --color-border-accent: #00FF88;
+  --color-border-accent: #0d9488;
 
   /* Functional Colors */
-  --color-success: #00FF88;
+  --color-success: #0d9488;
   --color-warning: #FFB800;
   --color-error: #FF3B3B;
   --color-info: #00BFFF;
@@ -52,8 +52,8 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 20px rgba(0, 255, 136, 0.3);
-  --shadow-glow-lg: 0 0 40px rgba(0, 255, 136, 0.4);
+  --shadow-glow: 0 0 20px rgba(13, 148, 136, 0.3);
+  --shadow-glow-lg: 0 0 40px rgba(13, 148, 136, 0.4);
 }
 
 /* Base Styles */
@@ -523,7 +523,7 @@ html {
 
 /* Text glow effect */
 .text-glow {
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+  text-shadow: 0 0 10px rgba(13, 148, 136, 0.5);
 }
 
 /* Improved button hover states with glow */
