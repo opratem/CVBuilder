@@ -4,11 +4,109 @@ import { useAuth } from '../../contexts/AuthContext';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Card from '../ui/Card';
-import { LogIn, Eye, EyeOff, ArrowLeft, Mail, AlertTriangle, Info } from 'lucide-react';
+import { LogIn, Eye, EyeOff, ArrowLeft, Mail, AlertTriangle, Info, WifiOff, Clock, ShieldAlert, ServerCrash } from 'lucide-react';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
 }
+
+// Error display component with different styling based on error type
+const ErrorDisplay: React.FC<{
+  error: string | React.ReactNode;
+  errorType?: string;
+  onResendVerification?: () => void;
+}> = ({ error, errorType, onResendVerification }) => {
+  const getErrorIcon = () => {
+    switch (errorType) {
+      case 'network':
+      case 'cors':
+        return <WifiOff className="w-5 h-5 text-orange-400 mr-2 mt-0.5 flex-shrink-0" />;
+      case 'timeout':
+        return <Clock className="w-5 h-5 text-yellow-400 mr-2 mt-0.5 flex-shrink-0" />;
+      case 'auth':
+        return <ShieldAlert className="w-5 h-5 text-red-400 mr-2 mt-0.5 flex-shrink-0" />;
+      case 'server':
+        return <ServerCrash className="w-5 h-5 text-red-400 mr-2 mt-0.5 flex-shrink-0" />;
+      default:
+        return <AlertTriangle className="w-5 h-5 text-red-400 mr-2 mt-0.5 flex-shrink-0" />;
+    }
+  };
+
+  const getErrorStyles = () => {
+    switch (errorType) {
+      case 'network':
+      case 'cors':
+        return 'bg-orange-900/20 border-orange-500/30';
+      case 'timeout':
+        return 'bg-yellow-900/20 border-yellow-500/30';
+      default:
+        return 'bg-red-900/20 border-red-500/30';
+    }
+  };
+
+  const getTextColor = () => {
+    switch (errorType) {
+      case 'network':
+      case 'cors':
+        return 'text-orange-400';
+      case 'timeout':
+        return 'text-yellow-400';
+      default:
+        return 'text-red-400';
+    }
+  };
+
+  // Format error message - handle newlines in the message
+  const formatErrorMessage = (msg: string | React.ReactNode) => {
+    if (typeof msg !== 'string') return msg;
+
+    return msg.split('\n').map((line, index) => (
+      <span key={index}>
+        {line}
+        {index < msg.split('\n').length - 1 && <br />}
+      </span>
+    ));
+  };
+
+  return (
+    <div className={`p-4 border rounded-md ${getErrorStyles()}`}>
+      <div className="flex items-start">
+        {getErrorIcon()}
+        <div className="flex-1">
+          <div className={`text-sm ${getTextColor()} whitespace-pre-wrap`}>
+            {typeof error === 'string' ? formatErrorMessage(error) : error}
+          </div>
+
+          {/* Show retry hint for network errors */}
+          {(errorType === 'network' || errorType === 'cors') && (
+            <div className="mt-2 pt-2 border-t border-orange-500/20">
+              <p className="text-xs text-orange-400/80">
+                <strong>Troubleshooting tips:</strong>
+              </p>
+              <ul className="text-xs text-orange-400/70 mt-1 list-disc list-inside space-y-0.5">
+                <li>Check your internet connection</li>
+                <li>Try refreshing the page</li>
+                <li>Disable any VPN or proxy</li>
+                <li>Clear browser cache and cookies</li>
+              </ul>
+            </div>
+          )}
+
+          {/* Show verification resend option */}
+          {errorType === 'validation' && onResendVerification && (
+            <button
+              type="button"
+              onClick={onResendVerification}
+              className="mt-2 text-sm underline hover:text-red-300 font-medium text-red-400"
+            >
+              Resend verification email
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const { login, isLoading, resetPassword, resendVerification } = useAuth();
@@ -27,6 +125,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(isDeviceRemembered());
   const [error, setError] = useState<string | React.ReactNode>('');
+  const [errorType, setErrorType] = useState<string>('');
   const [success, setSuccess] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
@@ -63,6 +162,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setErrorType('');
     setSuccess('');
 
     // Validate fields
@@ -71,37 +171,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
 
     if (Object.keys(formErrors).length > 0 || !email || !password) {
       setError('Please fix all errors before submitting');
+      setErrorType('validation');
       return;
     }
 
     const result = await login(email, password, rememberDevice);
     if (!result.success) {
-      if (result.error?.includes('verify')) {
-        setError(
-          <div className="space-y-2">
-            <p>{result.error}</p>
-            <button
-              type="button"
-              onClick={handleResendVerification}
-              className="text-sm underline hover:text-red-800 font-medium"
-            >
-              Resend verification email
-            </button>
-          </div>
-        );
-      } else {
-        setError(result.error || 'Invalid email or password');
-      }
+      setError(result.error || 'Invalid email or password');
+      setErrorType((result as any).errorType || 'unknown');
     }
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setErrorType('');
     setSuccess('');
 
     if (!email) {
       setError('Please enter your email address');
+      setErrorType('validation');
       return;
     }
 
@@ -111,6 +200,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       setShowForgotPassword(false);
     } else {
       setError(result.error || 'Failed to send reset email');
+      setErrorType((result as any).errorType || 'unknown');
     }
   };
 
@@ -118,9 +208,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     if (email) {
       const result = await resendVerification(email);
       if (result.success) {
+        setError('');
+        setErrorType('');
         setSuccess('Verification email sent! Please check your inbox and spam folder.');
       } else {
         setError(result.error || 'Failed to resend verification email');
+        setErrorType((result as any).errorType || 'unknown');
       }
     }
   };
@@ -154,9 +247,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-900/20 border border-red-500/30 rounded-md">
-              <p className="text-sm text-red-400">{error}</p>
-            </div>
+            <ErrorDisplay error={error} errorType={errorType} />
           )}
 
           {success && (
@@ -286,9 +377,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         </div>
 
         {error && (
-          <div className="p-3 bg-red-900/20 border border-red-500/30 rounded-md">
-            <div className="text-sm text-red-400">{error}</div>
-          </div>
+          <ErrorDisplay
+            error={error}
+            errorType={errorType}
+            onResendVerification={errorType === 'validation' ? handleResendVerification : undefined}
+          />
         )}
 
         {success && (
