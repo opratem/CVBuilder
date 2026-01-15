@@ -92,7 +92,7 @@ const SortableSection: React.FC<SortableSectionProps> = ({ id, children, section
 };
 
 const CVBuilderApp: React.FC = () => {
-  const { isAuthenticated, isLoading, user, isGuestMode } = useAuth();
+  const { isAuthenticated, isInitializing, user, isGuestMode } = useAuth();
   const { resetCV, saveCV, loadCV, saveStatus, updateCV, updateSectionOrder, cv } = useCVStore();
   const progressSteps = useProgressTracking();
   const [isMobilePreviewVisible, setIsMobilePreviewVisible] = useState(false);
@@ -157,11 +157,11 @@ const CVBuilderApp: React.FC = () => {
 
   // Load CV data when user is authenticated
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
+    if (isAuthenticated && !isInitializing) {
       loadCV();
       loadVersions();
     }
-  }, [isAuthenticated, isLoading, loadCV]);
+  }, [isAuthenticated, isInitializing, loadCV]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -253,7 +253,7 @@ const CVBuilderApp: React.FC = () => {
     }
   };
 
-  if (isLoading) {
+  if (isInitializing) {
     return (
       <div className="min-h-screen bg-primary flex items-center justify-center">
         <div className="text-center">

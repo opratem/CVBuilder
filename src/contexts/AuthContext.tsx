@@ -9,16 +9,26 @@ interface User {
   createdAt: string;
 }
 
+type ErrorType = 'network' | 'cors' | 'auth' | 'validation' | 'timeout' | 'server' | 'unknown';
+
+interface AuthResult {
+  success: boolean;
+  error?: string;
+  errorType?: ErrorType;
+  needsVerification?: boolean;
+}
+
 interface AuthContextType {
   user: AuthUser | null;
-  login: (email: string, password: string, rememberDevice?: boolean) => Promise<{ success: boolean; error?: string; needsVerification?: boolean }>;
-  register: (data: { email: string; password: string; fullName: string; phone?: string }, rememberDevice?: boolean) => Promise<{ success: boolean; error?: string; needsVerification?: boolean }>;
+  login: (email: string, password: string, rememberDevice?: boolean) => Promise<AuthResult>;
+  register: (data: { email: string; password: string; fullName: string; phone?: string }, rememberDevice?: boolean) => Promise<AuthResult>;
   logout: () => Promise<void>;
-  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>;
-  resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
-  updateProfile: (updates: Partial<{ fullName: string; phone: string }>) => Promise<{ success: boolean; error?: string }>;
-  updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string }>;
-  isLoading: boolean;
+  resetPassword: (email: string) => Promise<AuthResult>;
+  resendVerification: (email: string) => Promise<AuthResult>;
+  updateProfile: (updates: Partial<{ fullName: string; phone: string }>) => Promise<AuthResult>;
+  updatePassword: (newPassword: string) => Promise<AuthResult>;
+  isLoading: boolean; // For form submission states (buttons, etc.)
+  isInitializing: boolean; // For initial app load - shows loading screen
   isAuthenticated: boolean;
   continueAsGuest: () => void;
   isGuestMode: boolean;
@@ -40,7 +50,8 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(true); // Only for initial auth check
+  const [isLoading, setIsLoading] = useState(false); // For form submissions
   const [isGuestMode, setIsGuestMode] = useState(false);
 
   // Session management helper functions
@@ -61,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Guest mode function
   const continueAsGuest = () => {
     setIsGuestMode(true);
-    setIsLoading(false);
+    setIsInitializing(false);
     localStorage.setItem('guest_mode', 'true');
   };
 
@@ -77,17 +88,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (guestMode === 'true') {
           console.log('Guest mode enabled');
           setIsGuestMode(true);
-          setIsLoading(false);
+          setIsInitializing(false);
           return;
         }
 
         // Set a longer timeout for initial auth check with proper error handling
         loadingTimeout = setTimeout(() => {
-          if (isMounted && isLoading) {
+          if (isMounted && isInitializing) {
             console.warn('Auth initialization taking longer than expected...');
             console.warn('This may indicate network connectivity issues with Supabase');
             console.warn('The app will continue to try in the background');
-            setIsLoading(false); // Stop blocking the UI
+            setIsInitializing(false); // Stop blocking the UI
           }
         }, 8000); // Increased timeout to allow more time
 
@@ -112,7 +123,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }
 
           clearTimeout(loadingTimeout);
-          setIsLoading(false);
+          setIsInitializing(false);
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
@@ -120,7 +131,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           // Clear potentially corrupted session data
           clearRememberedSession();
           setUser(null);
-          setIsLoading(false);
+          setIsInitializing(false);
 
           // Show user-friendly error message
           if (error instanceof Error && error.message.includes('timeout')) {
@@ -136,7 +147,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const { data: { subscription } } = authService.onAuthStateChange((authUser) => {
       if (isMounted) {
         setUser(authUser);
-        setIsLoading(false);
+        setIsInitializing(false);
         clearTimeout(loadingTimeout);
 
         // Clear remembered session if user logs out
@@ -156,7 +167,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (email: string, password: string, rememberDevice = false) => {
-    setIsLoading(true);
+    setIsLoading(true); // This only affects form buttons, NOT the main app loading screen
     try {
       const result = await authService.signIn({ email, password });
       if (result.success && result.user) {
@@ -243,6 +254,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     updateProfile,
     updatePassword,
     isLoading,
+    isInitializing,
     isAuthenticated: !!user,
     continueAsGuest,
     isGuestMode

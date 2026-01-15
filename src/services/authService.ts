@@ -15,6 +15,7 @@ export interface AuthResponse {
   success: boolean
   user?: AuthUser
   error?: string
+  errorType?: 'network' | 'cors' | 'auth' | 'validation' | 'timeout' | 'server' | 'unknown'
   needsVerification?: boolean
 }
 
@@ -30,7 +31,100 @@ export interface SignInData {
   password: string
 }
 
+// Error categories for better user feedback
+type ErrorCategory = 'network' | 'cors' | 'auth' | 'validation' | 'timeout' | 'server' | 'unknown'
+
+interface ParsedError {
+  message: string
+  category: ErrorCategory
+  technicalDetails?: string
+}
+
 class AuthService {
+  // Parse and categorize errors for better user feedback
+  private parseError(error: unknown): ParsedError {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    const lowerMessage = errorMessage.toLowerCase()
+
+    // Network/CORS errors - these often come with "Failed to fetch" or "NetworkError"
+    if (
+      lowerMessage.includes('failed to fetch') ||
+      lowerMessage.includes('networkerror') ||
+      lowerMessage.includes('network error') ||
+      lowerMessage.includes('net::err_') ||
+      lowerMessage.includes('cors') ||
+      lowerMessage.includes('cross-origin') ||
+      lowerMessage.includes('load failed')
+    ) {
+      return {
+        message: 'Unable to connect to the authentication server. This could be due to:\n• Network connectivity issues\n• The service being temporarily unavailable\n• Browser security settings blocking the request\n\nPlease check your internet connection and try again.',
+        category: 'network',
+        technicalDetails: errorMessage
+      }
+    }
+
+    // Timeout errors
+    if (lowerMessage.includes('timeout') || lowerMessage.includes('timed out')) {
+      return {
+        message: 'The request took too long to complete. This usually indicates a slow or unstable internet connection. Please check your connection and try again.',
+        category: 'timeout',
+        technicalDetails: errorMessage
+      }
+    }
+
+    // Authentication-specific errors
+    if (lowerMessage.includes('invalid login credentials') || lowerMessage.includes('invalid password')) {
+      return {
+        message: 'Invalid email or password. Please check your credentials and try again.',
+        category: 'auth'
+      }
+    }
+
+    if (lowerMessage.includes('email not confirmed') || lowerMessage.includes('email not verified')) {
+      return {
+        message: 'Please verify your email address before signing in. Check your inbox (and spam folder) for the verification link.',
+        category: 'validation'
+      }
+    }
+
+    if (lowerMessage.includes('user already registered') || lowerMessage.includes('already exists')) {
+      return {
+        message: 'An account with this email already exists. Please sign in instead, or use a different email address.',
+        category: 'validation'
+      }
+    }
+
+    if (lowerMessage.includes('password') && lowerMessage.includes('weak')) {
+      return {
+        message: 'Your password is too weak. Please use a stronger password with at least 8 characters, including uppercase, lowercase, and numbers.',
+        category: 'validation'
+      }
+    }
+
+    if (lowerMessage.includes('rate limit') || lowerMessage.includes('too many requests')) {
+      return {
+        message: 'Too many attempts. Please wait a few minutes before trying again.',
+        category: 'server'
+      }
+    }
+
+    // Server errors
+    if (lowerMessage.includes('500') || lowerMessage.includes('internal server') || lowerMessage.includes('service unavailable')) {
+      return {
+        message: 'The authentication service is temporarily unavailable. Please try again in a few minutes.',
+        category: 'server',
+        technicalDetails: errorMessage
+      }
+    }
+
+    // Unknown errors - provide generic but helpful message
+    return {
+      message: 'An unexpected error occurred. Please try again. If the problem persists, check your internet connection or try again later.',
+      category: 'unknown',
+      technicalDetails: errorMessage
+    }
+  }
+
   // Timeout wrapper to prevent hanging requests with improved timeout
   private async withTimeout<T>(promise: Promise<T>, timeoutMs = 15000): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -63,10 +157,10 @@ class AuthService {
         return await operation();
       } catch (error) {
         lastError = error as Error;
+        const parsedError = this.parseError(error);
 
-        // Don't retry on authentication errors
-        if (lastError.message.includes('Invalid login credentials') ||
-            lastError.message.includes('Email not confirmed')) {
+        // Don't retry on authentication/validation errors
+        if (parsedError.category === 'auth' || parsedError.category === 'validation') {
           throw lastError;
         }
 
@@ -83,23 +177,35 @@ class AuthService {
   // Sign up with email and password
   async signUp(data: SignUpData): Promise<AuthResponse> {
     try {
-      const { data: authData, error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            full_name: data.fullName,
-            phone: data.phone || null
+      console.log('Attempting to sign up user:', data.email);
+
+      const { data: authData, error } = await this.withTimeout(
+        supabase.auth.signUp({
+          email: data.email,
+          password: data.password,
+          options: {
+            data: {
+              full_name: data.fullName,
+              phone: data.phone || null
+            }
           }
-        }
-      })
+        }),
+        15000
+      );
 
       if (error) {
-        return { success: false, error: error.message }
+        console.error('Sign up error:', error.message);
+        const parsedError = this.parseError(error);
+        return {
+          success: false,
+          error: parsedError.message,
+          errorType: parsedError.category
+        }
       }
 
       if (authData.user && !authData.session) {
         // User needs to verify email
+        console.log('Sign up successful, email verification required');
         return {
           success: true,
           needsVerification: true,
@@ -108,6 +214,7 @@ class AuthService {
       }
 
       if (authData.user) {
+        console.log('Sign up successful for:', authData.user.email);
         // Create user profile
         await this.createUserProfile(authData.user)
 
@@ -115,9 +222,15 @@ class AuthService {
         return { success: true, user: authUser }
       }
 
-      return { success: false, error: 'Unexpected error occurred' }
+      return { success: false, error: 'Unexpected error occurred', errorType: 'unknown' }
     } catch (error) {
-      return { success: false, error: 'Network error. Please try again.' }
+      console.error('Sign up failed:', error);
+      const parsedError = this.parseError(error);
+      return {
+        success: false,
+        error: parsedError.message,
+        errorType: parsedError.category
+      }
     }
   }
 
@@ -132,7 +245,7 @@ class AuthService {
             email: data.email,
             password: data.password
           }),
-          6000
+          10000
         );
       });
 
@@ -140,13 +253,12 @@ class AuthService {
 
       if (error) {
         console.error('Sign in error:', error.message);
-        if (error.message.includes('Invalid login credentials')) {
-          return { success: false, error: 'Invalid email or password' }
+        const parsedError = this.parseError(error);
+        return {
+          success: false,
+          error: parsedError.message,
+          errorType: parsedError.category
         }
-        if (error.message.includes('Email not confirmed')) {
-          return { success: false, error: 'Please verify your email before signing in' }
-        }
-        return { success: false, error: error.message }
       }
 
       if (authData.user) {
@@ -155,13 +267,15 @@ class AuthService {
         return { success: true, user: authUser }
       }
 
-      return { success: false, error: 'Unexpected error occurred' }
+      return { success: false, error: 'Unexpected error occurred', errorType: 'unknown' }
     } catch (error) {
       console.error('Sign in failed:', error);
-      if (error instanceof Error && error.message.includes('timeout')) {
-        return { success: false, error: 'Connection timeout. Please check your internet connection and try again.' }
+      const parsedError = this.parseError(error);
+      return {
+        success: false,
+        error: parsedError.message,
+        errorType: parsedError.category
       }
-      return { success: false, error: 'Network error. Please try again.' }
     }
   }
 
@@ -179,9 +293,9 @@ class AuthService {
       const sessionResult = await this.withRetry(async () => {
         return await this.withTimeout(
           supabase.auth.getSession(),
-          6000 // Longer timeout for initial load
+          8000
         );
-      });
+      }, 1); // Only 1 retry for session check
 
       const { data: { session }, error: sessionError } = sessionResult;
 
@@ -201,9 +315,9 @@ class AuthService {
       const userResult = await this.withRetry(async () => {
         return await this.withTimeout(
           supabase.auth.getUser(),
-          4000
+          6000
         );
-      });
+      }, 1);
 
       const { data: { user }, error: userError } = userResult;
 
@@ -220,15 +334,12 @@ class AuthService {
       return null;
     } catch (error) {
       console.error('❌ Error getting current user:', error);
+      const parsedError = this.parseError(error);
 
-      // More specific error handling
-      if (error instanceof Error) {
-        if (error.message.includes('timeout')) {
-          console.error('Supabase request timed out - this usually indicates network connectivity issues');
-          console.error('Try refreshing the page or check your internet connection');
-        } else if (error.message.includes('Failed to fetch')) {
-          console.error('Network error - Supabase server may be unreachable');
-        }
+      if (parsedError.category === 'timeout') {
+        console.warn('Session check timed out - this usually indicates network connectivity issues');
+      } else if (parsedError.category === 'network') {
+        console.warn('Network error during session check - Supabase server may be unreachable');
       }
 
       return null;
@@ -238,12 +349,20 @@ class AuthService {
   // Reset password
   async resetPassword(email: string): Promise<AuthResponse> {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
-      })
+      const { error } = await this.withTimeout(
+        supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`
+        }),
+        10000
+      );
 
       if (error) {
-        return { success: false, error: error.message }
+        const parsedError = this.parseError(error);
+        return {
+          success: false,
+          error: parsedError.message,
+          errorType: parsedError.category
+        }
       }
 
       return {
@@ -251,37 +370,63 @@ class AuthService {
         error: 'Password reset email sent. Check your inbox for further instructions.'
       }
     } catch (error) {
-      return { success: false, error: 'Network error. Please try again.' }
+      const parsedError = this.parseError(error);
+      return {
+        success: false,
+        error: parsedError.message,
+        errorType: parsedError.category
+      }
     }
   }
 
   // Update password
   async updatePassword(newPassword: string): Promise<AuthResponse> {
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      })
+      const { error } = await this.withTimeout(
+        supabase.auth.updateUser({
+          password: newPassword
+        }),
+        10000
+      );
 
       if (error) {
-        return { success: false, error: error.message }
+        const parsedError = this.parseError(error);
+        return {
+          success: false,
+          error: parsedError.message,
+          errorType: parsedError.category
+        }
       }
 
       return { success: true }
     } catch (error) {
-      return { success: false, error: 'Network error. Please try again.' }
+      const parsedError = this.parseError(error);
+      return {
+        success: false,
+        error: parsedError.message,
+        errorType: parsedError.category
+      }
     }
   }
 
   // Resend verification email
   async resendVerification(email: string): Promise<AuthResponse> {
     try {
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email
-      })
+      const { error } = await this.withTimeout(
+        supabase.auth.resend({
+          type: 'signup',
+          email: email
+        }),
+        10000
+      );
 
       if (error) {
-        return { success: false, error: error.message }
+        const parsedError = this.parseError(error);
+        return {
+          success: false,
+          error: parsedError.message,
+          errorType: parsedError.category
+        }
       }
 
       return {
@@ -289,22 +434,35 @@ class AuthService {
         error: 'Verification email sent. Please check your inbox.'
       }
     } catch (error) {
-      return { success: false, error: 'Network error. Please try again.' }
+      const parsedError = this.parseError(error);
+      return {
+        success: false,
+        error: parsedError.message,
+        errorType: parsedError.category
+      }
     }
   }
 
   // Update profile
   async updateProfile(updates: Partial<{ fullName: string; phone: string }>): Promise<AuthResponse> {
     try {
-      const { error } = await supabase.auth.updateUser({
-        data: {
-          full_name: updates.fullName,
-          phone: updates.phone
-        }
-      })
+      const { error } = await this.withTimeout(
+        supabase.auth.updateUser({
+          data: {
+            full_name: updates.fullName,
+            phone: updates.phone
+          }
+        }),
+        10000
+      );
 
       if (error) {
-        return { success: false, error: error.message }
+        const parsedError = this.parseError(error);
+        return {
+          success: false,
+          error: parsedError.message,
+          errorType: parsedError.category
+        }
       }
 
       // Also update the profiles table
@@ -326,7 +484,12 @@ class AuthService {
 
       return { success: true }
     } catch (error) {
-      return { success: false, error: 'Network error. Please try again.' }
+      const parsedError = this.parseError(error);
+      return {
+        success: false,
+        error: parsedError.message,
+        errorType: parsedError.category
+      }
     }
   }
 
