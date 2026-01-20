@@ -222,7 +222,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     return (
       <Card className="max-w-md mx-auto">
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Reset Password</h2>
+          <h2 className="text-2xl font-bold text-text-primary mb-2">Reset Password</h2>
           <p className="text-gray-400">Enter your email to receive reset instructions</p>
         </div>
 
@@ -302,7 +302,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     <Card className="max-w-md mx-auto">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-white mb-2">Welcome Back</h2>
-        <p className="text-gray-400">Sign in to access your CV builder</p>
+        <p className="text-text-muted">Sign in to access your CV builder</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -326,9 +326,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         </div>
 
         <div>
+          <label className="block text-sm md:text-base font-medium text-text-secondary mb-1.5 md:mb-2">
+            Password
+          </label>
           <div className="relative">
-            <Input
-              label="Password"
+            <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => {
@@ -337,19 +339,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
               }}
               placeholder="Enter your password"
               required
-              fullWidth
-              className={formErrors.password ? 'border-red-300' : ''}
+              className={`w-full px-3 py-2 md:px-4 md:py-2.5 pr-10 text-sm md:text-base rounded-lg border border-border bg-surface-input text-text-primary shadow-sm focus:border-accent focus:ring-accent focus:ring-2 focus:shadow-glow-sm placeholder-text-muted transition-all duration-200 ${formErrors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
           {formErrors.password && (
-            <p className="text-sm text-red-600 mt-1">{formErrors.password}</p>
+            <p className="text-sm text-red-400 mt-1">{formErrors.password}</p>
           )}
         </div>
 
@@ -363,14 +364,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
               onChange={(e) => setRememberDevice(e.target.checked)}
               className="h-4 w-4 text-[#4EAA93] focus:ring-[#4EAA93] border-gray-600 bg-[#252A30] rounded"
             />
-            <label htmlFor="rememberDevice" className="ml-2 block text-sm text-gray-300">
+            <label htmlFor="rememberDevice" className="ml-2 block text-sm text-text-secondary">
               Remember this device
             </label>
           </div>
           <button
             type="button"
             onClick={() => setShowForgotPassword(true)}
-            className="text-sm text-[#4EAA93] hover:text-[#5CC4A8]"
+            className="text-sm text-accent hover:text-accent-light"
           >
             Forgot password?
           </button>
@@ -418,12 +419,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
         </p>
       </div>
 
-      <div className="mt-4 p-3 bg-[#252A30] border border-[#353B42] rounded-md">
+      <div className="mt-4 p-3 glass-card rounded-md">
         <div className="flex items-start">
-          <Info className="w-4 h-4 text-[#4EAA93] mr-2 mt-0.5 flex-shrink-0" />
+          <Info className="w-4 h-4 text-accent mr-2 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-xs text-gray-400">
-              <strong className="text-gray-300">Secure Login:</strong> Your account is protected with encrypted authentication.
+            <p className="text-xs text-text-muted">
+              <strong className="text-text-secondary">Secure Login:</strong> Your account is protected with encrypted authentication.
               Use "Remember device" for convenient access on trusted devices.
             </p>
           </div>

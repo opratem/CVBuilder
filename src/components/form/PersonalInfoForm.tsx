@@ -17,23 +17,23 @@ const PersonalInfoForm: React.FC = () => {
   return (
     <Card className="mb-6">
       <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="md:col-span-2">
           <div className="flex items-center">
-            <User className="w-5 h-5 text-gray-400 mr-2" />
+            <User className="w-5 h-5 text-text-muted mr-2" />
             <Input
               label="Full Name"
               name="fullName"
               value={personalInfo.fullName}
               onChange={handleChange}
-              placeholder="John Doe"
+              placeholder="John Jones"
               fullWidth
               required
             />
           </div>
         </div>
-        
+
         <div className="md:col-span-2">
           <Input
             label="Job Title"
@@ -44,61 +44,61 @@ const PersonalInfoForm: React.FC = () => {
             fullWidth
           />
         </div>
-        
+
         <div className="flex items-center">
-          <Mail className="w-5 h-5 text-gray-400 mr-2 self-start mt-4" />
+          <Mail className="w-5 h-5 text-text-muted mr-2 self-start mt-4" />
           <Input
             label="Email"
             name="email"
             type="email"
             value={personalInfo.email}
             onChange={handleChange}
-            placeholder="john.doe@example.com"
+            placeholder="john.jones@example.com"
             fullWidth
             required
           />
         </div>
-        
+
         <div className="flex items-center">
-          <Phone className="w-5 h-5 text-gray-400 mr-2 self-start mt-4" />
+          <Phone className="w-5 h-5 text-text-muted mr-2 self-start mt-4" />
           <Input
             label="Phone"
             name="phone"
             type="tel"
             value={personalInfo.phone}
             onChange={handleChange}
-            placeholder="+1 (555) 123-4567"
+            placeholder="+234 (456) 678-9102"
             fullWidth
           />
         </div>
-        
+
         <div className="flex items-center">
-          <MapPin className="w-5 h-5 text-gray-400 mr-2 self-start mt-4" />
+          <MapPin className="w-5 h-5 text-text-muted mr-2 self-start mt-4" />
           <Input
             label="Location"
             name="location"
             value={personalInfo.location}
             onChange={handleChange}
-            placeholder="New York, NY"
+            placeholder="Lagos, Nigeria"
             fullWidth
           />
         </div>
-        
+
         <div className="flex items-center">
-          <Globe className="w-5 h-5 text-gray-400 mr-2 self-start mt-4" />
+          <Globe className="w-5 h-5 text-text-muted mr-2 self-start mt-4" />
           <Input
             label="Website"
             name="website"
             type="url"
             value={personalInfo.website}
             onChange={handleChange}
-            placeholder="https://johndoe.com"
+            placeholder="https://johnjones.com"
             fullWidth
           />
         </div>
-        
+
         <div className="flex items-center">
-          <Linkedin className="w-5 h-5 text-gray-400 mr-2 self-start mt-4" />
+          <Linkedin className="w-5 h-5 text-text-muted mr-2 self-start mt-4" />
           <Input
             label="LinkedIn"
             name="linkedin"
@@ -108,19 +108,19 @@ const PersonalInfoForm: React.FC = () => {
             fullWidth
           />
         </div>
-        
+
         <div className="flex items-center">
-          <Github className="w-5 h-5 text-gray-400 mr-2 self-start mt-4" />
+          <Github className="w-5 h-5 text-text-muted mr-2 self-start mt-4" />
           <Input
             label="GitHub"
             name="github"
             value={personalInfo.github}
             onChange={handleChange}
-            placeholder="github.com/johndoe"
+            placeholder="github.com/johnjones"
             fullWidth
           />
         </div>
-        
+
         <div className="md:col-span-2">
           <TextArea
             label="Professional Summary"

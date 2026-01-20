@@ -65,14 +65,14 @@ const EducationForm: React.FC = () => {
       </div>
 
       {education.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">
+        <div className="text-center py-4 text-text-muted">
           <p>No education added yet. Click the button above to add your educational background.</p>
         </div>
       ) : (
         education.map((edu, index) => (
           <div
             key={edu.id}
-            className={`p-4 rounded-lg border border-gray-200 ${index > 0 ? 'mt-4' : ''}`}
+            className={`p-4 rounded-lg glass-surface ${index > 0 ? 'mt-4' : ''}`}
           >
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-medium text-lg">Education #{index + 1}</h3>

@@ -202,11 +202,11 @@ const JobOptimizer: React.FC = () => {
   return (
     <Card className="p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2 flex items-center">
-          <Target className="w-6 h-6 mr-2 text-blue-600" />
+        <h2 className="text-2xl font-bold text-text-primary mb-2 flex items-center">
+          <Target className="w-6 h-6 mr-2 text-accent" />
           Job-Specific CV Optimizer
         </h2>
-        <p className="text-gray-200">
+        <p className="text-text-secondary">
           Analyze job descriptions and optimize your CV for specific positions to increase your chances of getting interviews.
         </p>
       </div>
@@ -215,7 +215,7 @@ const JobOptimizer: React.FC = () => {
         {/* Job Details Input */}
         <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-sm font-medium text-text-primary mb-2">
               Job Title
             </label>
             <input
@@ -223,11 +223,11 @@ const JobOptimizer: React.FC = () => {
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
               placeholder="e.g., Frontend Developer"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 glass-input rounded-md focus:ring-accent focus:border-accent text-text-primary placeholder-text-muted"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
+            <label className="block text-sm font-medium text-text-primary mb-2">
               Company
             </label>
             <input
@@ -235,14 +235,14 @@ const JobOptimizer: React.FC = () => {
               value={company}
               onChange={(e) => setCompany(e.target.value)}
               placeholder="e.g., Google"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 glass-input rounded-md focus:ring-accent focus:border-accent text-text-primary placeholder-text-muted"
             />
           </div>
         </div>
 
         {/* Job Description Input */}
         <div>
-          <label className="block text-sm font-medium text-white mb-2">
+          <label className="block text-sm font-medium text-text-primary mb-2">
             Job Description
           </label>
           <TextArea
@@ -279,28 +279,28 @@ const JobOptimizer: React.FC = () => {
       {analysis && showSuggestions && (
         <div className="mt-8 space-y-6">
           {/* Match Score */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+          <div className="glass-accent rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-white">CV Match Score</h3>
-                <p className="text-sm text-gray-200">Based on required skills alignment</p>
+                <h3 className="text-lg font-semibold text-text-primary">CV Match Score</h3>
+                <p className="text-sm text-text-secondary">Based on required skills alignment</p>
               </div>
               <div className="text-right">
                 <div className={`text-3xl font-bold ${
-                  analysis.matchScore >= 80 ? 'text-green-600' :
-                  analysis.matchScore >= 60 ? 'text-yellow-600' : 'text-red-600'
+                  analysis.matchScore >= 80 ? 'text-accent-light' :
+                  analysis.matchScore >= 60 ? 'text-[#fbbf24]' : 'text-[#ff6b6b]'
                 }`}>
                   {analysis.matchScore}%
                 </div>
-                <div className="text-sm text-gray-500">Match</div>
+                <div className="text-sm text-text-muted">Match</div>
               </div>
             </div>
           </div>
 
           {/* Required Skills */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <h4 className="font-semibold text-white mb-3 flex items-center">
-              <AlertCircle className="w-4 h-4 mr-2 text-red-500" />
+          <div className="glass-surface rounded-lg p-4">
+            <h4 className="font-semibold text-text-primary mb-3 flex items-center">
+              <AlertCircle className="w-4 h-4 mr-2 text-[#ff6b6b]" />
               Required Skills ({analysis.requiredSkills.length})
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -309,8 +309,8 @@ const JobOptimizer: React.FC = () => {
                   key={index}
                   className={`px-3 py-1 rounded-full text-sm ${
                     cv.skills.some(s => s.name.toLowerCase() === skill.toLowerCase())
-                      ? 'bg-green-100 text-green-800 border border-green-200'
-                      : 'bg-red-100 text-red-800 border border-red-200'
+                      ? 'tag-success'
+                      : 'tag-error'
                   }`}
                 >
                   {skill}
@@ -321,39 +321,39 @@ const JobOptimizer: React.FC = () => {
           </div>
 
           {/* Optimization Suggestions */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <h4 className="font-semibold text-white mb-4 flex items-center">
-              <TrendingUp className="w-4 h-4 mr-2 text-blue-500" />
+          <div className="glass-surface rounded-lg p-4">
+            <h4 className="font-semibold text-text-primary mb-4 flex items-center">
+              <TrendingUp className="w-4 h-4 mr-2 text-accent" />
               Optimization Suggestions
             </h4>
             <div className="space-y-3">
               {analysis.suggestions.map((suggestion, index) => (
                 <div
                   key={index}
-                  className={`border rounded-lg p-4 ${
-                    suggestion.priority === 'high' ? 'border-red-200 bg-red-50' :
-                    suggestion.priority === 'medium' ? 'border-yellow-200 bg-yellow-50' :
-                    'border-gray-200 bg-gray-50'
+                  className={`rounded-lg p-4 ${
+                    suggestion.priority === 'high' ? 'glass-error' :
+                    suggestion.priority === 'medium' ? 'glass-warning' :
+                    'glass-surface'
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center mb-2">
-                        <h5 className="font-medium text-white">{suggestion.title}</h5>
+                        <h5 className="font-medium text-text-primary">{suggestion.title}</h5>
                         <span className={`ml-2 px-2 py-1 text-xs rounded-full ${
-                          suggestion.priority === 'high' ? 'bg-red-100 text-red-800' :
-                          suggestion.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-gray-100 text-gray-800'
+                          suggestion.priority === 'high' ? 'tag-error' :
+                          suggestion.priority === 'medium' ? 'tag-warning' :
+                          'tag-neutral'
                         }`}>
                           {suggestion.priority} priority
                         </span>
                       </div>
-                      <p className="text-sm text-gray-200 mb-2">{suggestion.description}</p>
-                      <p className="text-xs text-gray-500">{suggestion.action}</p>
+                      <p className="text-sm text-text-secondary mb-2">{suggestion.description}</p>
+                      <p className="text-xs text-text-muted">{suggestion.action}</p>
                     </div>
                     <div className="ml-4 text-right">
-                      <div className="text-sm font-medium text-white">+{suggestion.impact}%</div>
-                      <div className="text-xs text-gray-500">Impact</div>
+                      <div className="text-sm font-medium text-text-primary">+{suggestion.impact}%</div>
+                      <div className="text-xs text-text-muted">Impact</div>
                     </div>
                   </div>
                   <Button

@@ -10,36 +10,36 @@ const TemplateSelector: React.FC = () => {
   const getTemplateIcon = (templateId: string) => {
     switch (templateId) {
       case 'executive':
-        return <Crown className="w-5 h-5 text-amber-600" />;
+        return <Crown className="w-5 h-5 text-[#fbbf24]" />;
       case 'creative':
-        return <Palette className="w-5 h-5 text-purple-600" />;
+        return <Palette className="w-5 h-5 text-[#a78bfa]" />;
       case 'tech':
-        return <Code className="w-5 h-5 text-blue-600" />;
+        return <Code className="w-5 h-5 text-accent" />;
       case 'academic':
-        return <GraduationCap className="w-5 h-5 text-green-600" />;
+        return <GraduationCap className="w-5 h-5 text-accent-light" />;
       case 'classic':
-        return <Building2 className="w-5 h-5 text-gray-600" />;
+        return <Building2 className="w-5 h-5 text-text-muted" />;
       case 'modern':
-        return <Zap className="w-5 h-5 text-indigo-600" />;
+        return <Zap className="w-5 h-5 text-accent" />;
       default:
-        return <Layout className="w-5 h-5 text-gray-600" />;
+        return <Layout className="w-5 h-5 text-text-muted" />;
     }
   };
 
   const getTemplateCategory = (templateId: string) => {
     switch (templateId) {
       case 'classic':
-        return { category: 'ATS-Optimized', color: 'bg-green-100 text-green-800' };
+        return { category: 'ATS-Optimized', color: 'tag-success' };
       case 'executive':
-        return { category: 'Leadership', color: 'bg-amber-100 text-amber-800' };
+        return { category: 'Leadership', color: 'tag-warning' };
       case 'creative':
-        return { category: 'Creative', color: 'bg-purple-100 text-purple-800' };
+        return { category: 'Creative', color: 'tag-purple' };
       case 'tech':
-        return { category: 'Technology', color: 'bg-blue-100 text-blue-800' };
+        return { category: 'Technology', color: 'tag-accent' };
       case 'academic':
-        return { category: 'Academic', color: 'bg-green-100 text-green-800' };
+        return { category: 'Academic', color: 'tag-success' };
       default:
-        return { category: 'General', color: 'bg-gray-100 text-gray-800' };
+        return { category: 'General', color: 'tag-neutral' };
     }
   };
 
@@ -48,73 +48,73 @@ const TemplateSelector: React.FC = () => {
     switch (templateId) {
       case 'modern':
         return (
-          <div className="w-full h-16 bg-gradient-to-r from-indigo-100 to-blue-100 rounded border flex">
-            <div className="w-1/3 bg-indigo-200 rounded-l border-r border-indigo-300"></div>
+          <div className="w-full h-16 bg-gradient-to-r from-accent/20 to-accent/10 rounded border border-accent/30 flex">
+            <div className="w-1/3 bg-accent/30 rounded-l border-r border-accent/40"></div>
             <div className="flex-1 p-1 space-y-0.5">
-              <div className="h-1 bg-indigo-300 rounded"></div>
-              <div className="h-1 bg-indigo-200 rounded w-3/4"></div>
-              <div className="h-1 bg-indigo-200 rounded w-1/2"></div>
+              <div className="h-1 bg-accent/50 rounded"></div>
+              <div className="h-1 bg-accent/30 rounded w-3/4"></div>
+              <div className="h-1 bg-accent/30 rounded w-1/2"></div>
             </div>
           </div>
         );
       case 'classic':
         return (
-          <div className="w-full h-16 bg-gray-50 rounded border p-1 space-y-0.5">
-            <div className="h-2 bg-gray-300 rounded"></div>
-            <div className="h-1 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-1 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-1 bg-gray-200 rounded w-2/3"></div>
+          <div className="w-full h-16 glass-surface rounded border border-border p-1 space-y-0.5">
+            <div className="h-2 bg-text-muted/50 rounded"></div>
+            <div className="h-1 bg-text-muted/30 rounded w-3/4"></div>
+            <div className="h-1 bg-text-muted/30 rounded w-1/2"></div>
+            <div className="h-1 bg-text-muted/30 rounded w-2/3"></div>
           </div>
         );
       case 'minimal':
         return (
-          <div className="w-full h-16 bg-white rounded border p-1 space-y-1">
-            <div className="h-1.5 bg-gray-800 rounded w-1/2"></div>
-            <div className="h-0.5 bg-gray-400 rounded w-3/4"></div>
-            <div className="h-0.5 bg-gray-400 rounded w-1/2"></div>
-            <div className="h-0.5 bg-gray-400 rounded w-2/3"></div>
+          <div className="w-full h-16 bg-surface-elevated rounded border border-border p-1 space-y-1">
+            <div className="h-1.5 bg-text-primary/80 rounded w-1/2"></div>
+            <div className="h-0.5 bg-text-muted/50 rounded w-3/4"></div>
+            <div className="h-0.5 bg-text-muted/50 rounded w-1/2"></div>
+            <div className="h-0.5 bg-text-muted/50 rounded w-2/3"></div>
           </div>
         );
       case 'executive':
         return (
-          <div className="w-full h-16 bg-gradient-to-b from-amber-50 to-amber-100 rounded border p-1 space-y-0.5">
-            <div className="h-2 bg-amber-600 rounded"></div>
-            <div className="h-1 bg-amber-400 rounded w-3/4"></div>
-            <div className="h-1 bg-amber-300 rounded w-1/2"></div>
+          <div className="w-full h-16 bg-gradient-to-b from-[#fbbf24]/10 to-[#fbbf24]/20 rounded border border-[#fbbf24]/30 p-1 space-y-0.5">
+            <div className="h-2 bg-[#fbbf24]/60 rounded"></div>
+            <div className="h-1 bg-[#fbbf24]/40 rounded w-3/4"></div>
+            <div className="h-1 bg-[#fbbf24]/30 rounded w-1/2"></div>
           </div>
         );
       case 'creative':
         return (
-          <div className="w-full h-16 bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 rounded border p-1 space-y-0.5">
-            <div className="h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
-            <div className="h-1 bg-purple-300 rounded w-3/4"></div>
-            <div className="h-1 bg-pink-300 rounded w-1/2"></div>
+          <div className="w-full h-16 bg-gradient-to-br from-[#a78bfa]/20 via-[#ec4899]/10 to-accent/10 rounded border border-[#a78bfa]/30 p-1 space-y-0.5">
+            <div className="h-2 bg-gradient-to-r from-[#a78bfa]/60 to-[#ec4899]/40 rounded"></div>
+            <div className="h-1 bg-[#a78bfa]/40 rounded w-3/4"></div>
+            <div className="h-1 bg-[#ec4899]/30 rounded w-1/2"></div>
           </div>
         );
       case 'tech':
         return (
-          <div className="w-full h-16 bg-slate-50 rounded border p-1 space-y-0.5">
-            <div className="h-1.5 bg-blue-600 rounded w-1/2"></div>
+          <div className="w-full h-16 glass-surface rounded border border-border p-1 space-y-0.5">
+            <div className="h-1.5 bg-accent rounded w-1/2"></div>
             <div className="flex space-x-1">
-              <div className="h-1 bg-blue-400 rounded w-1/4"></div>
-              <div className="h-1 bg-green-400 rounded w-1/4"></div>
-              <div className="h-1 bg-yellow-400 rounded w-1/4"></div>
+              <div className="h-1 bg-accent/60 rounded w-1/4"></div>
+              <div className="h-1 bg-accent-light/60 rounded w-1/4"></div>
+              <div className="h-1 bg-[#fbbf24]/60 rounded w-1/4"></div>
             </div>
-            <div className="h-1 bg-slate-300 rounded w-3/4"></div>
+            <div className="h-1 bg-text-muted/40 rounded w-3/4"></div>
           </div>
         );
       case 'academic':
         return (
-          <div className="w-full h-16 bg-green-50 rounded border p-1 space-y-0.5">
-            <div className="h-1.5 bg-green-600 rounded w-3/4"></div>
-            <div className="h-1 bg-green-400 rounded w-1/2"></div>
-            <div className="h-1 bg-green-300 rounded w-2/3"></div>
-            <div className="h-1 bg-green-200 rounded w-1/3"></div>
+          <div className="w-full h-16 bg-accent/10 rounded border border-accent/30 p-1 space-y-0.5">
+            <div className="h-1.5 bg-accent rounded w-3/4"></div>
+            <div className="h-1 bg-accent/60 rounded w-1/2"></div>
+            <div className="h-1 bg-accent/40 rounded w-2/3"></div>
+            <div className="h-1 bg-accent/30 rounded w-1/3"></div>
           </div>
         );
       default:
         return (
-          <div className="w-full h-16 bg-gray-100 rounded border"></div>
+          <div className="w-full h-16 glass-surface rounded border border-border"></div>
         );
     }
   };
@@ -125,9 +125,9 @@ const TemplateSelector: React.FC = () => {
         <Layout className="mr-2" /> Choose Your Template
       </h2>
 
-      <div className="mb-4 p-4 bg-teal-900/20 rounded-lg border border-teal-700/50">
-        <p className="text-gray-200 text-sm flex items-center">
-          <Lightbulb className="w-4 h-4 mr-2 text-teal-400" />
+      <div className="mb-4 p-4 glass-accent rounded-lg">
+        <p className="text-text-secondary text-sm flex items-center">
+          <Lightbulb className="w-4 h-4 mr-2 text-accent" />
           <strong>Pro Tip:</strong> For most job applications, we recommend the "Classic (ATS-Optimized)" template
           as it's designed to pass through Applicant Tracking Systems used by most companies.
         </p>
@@ -140,10 +140,10 @@ const TemplateSelector: React.FC = () => {
             <div
               key={template.id}
               className={`
-                border rounded-xl p-5 cursor-pointer transition-all hover:shadow-lg
+                border rounded-xl p-5 cursor-pointer transition-all hover:shadow-lg hover:shadow-glow
                 ${cv.templateId === template.id
-                  ? 'border-teal-500 bg-teal-900/20 shadow-md ring-2 ring-teal-700/50'
-                  : 'border-gray-600 hover:border-teal-500 hover:bg-teal-900/10'}
+                  ? 'border-accent bg-accent/10 shadow-md ring-2 ring-accent/50'
+                  : 'border-border hover:border-accent hover:bg-accent/5'}
               `}
               onClick={() => setTemplateId(template.id)}
             >
@@ -157,18 +157,18 @@ const TemplateSelector: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     {getTemplateIcon(template.id)}
-                    <h3 className="font-semibold text-white">{template.name}</h3>
+                    <h3 className="font-semibold text-text-primary">{template.name}</h3>
                   </div>
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${category.color}`}>
                     {category.category}
                   </span>
                 </div>
 
-                <p className="text-sm text-gray-300 leading-relaxed">{template.description}</p>
+                <p className="text-sm text-text-secondary leading-relaxed">{template.description}</p>
 
                 {cv.templateId === template.id && (
-                  <div className="flex items-center text-teal-400 text-sm font-medium">
-                    <div className="w-2 h-2 bg-teal-400 rounded-full mr-2"></div>
+                  <div className="flex items-center text-accent text-sm font-medium">
+                    <div className="w-2 h-2 bg-accent rounded-full mr-2"></div>
                     Currently selected
                   </div>
                 )}
@@ -178,9 +178,9 @@ const TemplateSelector: React.FC = () => {
         })}
       </div>
 
-      <div className="mt-6 p-4 bg-gray-800/30 rounded-lg">
-        <h4 className="font-medium text-white mb-2">Need help choosing?</h4>
-        <div className="text-sm text-gray-300 space-y-1">
+      <div className="mt-6 p-4 glass-surface rounded-lg">
+        <h4 className="font-medium text-text-primary mb-2">Need help choosing?</h4>
+        <div className="text-sm text-text-secondary space-y-1">
           <p>• <strong>Corporate/Finance:</strong> Classic or Executive</p>
           <p>• <strong>Tech/Engineering:</strong> Tech Professional or Modern</p>
           <p>• <strong>Design/Marketing:</strong> Creative or Modern</p>

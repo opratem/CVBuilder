@@ -21,7 +21,7 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ steps, className 
   const completedRequiredSteps = requiredSteps.filter(step => step.completed).length;
 
   return (
-    <div className={`bg-secondary rounded-lg shadow-lg border border-secondary-light p-4 ${className}`}>
+    <div className={`glass-card rounded-lg p-4 ${className}`}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-1">
         <h3 className="text-sm font-semibold text-text-primary">CV Completion</h3>
         <span className="text-xs text-text-muted">

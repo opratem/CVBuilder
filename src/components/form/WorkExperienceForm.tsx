@@ -64,14 +64,14 @@ const WorkExperienceForm: React.FC = () => {
       </div>
 
       {workExperience.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">
+        <div className="text-center py-4 text-text-muted">
           <p>No work experience added yet. Click the button above to add your work history.</p>
         </div>
       ) : (
         workExperience.map((exp, index) => (
           <div
             key={exp.id}
-            className={`p-4 rounded-lg border border-gray-200 ${index > 0 ? 'mt-4' : ''}`}
+            className={`p-4 rounded-lg glass-surface ${index > 0 ? 'mt-4' : ''}`}
           >
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-medium text-lg">Experience #{index + 1}</h3>
@@ -143,7 +143,7 @@ const WorkExperienceForm: React.FC = () => {
                     type="checkbox"
                     checked={exp.isCurrentJob}
                     onChange={(e) => handleCurrentJobChange(exp.id, e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-border text-accent focus:ring-accent bg-surface-input"
                   />
                   <span>I currently work here</span>
                 </label>

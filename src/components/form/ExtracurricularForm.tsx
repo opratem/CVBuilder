@@ -59,7 +59,7 @@ const ExtracurricularForm: React.FC = () => {
         extracurricular.map((activity, index) => (
           <div
             key={activity.id}
-            className={`p-4 rounded-lg border border-gray-200 ${index > 0 ? 'mt-4' : ''}`}
+            className={`p-4 rounded-lg glass-surface ${index > 0 ? 'mt-4' : ''}`}
           >
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-medium text-lg">Activity #{index + 1}</h3>

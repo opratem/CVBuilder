@@ -12,7 +12,7 @@ const Card: React.FC<CardProps> = ({ children, className = '', hover = false }) 
     : 'transition-all duration-200';
 
   return (
-    <div className={`bg-surface-card rounded-lg md:rounded-xl shadow-dark border border-border backdrop-blur-sm p-4 md:p-6 ${hoverClasses} ${className}`}>
+    <div className={`glass-card rounded-lg md:rounded-xl p-4 md:p-6 ${hoverClasses} ${className}`}>
       {children}
     </div>
   );

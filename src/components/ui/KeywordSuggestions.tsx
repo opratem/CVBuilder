@@ -242,7 +242,7 @@ const KeywordSuggestions: React.FC<KeywordSuggestionsProps> = ({ className = '' 
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
             placeholder="e.g., Software Engineer, Nurse, Teacher, Sales Manager"
-            className="w-full pl-10 pr-3 py-2 border border-secondary-light bg-surface text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm placeholder:text-text-muted"
+            className="w-full pl-10 pr-3 py-2 border border-border bg-surface-input text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent text-sm placeholder:text-text-muted"
           />
         </div>
       </div>

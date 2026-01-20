@@ -33,7 +33,7 @@ const Toast: React.FC<ToastProps> = ({
   }, [id, duration, onClose]);
 
   const getToastStyles = () => {
-    const baseStyles = "fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-lg border transform transition-all duration-300 ease-in-out";
+    const baseStyles = "fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-dark-lg backdrop-blur-md transform transition-all duration-300 ease-in-out";
 
     if (!isVisible) {
       return `${baseStyles} translate-x-full opacity-0`;
@@ -41,30 +41,30 @@ const Toast: React.FC<ToastProps> = ({
 
     switch (type) {
       case 'success':
-        return `${baseStyles} bg-green-50 border-green-200 text-green-800`;
+        return `${baseStyles} glass-success text-accent-light`;
       case 'error':
-        return `${baseStyles} bg-red-50 border-red-200 text-red-800`;
+        return `${baseStyles} glass-error text-red-400`;
       case 'warning':
-        return `${baseStyles} bg-yellow-50 border-yellow-200 text-yellow-800`;
+        return `${baseStyles} glass-warning text-yellow-400`;
       case 'info':
-        return `${baseStyles} bg-blue-50 border-blue-200 text-blue-800`;
+        return `${baseStyles} glass-info text-blue-400`;
       default:
-        return `${baseStyles} bg-gray-50 border-gray-200 text-gray-800`;
+        return `${baseStyles} glass-dark text-text-primary`;
     }
   };
 
   const getIcon = () => {
     switch (type) {
       case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-600" />;
+        return <CheckCircle className="w-5 h-5 text-accent-light" />;
       case 'error':
-        return <AlertCircle className="w-5 h-5 text-red-600" />;
+        return <AlertCircle className="w-5 h-5 text-red-400" />;
       case 'warning':
-        return <AlertCircle className="w-5 h-5 text-yellow-600" />;
+        return <AlertCircle className="w-5 h-5 text-yellow-400" />;
       case 'info':
-        return <Info className="w-5 h-5 text-blue-600" />;
+        return <Info className="w-5 h-5 text-blue-400" />;
       default:
-        return <Info className="w-5 h-5 text-gray-600" />;
+        return <Info className="w-5 h-5 text-text-muted" />;
     }
   };
 
@@ -75,9 +75,9 @@ const Toast: React.FC<ToastProps> = ({
           {getIcon()}
         </div>
         <div className="flex-1">
-          <h4 className="font-medium text-sm">{title}</h4>
+          <h4 className="font-medium text-sm text-text-primary">{title}</h4>
           {message && (
-            <p className="text-sm mt-1 opacity-90">{message}</p>
+            <p className="text-sm mt-1 text-text-secondary opacity-90">{message}</p>
           )}
         </div>
         <button
@@ -85,7 +85,7 @@ const Toast: React.FC<ToastProps> = ({
             setIsVisible(false);
             setTimeout(() => onClose(id), 300);
           }}
-          className="flex-shrink-0 ml-3 text-gray-400 hover:text-gray-600 transition-colors"
+          className="flex-shrink-0 ml-3 text-text-muted hover:text-text-primary transition-colors"
         >
           <X className="w-4 h-4" />
         </button>

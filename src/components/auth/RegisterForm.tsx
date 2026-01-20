@@ -228,7 +228,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
     <Card className="max-w-md mx-auto">
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-white mb-2">Create Account</h2>
-        <p className="text-gray-400">Join us and start building your professional CV</p>
+        <p className="text-text-muted">Join us and start building your professional CV</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -280,24 +280,25 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
         />
 
         <div>
+          <label className="block text-sm md:text-base font-medium text-text-secondary mb-1.5 md:mb-2">
+            Password
+          </label>
           <div className="relative">
-            <Input
-              label="Password"
+            <input
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
                 validateField('password', e.target.value);
               }}
-              placeholder="At least 8 characters with uppercase, lowercase, and number"
+              placeholder="Min 8 chars, uppercase, lowercase, number"
               required
-              fullWidth
-              className={formErrors.password ? 'border-red-300' : ''}
+              className={`w-full px-3 py-2 md:px-4 md:py-2.5 pr-10 text-sm md:text-base rounded-lg border border-border bg-surface-input text-text-primary shadow-sm focus:border-accent focus:ring-accent focus:ring-2 focus:shadow-glow-sm placeholder-text-muted transition-all duration-200 ${formErrors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9 text-gray-500 hover:text-gray-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -323,7 +324,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
                   />
                 ))}
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-muted">
                 Password strength: {
                   passwordStrength < 3 ? 'Weak' :
                   passwordStrength < 4 ? 'Medium' : 'Strong'
@@ -334,9 +335,11 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
         </div>
 
         <div>
+          <label className="block text-sm md:text-base font-medium text-text-secondary mb-1.5 md:mb-2">
+            Confirm Password
+          </label>
           <div className="relative">
-            <Input
-              label="Confirm Password"
+            <input
               type={showConfirmPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => {
@@ -345,13 +348,12 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
               }}
               placeholder="Confirm your password"
               required
-              fullWidth
-              className={formErrors.confirmPassword ? 'border-red-300' : ''}
+              className={`w-full px-3 py-2 md:px-4 md:py-2.5 pr-10 text-sm md:text-base rounded-lg border border-border bg-surface-input text-text-primary shadow-sm focus:border-accent focus:ring-accent focus:ring-2 focus:shadow-glow-sm placeholder-text-muted transition-all duration-200 ${formErrors.confirmPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-9 text-gray-500 hover:text-gray-300"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
             >
               {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -368,9 +370,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
             type="checkbox"
             checked={rememberDevice}
             onChange={(e) => setRememberDevice(e.target.checked)}
-            className="h-4 w-4 text-[#4EAA93] focus:ring-[#4EAA93] border-gray-600 bg-[#252A30] rounded"
+            className="h-4 w-4 text-accent focus:ring-accent border-border bg-secondary-light rounded"
           />
-          <label htmlFor="rememberDevice" className="ml-2 block text-sm text-gray-300">
+          <label htmlFor="rememberDevice" className="ml-2 block text-sm text-text-secondary">
             Remember this device for faster login
           </label>
         </div>
@@ -390,20 +392,20 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
 
         {/* Enhanced Email Verification Message */}
         {success && needsVerification && (
-          <div className="p-4 bg-[#252A30] border border-[#4EAA93] rounded-md">
+          <div className="p-4 glass-accent rounded-md">
             <div className="flex items-start">
-              <Mail className="w-5 h-5 text-[#4EAA93] mr-2 mt-0.5 flex-shrink-0" />
+              <Mail className="w-5 h-5 text-accent mr-2 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
-                <p className="text-sm text-white font-medium mb-2">
+                <p className="text-sm text-text-primary font-medium mb-2">
                   Please verify your email address
                 </p>
-                <p className="text-sm text-gray-400 mb-3">
-                  We've sent a verification email to <strong className="text-gray-300">{email}</strong>.
+                <p className="text-sm text-text-muted mb-3">
+                  We've sent a verification email to <strong className="text-text-secondary">{email}</strong>.
                   Click the link in the email to activate your account.
                 </p>
 
                 {/* Spam Warning */}
-                <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-md p-3 mb-3">
+                <div className="glass-warning rounded-md p-3 mb-3">
                   <div className="flex items-start">
                     <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2 mt-0.5 flex-shrink-0" />
                     <div>
@@ -420,7 +422,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
                 <button
                   type="button"
                   onClick={handleResendVerification}
-                  className="text-sm text-[#4EAA93] underline hover:text-[#5CC4A8] font-medium"
+                  className="text-sm text-accent underline hover:text-accent-light font-medium"
                 >
                   Didn't receive the email? Resend verification
                 </button>
@@ -446,23 +448,23 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
       </form>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-text-muted">
           Already have an account?{' '}
           <button
             onClick={onSwitchToLogin}
-            className="text-[#4EAA93] hover:text-[#5CC4A8] font-medium"
+            className="text-accent hover:text-accent-light font-medium"
           >
             Sign in here
           </button>
         </p>
       </div>
 
-      <div className="mt-4 p-3 bg-[#252A30] border border-[#353B42] rounded-md">
+      <div className="mt-4 p-3 glass-card rounded-md">
         <div className="flex items-start">
-          <Info className="w-4 h-4 text-[#4EAA93] mr-2 mt-0.5 flex-shrink-0" />
+          <Info className="w-4 h-4 text-accent mr-2 mt-0.5 flex-shrink-0" />
           <div>
-            <p className="text-xs text-gray-400">
-              <strong className="text-gray-300">Secure & Private:</strong> Your data is encrypted and stored securely.
+            <p className="text-xs text-text-muted">
+              <strong className="text-text-secondary">Secure & Private:</strong> Your data is encrypted and stored securely.
               Email verification is required for account security and helps prevent unauthorized access.
             </p>
           </div>
