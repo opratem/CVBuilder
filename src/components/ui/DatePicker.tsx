@@ -37,6 +37,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
     }
   };
 
+// Calculate year range - 50 years in the past to 10 years in the future
+const currentYear = new Date().getFullYear();
+const minYear = currentYear - 50;
+const maxYear = currentYear + 10;
+
   const getPickerProps = () => {
     const baseProps = {
       selected,
@@ -45,7 +50,14 @@ const DatePicker: React.FC<DatePickerProps> = ({
       placeholderText: placeholder,
       dateFormat: getDateFormat(),
       showTimeSelect,
-      wrapperClassName: "w-full"
+      wrapperClassName: "w-full",
+      showYearDropdown: true,
+      showMonthDropdown: true,
+      dropdownMode: 'select' as const,
+      yearDropdownItemNumber: 60,
+      scrollableYearDropdown: true,
+      minDate: new Date(minYear, 0, 1),
+      maxDate: new Date(maxYear, 11, 31),
     };
 
     switch (dateFormat) {

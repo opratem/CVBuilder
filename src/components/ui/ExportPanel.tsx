@@ -122,7 +122,7 @@ const ExportPanel: React.FC = () => {
   return (
     <>
       {/* Header */}
-      <div className="px-5 py-3 border-b border-secondary-light bg-gradient-to-r from-primary-dark to-primary-light">
+      <div className="px-5 py-3 border-b border-secondary-light glass-dark">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center mr-3">
             <Download className="w-5 h-5 text-accent" />
@@ -141,20 +141,14 @@ const ExportPanel: React.FC = () => {
           <button
             onClick={handleATSCheck}
             type="button"
-            style={{
-              backgroundColor: '#1A1B26',
-              color: '#E5E7EB',
-              borderColor: '#4EAA93',
-              borderWidth: '2px'
-            }}
-            className="flex items-center w-full px-4 py-2 rounded-lg border-2 font-medium transition-colors hover:bg-[#252A30] focus:outline-none focus:ring-2 focus:ring-[#4EAA93]"
+            className="flex items-center w-full px-4 py-2 rounded-lg border-2 font-medium transition-colors glass-card border-accent hover:bg-secondary-light focus:outline-none focus:ring-2 focus:ring-accent"
           >
-            <Shield className="w-4 h-4 mr-2" style={{ color: '#4EAA93' }} />
-            <span style={{ color: '#E5E7EB' }}>ATS Check ({atsResult.score}%)</span>
+            <Shield className="w-4 h-4 mr-2 text-accent" />
+            <span className="text-text-secondary">ATS Check ({atsResult.score}%)</span>
           </button>
 
           {/* Export Options */}
-          <div className="bg-secondary rounded-lg border border-secondary-light p-4">
+          <div className="glass-card rounded-lg p-4">
             <h3 className="text-sm font-semibold text-text-primary mb-3 flex items-center">
               <Download className="w-4 h-4 mr-2 text-accent" />
               Export Options
@@ -228,24 +222,24 @@ const ExportPanel: React.FC = () => {
             </div>
 
             <div className="mt-3 space-y-2">
-              <div className="text-xs text-center text-accent-light bg-accent/10 p-2 rounded border border-accent/30">
+              <div className="text-xs text-center text-accent-light glass-accent p-2 rounded">
                 <strong>PDF:</strong> Professional format, ATS-compatible, ideal for applications
               </div>
 
-              <div className="text-xs text-center text-text-secondary bg-primary/30 p-2 rounded border border-accent/20">
+              <div className="text-xs text-center text-text-secondary glass-surface p-2 rounded">
                 <strong>Enhanced Formats:</strong> ATS Optimized (keyword-rich), LinkedIn (profile import), Email (styled HTML), JSON (API integration)
               </div>
             </div>
           </div>
 
           {!atsResult.passed && (
-            <div className="text-xs text-center text-text-secondary bg-accent-dark/20 p-2 rounded border border-accent-dark/50">
+            <div className="text-xs text-center text-text-secondary glass-surface p-2 rounded border border-accent/30">
               ATS Score: {atsResult.score}% - Consider improvements before applying
             </div>
           )}
 
           {isExporting && (
-            <div className="text-xs text-center text-accent-light bg-accent/10 p-2 rounded border border-accent/30">
+            <div className="text-xs text-center text-accent-light glass-accent p-2 rounded">
               Generating high-quality document... Please wait
             </div>
           )}

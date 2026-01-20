@@ -200,10 +200,10 @@ const CVVersionManager: React.FC = () => {
       {/* Switching Overlay */}
       {switchingVersion && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gradient-to-br from-purple via-purple-dark to-purple-darker p-8 rounded-2xl shadow-2xl text-center">
-            <Loader className="w-16 h-16 text-white mx-auto mb-4 animate-spin" />
-            <h3 className="text-xl font-bold text-white">Switching Version...</h3>
-            <p className="text-purple-100 mt-2">Please wait while we load your CV</p>
+          <div className="glass-accent p-8 rounded-2xl shadow-2xl text-center">
+            <Loader className="w-16 h-16 text-accent mx-auto mb-4 animate-spin" />
+            <h3 className="text-xl font-bold text-text-primary">Switching Version...</h3>
+            <p className="text-text-secondary mt-2">Please wait while we load your CV</p>
           </div>
         </div>
       )}
@@ -212,11 +212,11 @@ const CVVersionManager: React.FC = () => {
       <Card className="p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-bold text-white mb-2 flex items-center">
-              <FileText className="w-8 h-8 mr-3 text-purple" />
+            <h2 className="text-3xl font-bold text-text-primary mb-2 flex items-center">
+              <FileText className="w-8 h-8 mr-3 text-accent" />
               CV Version Manager
             </h2>
-            <p className="text-gray-400 text-lg">
+            <p className="text-text-secondary text-lg">
               Manage multiple versions of your CV optimized for different job applications.
             </p>
           </div>
@@ -250,36 +250,36 @@ const CVVersionManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-6" hover>
           <div className="flex items-center">
-            <div className="p-3 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-xl mr-4">
-              <FileText className="w-8 h-8 text-blue-400" />
+            <div className="p-3 bg-accent/20 rounded-xl mr-4">
+              <FileText className="w-8 h-8 text-accent" />
             </div>
             <div>
-              <div className="text-3xl font-bold text-white">{stats.total}</div>
-              <div className="text-sm text-gray-400 font-medium">Total Versions</div>
+              <div className="text-3xl font-bold text-text-primary">{stats.total}</div>
+              <div className="text-sm text-text-muted font-medium">Total Versions</div>
             </div>
           </div>
         </Card>
         <Card className="p-6" hover>
           <div className="flex items-center">
-            <div className="p-3 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl mr-4">
-              <CheckCircle2 className="w-8 h-8 text-green-400" />
+            <div className="p-3 bg-accent-light/20 rounded-xl mr-4">
+              <CheckCircle2 className="w-8 h-8 text-accent-light" />
             </div>
             <div>
-              <div className="text-3xl font-bold text-white">{stats.active}</div>
-              <div className="text-sm text-gray-400 font-medium">Active Version</div>
+              <div className="text-3xl font-bold text-text-primary">{stats.active}</div>
+              <div className="text-sm text-text-muted font-medium">Active Version</div>
             </div>
           </div>
         </Card>
         <Card className="p-6" hover>
           <div className="flex items-center">
-            <div className="p-3 bg-gradient-to-br from-purple/20 to-purple-dark/20 rounded-xl mr-4">
-              <Clock className="w-8 h-8 text-purple" />
+            <div className="p-3 bg-accent/20 rounded-xl mr-4">
+              <Clock className="w-8 h-8 text-accent" />
             </div>
             <div>
-              <div className="text-xl font-bold text-white">
+              <div className="text-xl font-bold text-text-primary">
                 {versions.length > 0 ? formatDate(versions[0].updated_at).split(',')[0] : 'N/A'}
               </div>
-              <div className="text-sm text-gray-400 font-medium">Last Updated</div>
+              <div className="text-sm text-text-muted font-medium">Last Updated</div>
             </div>
           </div>
         </Card>
@@ -289,17 +289,17 @@ const CVVersionManager: React.FC = () => {
       <div className="space-y-4">
         {loading ? (
           <Card className="p-12 text-center">
-            <Loader className="w-16 h-16 text-purple mx-auto mb-4 animate-spin" />
-            <h3 className="text-xl font-semibold text-white mb-2">Loading CV Versions...</h3>
-            <p className="text-gray-400">Please wait while we fetch your saved versions.</p>
+            <Loader className="w-16 h-16 text-accent mx-auto mb-4 animate-spin" />
+            <h3 className="text-xl font-semibold text-text-primary mb-2">Loading CV Versions...</h3>
+            <p className="text-text-muted">Please wait while we fetch your saved versions.</p>
           </Card>
         ) : versions.length === 0 ? (
           <Card className="p-12 text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-purple/20 to-purple-dark/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-10 h-10 text-purple" />
+            <div className="w-20 h-20 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+              <FileText className="w-10 h-10 text-accent" />
             </div>
-            <h3 className="text-2xl font-semibold text-white mb-2">No CV Versions Yet</h3>
-            <p className="text-gray-400 mb-6 max-w-md mx-auto">
+            <h3 className="text-2xl font-semibold text-text-primary mb-2">No CV Versions Yet</h3>
+            <p className="text-text-muted mb-6 max-w-md mx-auto">
               Create your first CV version to start managing different optimizations for various job applications.
             </p>
             <Button
@@ -317,16 +317,16 @@ const CVVersionManager: React.FC = () => {
               key={version.id}
               className={`p-6 transition-all duration-300 ${
                 version.is_active
-                  ? 'border-2 border-purple bg-gradient-to-br from-purple/10 via-purple-dark/5 to-transparent shadow-lg shadow-purple/20'
-                  : 'border border-gray-700/50 hover:border-purple/50 hover:shadow-lg hover:shadow-purple/10'
+                  ? 'border-2 border-accent glass-accent shadow-glow'
+                  : 'border border-border hover:border-accent/50 hover:shadow-glow-sm'
               }`}
             >
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center mb-3 gap-3 flex-wrap">
-                    <h3 className="text-xl font-semibold text-white">{version.title}</h3>
+                    <h3 className="text-xl font-semibold text-text-primary">{version.title}</h3>
                     {version.is_active && (
-                      <span className="px-3 py-1.5 text-xs font-bold rounded-full bg-gradient-to-r from-purple via-purple-dark to-purple-darker text-white flex items-center shadow-lg shadow-purple/30 animate-pulse">
+                      <span className="px-3 py-1.5 text-xs font-bold rounded-full bg-accent text-white flex items-center shadow-glow animate-pulse">
                         <Star className="w-3 h-3 mr-1 fill-current" />
                         ACTIVE
                       </span>
@@ -334,20 +334,20 @@ const CVVersionManager: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div className="flex items-center text-sm text-gray-400">
-                      <Building2 className="w-4 h-4 mr-2 text-purple flex-shrink-0" />
+                    <div className="flex items-center text-sm text-text-muted">
+                      <Building2 className="w-4 h-4 mr-2 text-accent flex-shrink-0" />
                       <span className="font-medium">Template:</span>&nbsp;
-                      <span className="text-gray-300">{version.template}</span>
+                      <span className="text-text-secondary">{version.template}</span>
                     </div>
-                    <div className="flex items-center text-sm text-gray-400">
-                      <Calendar className="w-4 h-4 mr-2 text-purple flex-shrink-0" />
+                    <div className="flex items-center text-sm text-text-muted">
+                      <Calendar className="w-4 h-4 mr-2 text-accent flex-shrink-0" />
                       <span className="font-medium">Created:</span>&nbsp;
-                      <span className="text-gray-300">{formatDate(version.created_at)}</span>
+                      <span className="text-text-secondary">{formatDate(version.created_at)}</span>
                     </div>
-                    <div className="flex items-center text-sm text-gray-400">
-                      <Clock className="w-4 h-4 mr-2 text-purple flex-shrink-0" />
+                    <div className="flex items-center text-sm text-text-muted">
+                      <Clock className="w-4 h-4 mr-2 text-accent flex-shrink-0" />
                       <span className="font-medium">Updated:</span>&nbsp;
-                      <span className="text-gray-300">{formatDate(version.updated_at)}</span>
+                      <span className="text-text-secondary">{formatDate(version.updated_at)}</span>
                     </div>
                   </div>
                 </div>
@@ -355,7 +355,7 @@ const CVVersionManager: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Button
                     onClick={() => loadVersion(version)}
-                    variant={version.is_active ? "outline" : "purple"}
+                    variant={version.is_active ? "outline" : "primary"}
                     size="sm"
                     className="flex items-center"
                     disabled={actionLoading === version.id || version.is_active}
@@ -376,11 +376,11 @@ const CVVersionManager: React.FC = () => {
                     >
                       •••
                     </Button>
-                    <div className="absolute right-0 top-10 w-48 bg-gray-900 border-2 border-gray-700 rounded-xl shadow-2xl z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden">
+                    <div className="absolute right-0 top-10 w-48 glass-dark border border-border rounded-xl shadow-2xl z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden">
                       <div className="py-1">
                         <button
                           onClick={() => duplicateVersion(version)}
-                          className="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-purple/20 hover:text-white flex items-center transition-colors"
+                          className="w-full text-left px-4 py-3 text-sm text-text-secondary hover:bg-accent/20 hover:text-text-primary flex items-center transition-colors"
                           disabled={actionLoading === `duplicate-${version.id}`}
                         >
                           {actionLoading === `duplicate-${version.id}` ? (
@@ -390,10 +390,10 @@ const CVVersionManager: React.FC = () => {
                           )}
                           Duplicate
                         </button>
-                        <div className="h-px bg-gray-700 mx-2" />
+                        <div className="h-px bg-border mx-2" />
                         <button
                           onClick={() => deleteVersion(version)}
-                          className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 flex items-center transition-colors"
+                          className="w-full text-left px-4 py-3 text-sm text-[#ff6b6b] hover:bg-[#ff6b6b]/20 hover:text-[#ff8585] flex items-center transition-colors"
                           disabled={actionLoading === `delete-${version.id}`}
                         >
                           {actionLoading === `delete-${version.id}` ? (
@@ -413,7 +413,7 @@ const CVVersionManager: React.FC = () => {
         )}
       </div>
 
-      {/* Create Version Modal - Fixed Visibility */}
+      {/* Create Version Modal */}
       {showCreateModal && (
         <div
           className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-fade-in"
@@ -424,16 +424,16 @@ const CVVersionManager: React.FC = () => {
           }}
         >
           <div className="max-w-lg w-full animate-slide-in">
-            <Card className="p-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-2 border-purple/30 shadow-2xl shadow-purple/20">
+            <Card className="p-0 glass-card border border-accent/30 shadow-glow">
               <div className="p-8">
                 <div className="flex items-start justify-between mb-6">
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Create New CV Version</h3>
-                    <p className="text-sm text-gray-400">Save a customized version of your CV for specific job applications</p>
+                    <h3 className="text-2xl font-bold text-text-primary mb-2">Create New CV Version</h3>
+                    <p className="text-sm text-text-muted">Save a customized version of your CV for specific job applications</p>
                   </div>
                   <button
                     onClick={() => setShowCreateModal(false)}
-                    className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-gray-700 rounded-lg"
+                    className="text-text-muted hover:text-text-primary transition-colors p-1 hover:bg-secondary-light rounded-lg"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -441,42 +441,42 @@ const CVVersionManager: React.FC = () => {
 
                 <div className="space-y-5">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-200 mb-2">
-                      Version Name <span className="text-red-400">*</span>
+                    <label className="block text-sm font-semibold text-text-secondary mb-2">
+                      Version Name <span className="text-[#ff6b6b]">*</span>
                     </label>
                     <input
                       type="text"
                       value={newVersionName}
                       onChange={(e) => setNewVersionName(e.target.value)}
                       placeholder="e.g., Frontend Developer - TechCorp"
-                      className="w-full px-4 py-3 bg-gray-900 border-2 border-gray-700 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-purple focus:border-purple transition-all outline-none"
+                      className="w-full px-4 py-3 glass-input border border-border rounded-xl text-text-primary placeholder-text-muted focus:ring-2 focus:ring-accent focus:border-accent transition-all outline-none"
                       autoFocus
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-200 mb-2">
-                      Job Title <span className="text-gray-500">(Optional)</span>
+                    <label className="block text-sm font-semibold text-text-secondary mb-2">
+                      Job Title <span className="text-text-muted">(Optional)</span>
                     </label>
                     <input
                       type="text"
                       value={selectedJobTitle}
                       onChange={(e) => setSelectedJobTitle(e.target.value)}
                       placeholder="e.g., Senior Frontend Developer"
-                      className="w-full px-4 py-3 bg-gray-900 border-2 border-gray-700 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-purple focus:border-purple transition-all outline-none"
+                      className="w-full px-4 py-3 glass-input border border-border rounded-xl text-text-primary placeholder-text-muted focus:ring-2 focus:ring-accent focus:border-accent transition-all outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-200 mb-2">
-                      Company <span className="text-gray-500">(Optional)</span>
+                    <label className="block text-sm font-semibold text-text-secondary mb-2">
+                      Company <span className="text-text-muted">(Optional)</span>
                     </label>
                     <input
                       type="text"
                       value={selectedCompany}
                       onChange={(e) => setSelectedCompany(e.target.value)}
                       placeholder="e.g., TechCorp Inc."
-                      className="w-full px-4 py-3 bg-gray-900 border-2 border-gray-700 rounded-xl text-white placeholder-gray-500 focus:ring-2 focus:ring-purple focus:border-purple transition-all outline-none"
+                      className="w-full px-4 py-3 glass-input border border-border rounded-xl text-text-primary placeholder-text-muted focus:ring-2 focus:ring-accent focus:border-accent transition-all outline-none"
                     />
                   </div>
                 </div>

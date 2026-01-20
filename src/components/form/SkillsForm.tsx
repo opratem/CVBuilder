@@ -32,10 +32,10 @@ const SkillsForm: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-4">
-        <Code className="w-5 h-5 text-blue-600" />
+        <Code className="w-5 h-5 text-accent" />
         <h2 className="text-lg font-semibold">Skills</h2>
         <Tooltip content="Add your technical and soft skills. This helps ATS systems and recruiters understand your capabilities.">
-          <div className="w-4 h-4 rounded-full bg-gray-300 text-white text-xs flex items-center justify-center cursor-help">
+          <div className="w-4 h-4 rounded-full bg-secondary-light text-text-muted text-xs flex items-center justify-center cursor-help">
             ?
           </div>
         </Tooltip>
@@ -52,9 +52,9 @@ const SkillsForm: React.FC = () => {
       {/* Skills List */}
       <div className="space-y-3">
         {skills.map((skill, index) => (
-          <div key={skill.id} className="p-4 border border-gray-200 rounded-lg">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="lg:col-span-2">
+          <div key={skill.id} className="p-4 border border-border rounded-lg bg-surface-elevated">
+            <div className="flex items-end gap-4">
+              <div className="flex-1">
                 <Input
                   label="Skill Name"
                   value={skill.name}
@@ -63,36 +63,11 @@ const SkillsForm: React.FC = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-text-primary">
-                  Proficiency Level
-                </label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="range"
-                    min="1"
-                    max="5"
-                    value={skill.level || 3}
-                    onChange={(e) => updateSkill(skill.id, { level: Number.parseInt(e.target.value) })}
-                    className="flex-1 min-w-0"
-                  />
-                  <span className="text-sm text-gray-600 w-20 text-right flex-shrink-0">
-                    {skill.level === 1 ? 'Beginner' :
-                     skill.level === 2 ? 'Basic' :
-                     skill.level === 3 ? 'Intermediate' :
-                     skill.level === 4 ? 'Advanced' :
-                     'Expert'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-3 flex justify-end">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleRemoveSkill(skill.id)}
-                className="text-red-600 border-red-300 hover:bg-red-50"
+                className="btn-danger-dark mb-0.5"
               >
                 <Trash2 className="w-4 h-4 mr-1" />
                 Remove

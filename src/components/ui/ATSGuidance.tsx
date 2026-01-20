@@ -49,11 +49,11 @@ const ATSGuidance: React.FC<ATSGuidanceProps> = ({ className = '' }) => {
   const getIcon = (type: string) => {
     switch (type) {
       case 'success':
-        return <CheckCircle className="w-5 h-5 text-green-400" />;
+        return <CheckCircle className="w-5 h-5 text-accent-light" />;
       case 'warning':
-        return <AlertCircle className="w-5 h-5 text-yellow-400" />;
+        return <AlertCircle className="w-5 h-5 text-[#fbbf24]" />;
       case 'info':
-        return <Info className="w-5 h-5 text-blue-400" />;
+        return <Info className="w-5 h-5 text-[#60a5fa]" />;
       default:
         return <Info className="w-5 h-5 text-text-muted" />;
     }
@@ -62,13 +62,26 @@ const ATSGuidance: React.FC<ATSGuidanceProps> = ({ className = '' }) => {
   const getHeaderColor = (type: string) => {
     switch (type) {
       case 'success':
-        return 'text-green-300';
+        return 'text-accent-light';
       case 'warning':
-        return 'text-yellow-300';
+        return 'text-[#fbbf24]';
       case 'info':
-        return 'text-blue-300';
+        return 'text-[#60a5fa]';
       default:
         return 'text-text-secondary';
+    }
+  };
+
+  const getSectionClass = (type: string) => {
+    switch (type) {
+      case 'success':
+        return 'glass-success';
+      case 'warning':
+        return 'glass-warning';
+      case 'info':
+        return 'glass-info';
+      default:
+        return 'glass-surface';
     }
   };
 
@@ -85,7 +98,7 @@ const ATSGuidance: React.FC<ATSGuidanceProps> = ({ className = '' }) => {
 
       <div className="space-y-6">
         {atsGuidelines.map((section, index) => (
-          <div key={index} className="border border-secondary-light rounded-lg p-4 bg-surface/30">
+          <div key={index} className={`rounded-lg p-4 ${getSectionClass(section.type)}`}>
             <div className="flex items-center mb-3">
               {getIcon(section.type)}
               <h3 className={`ml-2 font-medium ${getHeaderColor(section.type)}`}>
@@ -104,7 +117,7 @@ const ATSGuidance: React.FC<ATSGuidanceProps> = ({ className = '' }) => {
         ))}
       </div>
 
-      <div className="mt-6 p-4 bg-accent/10 rounded-lg border border-accent/20">
+      <div className="mt-6 p-4 glass-accent rounded-lg">
         <h4 className="font-medium text-accent mb-2">Pro Tip:</h4>
         <p className="text-sm text-text-primary">
           The Classic template is specifically optimized for ATS compatibility.

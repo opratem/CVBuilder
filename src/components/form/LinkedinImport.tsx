@@ -49,7 +49,6 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         setImportData(result.data);
         setImportStep('review');
       } else {
-        // Show errors but stay on file upload step
         setImportStep('file');
       }
     } catch (error) {
@@ -108,25 +107,25 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
   const renderGuideStep = () => (
     <div className="space-y-6">
       <div className="text-center">
-        <Linkedin className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Import from LinkedIn</h2>
-        <p className="text-gray-600">
+        <Linkedin className="w-12 h-12 text-accent mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-text-primary mb-2">Import from LinkedIn</h2>
+        <p className="text-text-secondary">
           Quickly fill your CV with information from your LinkedIn profile
         </p>
       </div>
 
-      <div className="bg-teal-900/20 border border-teal-700/50 rounded-lg p-4">
-        <h3 className="font-semibold text-white mb-2">{LINKEDIN_IMPORT_GUIDE.title}</h3>
+      <div className="glass-accent rounded-lg p-4">
+        <h3 className="font-semibold text-text-primary mb-2">{LINKEDIN_IMPORT_GUIDE.title}</h3>
         <div className="space-y-3">
           {LINKEDIN_IMPORT_GUIDE.steps.map((step, index) => (
             <div key={index} className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+              <div className="w-6 h-6 bg-accent text-white rounded-full flex items-center justify-center text-sm font-bold">
                 {index + 1}
               </div>
               <div>
-                <h4 className="font-medium text-white">{step.title}</h4>
-                <p className="text-gray-200 text-sm">{step.description}</p>
-                <p className="text-gray-300 text-xs mt-1">{step.detail}</p>
+                <h4 className="font-medium text-text-primary">{step.title}</h4>
+                <p className="text-text-secondary text-sm">{step.description}</p>
+                <p className="text-text-muted text-xs mt-1">{step.detail}</p>
               </div>
             </div>
           ))}
@@ -134,14 +133,14 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="p-4 hover:shadow-md transition-shadow">
+        <Card className="p-4 hover:shadow-glow transition-shadow">
           <div className="text-center space-y-3">
-            <Upload className="w-8 h-8 text-green-600 mx-auto" />
-            <h3 className="font-semibold text-gray-900">Upload LinkedIn Data</h3>
-            <p className="text-gray-600 text-sm">
+            <Upload className="w-8 h-8 text-accent-light mx-auto" />
+            <h3 className="font-semibold text-text-primary">Upload LinkedIn Data</h3>
+            <p className="text-text-secondary text-sm">
               Upload your LinkedIn data export or resume file
             </p>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-text-muted">
               <p className="font-medium mb-1">Supported formats:</p>
               <ul className="space-y-0.5">
                 {LINKEDIN_IMPORT_GUIDE.fileFormats.map((format, index) => (
@@ -159,14 +158,14 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
           </div>
         </Card>
 
-        <Card className="p-4 hover:shadow-md transition-shadow">
+        <Card className="p-4 hover:shadow-glow transition-shadow">
           <div className="text-center space-y-3">
-            <FileText className="w-8 h-8 text-blue-600 mx-auto" />
-            <h3 className="font-semibold text-gray-900">Manual Import</h3>
-            <p className="text-gray-600 text-sm">
+            <FileText className="w-8 h-8 text-accent mx-auto" />
+            <h3 className="font-semibold text-text-primary">Manual Import</h3>
+            <p className="text-text-secondary text-sm">
               Manually copy information from your LinkedIn profile
             </p>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-text-muted">
               <p className="font-medium mb-1">Best for:</p>
               <ul className="space-y-0.5">
                 <li>• Quick profile updates</li>
@@ -190,7 +189,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
   const renderFileUploadStep = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Upload LinkedIn Data</h2>
+        <h2 className="text-xl font-bold text-text-primary">Upload LinkedIn Data</h2>
         <Button
           onClick={() => setImportStep('guide')}
           variant="outline"
@@ -200,7 +199,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         </Button>
       </div>
 
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
+      <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-accent transition-colors">
         <input
           ref={fileInputRef}
           type="file"
@@ -211,10 +210,10 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         />
 
         <div className="space-y-4">
-          <Upload className="w-12 h-12 text-gray-400 mx-auto" />
+          <Upload className="w-12 h-12 text-text-muted mx-auto" />
           <div>
-            <h3 className="text-lg font-medium text-gray-900">Choose a file to upload</h3>
-            <p className="text-gray-600 text-sm mt-1">
+            <h3 className="text-lg font-medium text-text-primary">Choose a file to upload</h3>
+            <p className="text-text-secondary text-sm mt-1">
               Drag and drop your LinkedIn data file here, or click to browse
             </p>
           </div>
@@ -228,7 +227,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
             {isProcessing ? 'Processing...' : 'Select File'}
           </Button>
 
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-text-muted">
             <p className="font-medium">Supported formats:</p>
             <p>JSON, CSV, PDF, Word Document, Text file, ZIP</p>
           </div>
@@ -238,15 +237,15 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
       {uploadedFile && (
         <Card className="p-4">
           <div className="flex items-center space-x-3">
-            <FileText className="w-5 h-5 text-blue-600" />
+            <FileText className="w-5 h-5 text-accent" />
             <div className="flex-1">
-              <p className="font-medium text-gray-900">{uploadedFile.name}</p>
-              <p className="text-sm text-gray-600">
+              <p className="font-medium text-text-primary">{uploadedFile.name}</p>
+              <p className="text-sm text-text-secondary">
                 {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
               </p>
             </div>
             {isProcessing && (
-              <div className="text-blue-600 text-sm">Processing...</div>
+              <div className="text-accent text-sm">Processing...</div>
             )}
           </div>
         </Card>
@@ -256,12 +255,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         <Card className="p-4">
           <div className="space-y-3">
             {importResult.errors.length > 0 && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <div className="glass-error rounded-lg p-3">
                 <div className="flex items-center space-x-2 mb-2">
-                  <AlertTriangle className="w-4 h-4 text-red-600" />
-                  <h4 className="font-medium text-red-900">Upload Issues</h4>
+                  <AlertTriangle className="w-4 h-4 text-[#ff6b6b]" />
+                  <h4 className="font-medium text-[#ff6b6b]">Upload Issues</h4>
                 </div>
-                <ul className="text-red-700 text-sm space-y-1">
+                <ul className="text-[#ff8585] text-sm space-y-1">
                   {importResult.errors.map((error, index) => (
                     <li key={index}>• {error}</li>
                   ))}
@@ -270,12 +269,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
             )}
 
             {importResult.suggestions.length > 0 && (
-              <div className="bg-teal-900/20 border border-teal-700/50 rounded-lg p-3">
+              <div className="glass-info rounded-lg p-3">
                 <div className="flex items-center space-x-2 mb-2">
-                  <Info className="w-4 h-4 text-teal-400" />
-                  <h4 className="font-medium text-white">Suggestions</h4>
+                  <Info className="w-4 h-4 text-[#60a5fa]" />
+                  <h4 className="font-medium text-text-primary">Suggestions</h4>
                 </div>
-                <ul className="text-gray-200 text-sm space-y-1">
+                <ul className="text-text-secondary text-sm space-y-1">
                   {importResult.suggestions.map((suggestion, index) => (
                     <li key={index}>• {suggestion}</li>
                   ))}
@@ -302,12 +301,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         </Card>
       )}
 
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+      <div className="glass-warning rounded-lg p-4">
         <div className="flex items-start space-x-3">
-          <Download className="w-5 h-5 text-amber-600 mt-0.5" />
+          <Download className="w-5 h-5 text-[#fbbf24] mt-0.5" />
           <div>
-            <h4 className="font-medium text-amber-900">How to get your LinkedIn data</h4>
-            <ol className="text-amber-700 text-sm mt-2 space-y-1 list-decimal list-inside">
+            <h4 className="font-medium text-[#fbbf24]">How to get your LinkedIn data</h4>
+            <ol className="text-text-secondary text-sm mt-2 space-y-1 list-decimal list-inside">
               <li>Go to LinkedIn Settings & Privacy</li>
               <li>Click "Data Privacy" in the left sidebar</li>
               <li>Select "Get a copy of your data"</li>
@@ -324,7 +323,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
   const renderManualStep = () => (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Manual LinkedIn Import</h2>
+        <h2 className="text-xl font-bold text-text-primary">Manual LinkedIn Import</h2>
         <Button
           onClick={() => setImportStep('guide')}
           variant="outline"
@@ -337,12 +336,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
       {importResult && !importResult.success && (
         <Card className="p-4">
           {importResult.errors.length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-3">
+            <div className="glass-error rounded-lg p-3 mb-3">
               <div className="flex items-center space-x-2 mb-2">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
-                <h4 className="font-medium text-red-900">Please fix these issues:</h4>
+                <AlertTriangle className="w-4 h-4 text-[#ff6b6b]" />
+                <h4 className="font-medium text-[#ff6b6b]">Please fix these issues:</h4>
               </div>
-              <ul className="text-red-700 text-sm space-y-1">
+              <ul className="text-[#ff8585] text-sm space-y-1">
                 {importResult.errors.map((error, index) => (
                   <li key={index}>• {error}</li>
                 ))}
@@ -355,7 +354,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
       <div className="grid gap-6">
         {/* Basic Information */}
         <Card className="p-4">
-          <h3 className="font-semibold text-gray-900 mb-3">Basic Information</h3>
+          <h3 className="font-semibold text-text-primary mb-3">Basic Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="First Name"
@@ -391,7 +390,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
 
         {/* Contact Information */}
         <Card className="p-4">
-          <h3 className="font-semibold text-gray-900 mb-3">Contact Information</h3>
+          <h3 className="font-semibold text-text-primary mb-3">Contact Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Email Address"
@@ -417,12 +416,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         </Card>
 
         {/* Instructions */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div className="glass-warning rounded-lg p-4">
           <div className="flex items-start space-x-3">
-            <Info className="w-5 h-5 text-amber-600 mt-0.5" />
+            <Info className="w-5 h-5 text-[#fbbf24] mt-0.5" />
             <div>
-              <h4 className="font-medium text-amber-900">How to find this information</h4>
-              <ul className="text-amber-700 text-sm mt-2 space-y-1">
+              <h4 className="font-medium text-[#fbbf24]">How to find this information</h4>
+              <ul className="text-text-secondary text-sm mt-2 space-y-1">
                 <li>• Open your LinkedIn profile in a web browser</li>
                 <li>• Copy and paste the information from your profile sections</li>
                 <li>• Your work experience and education can be added in the next step</li>
@@ -458,12 +457,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-900">Review Import Data</h2>
+          <h2 className="text-xl font-bold text-text-primary">Review Import Data</h2>
           <div className="flex items-center space-x-2">
             {importResult.data && 'completeness' in importResult && typeof importResult.completeness === 'number' && (
-              <div className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+              <span className="tag-info text-xs px-2 py-1 rounded-full">
                 {importResult.completeness}% Complete
-              </div>
+              </span>
             )}
             <Button
               onClick={() => setImportStep(uploadedFile ? 'file' : 'manual')}
@@ -477,12 +476,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
 
         {/* Validation Alerts */}
         {importResult.errors.length > 0 && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="glass-error rounded-lg p-4">
             <div className="flex items-center space-x-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
-              <h3 className="font-medium text-red-900">Issues Found</h3>
+              <AlertTriangle className="w-5 h-5 text-[#ff6b6b]" />
+              <h3 className="font-medium text-[#ff6b6b]">Issues Found</h3>
             </div>
-            <ul className="text-red-700 text-sm space-y-1">
+            <ul className="text-[#ff8585] text-sm space-y-1">
               {importResult.errors.map((error, index) => (
                 <li key={index}>• {error}</li>
               ))}
@@ -491,12 +490,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         )}
 
         {importResult.warnings.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="glass-warning rounded-lg p-4">
             <div className="flex items-center space-x-2 mb-2">
-              <AlertTriangle className="w-5 h-5 text-amber-600" />
-              <h3 className="font-medium text-amber-900">Warnings</h3>
+              <AlertTriangle className="w-5 h-5 text-[#fbbf24]" />
+              <h3 className="font-medium text-[#fbbf24]">Warnings</h3>
             </div>
-            <ul className="text-amber-700 text-sm space-y-1">
+            <ul className="text-text-secondary text-sm space-y-1">
               {importResult.warnings.map((warning, index) => (
                 <li key={index}>• {warning}</li>
               ))}
@@ -505,12 +504,12 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         )}
 
         {importResult.suggestions.length > 0 && (
-          <div className="bg-teal-900/20 border border-teal-700/50 rounded-lg p-4">
+          <div className="glass-info rounded-lg p-4">
             <div className="flex items-center space-x-2 mb-2">
-              <Info className="w-5 h-5 text-teal-600" />
-              <h3 className="font-medium text-white">Suggestions</h3>
+              <Info className="w-5 h-5 text-accent" />
+              <h3 className="font-medium text-text-primary">Suggestions</h3>
             </div>
-            <ul className="text-gray-200 text-sm space-y-1">
+            <ul className="text-text-secondary text-sm space-y-1">
               {importResult.suggestions.map((suggestion, index) => (
                 <li key={index}>• {suggestion}</li>
               ))}
@@ -522,8 +521,8 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         <div className="grid gap-4">
           {importData.personalInfo && (
             <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-2">Personal Information</h3>
-              <div className="text-sm text-gray-600 space-y-1">
+              <h3 className="font-semibold text-text-primary mb-2">Personal Information</h3>
+              <div className="text-sm text-text-secondary space-y-1">
                 {importData.personalInfo.fullName && (
                   <p><strong>Name:</strong> {importData.personalInfo.fullName}</p>
                 )}
@@ -545,22 +544,22 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
 
           {importData.workExperience.length > 0 && (
             <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-2">
+              <h3 className="font-semibold text-text-primary mb-2">
                 Work Experience ({importData.workExperience.length} positions)
               </h3>
               <div className="space-y-2">
                 {importData.workExperience.slice(0, 3).map((exp, index) => (
-                  <div key={index} className="text-sm text-gray-600">
+                  <div key={index} className="text-sm text-text-secondary">
                     <p><strong>{exp.position}</strong> at {exp.company}</p>
                     {exp.startDate && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-text-muted">
                         {exp.startDate} - {exp.endDate || 'Present'}
                       </p>
                     )}
                   </div>
                 ))}
                 {importData.workExperience.length > 3 && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-text-muted">
                     ... and {importData.workExperience.length - 3} more positions
                   </p>
                 )}
@@ -570,18 +569,18 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
 
           {importData.education.length > 0 && (
             <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-2">
+              <h3 className="font-semibold text-text-primary mb-2">
                 Education ({importData.education.length} entries)
               </h3>
               <div className="space-y-2">
                 {importData.education.slice(0, 2).map((edu, index) => (
-                  <div key={index} className="text-sm text-gray-600">
+                  <div key={index} className="text-sm text-text-secondary">
                     <p><strong>{edu.degree}</strong> {edu.fieldOfStudy && `in ${edu.fieldOfStudy}`}</p>
-                    <p className="text-xs text-gray-500">{edu.institution}</p>
+                    <p className="text-xs text-text-muted">{edu.institution}</p>
                   </div>
                 ))}
                 {importData.education.length > 2 && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-text-muted">
                     ... and {importData.education.length - 2} more entries
                   </p>
                 )}
@@ -591,20 +590,20 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
 
           {importData.skills.length > 0 && (
             <Card className="p-4">
-              <h3 className="font-semibold text-gray-900 mb-2">
+              <h3 className="font-semibold text-text-primary mb-2">
                 Skills ({importData.skills.length} skills)
               </h3>
               <div className="flex flex-wrap gap-2">
                 {importData.skills.slice(0, 12).map((skill, index) => (
                   <span
                     key={index}
-                    className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
+                    className="tag-info text-xs px-2 py-1 rounded-full"
                   >
                     {skill}
                   </span>
                 ))}
                 {importData.skills.length > 12 && (
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-text-muted">
                     +{importData.skills.length - 12} more
                   </span>
                 )}
@@ -635,20 +634,20 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
 
   const renderCompleteStep = () => (
     <div className="text-center space-y-6">
-      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-        <CheckCircle className="w-8 h-8 text-green-600" />
+      <div className="w-16 h-16 glass-success rounded-full flex items-center justify-center mx-auto">
+        <CheckCircle className="w-8 h-8 text-accent-light" />
       </div>
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Import Successful!</h2>
-        <p className="text-gray-600">
+        <h2 className="text-2xl font-bold text-text-primary mb-2">Import Successful!</h2>
+        <p className="text-text-secondary">
           Your LinkedIn information has been imported into your CV. You can now review and edit the imported data.
         </p>
       </div>
 
       {importData && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-left">
-          <h3 className="font-medium text-green-900 mb-2">Successfully imported:</h3>
-          <ul className="text-green-700 text-sm space-y-1">
+        <div className="glass-success rounded-lg p-4 text-left">
+          <h3 className="font-medium text-accent-light mb-2">Successfully imported:</h3>
+          <ul className="text-text-secondary text-sm space-y-1">
             <li>✓ Personal information</li>
             {importData.workExperience.length > 0 && (
               <li>✓ {importData.workExperience.length} work experience entries</li>
@@ -671,7 +670,7 @@ const LinkedInImport: React.FC<LinkedInImportProps> = ({ onClose }) => {
         >
           Continue Editing CV
         </Button>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-text-muted">
           Tip: Review each section to ensure accuracy and add any missing details
         </p>
       </div>
