@@ -52,7 +52,7 @@ const ProjectsForm: React.FC = () => {
       </div>
 
       {projects.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">
+        <div className="text-center py-4 text-text-muted">
           <p>No projects added yet. Click the button above to add your projects.</p>
         </div>
       ) : (

@@ -8,7 +8,7 @@ import Card from '../ui/Card';
 import {
   Target, Sparkles, TrendingUp, CheckCircle, AlertCircle, ChevronRight, Zap,
   Users, Award, Lightbulb, BarChart3, Brain, FileEdit, ArrowRight,
-  BookOpen, Star, Clock, Building2
+  BookOpen, Star, Clock, Building2, Loader
 } from 'lucide-react';
 import { JobAnalysisService, type JobAnalysisResult, type OptimizationSuggestion, type CompetencyGap } from '../../utils/jobAnalysisService';
 import { cvDataService } from '../../services/cvDataService';
@@ -21,6 +21,7 @@ const EnhancedJobOptimizer: React.FC = () => {
   const [company, setCompany] = useState('');
   const [analysis, setAnalysis] = useState<JobAnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [isCreatingVersion, setIsCreatingVersion] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'suggestions' | 'gaps' | 'keywords'>('overview');
   const [appliedSuggestions, setAppliedSuggestions] = useState<Set<string>>(new Set());
 
@@ -102,18 +103,39 @@ const EnhancedJobOptimizer: React.FC = () => {
   };
 
   const createOptimizedVersion = async () => {
-    if (!analysis) return;
+    if (!analysis) {
+        showError('No Analysis', 'Please analyze a job description first before creating an optimized version. ');
+        return;
+        }
+
+        // Prevent double clicks
+        if (isCreatingVersion) {
+            return;
+        }
+
+    setIsCreatingVersion(true);
+
+    // Validate that we have meaningful data
+    const jobTitlePart = analysis.jobTitle?.trim() || jobTitle.trim() || 'Untitled Position';
+    const companyPart = analysis.company?.trim() || company.trim() || 'Untitled Company';
+
+    // Create a meaningful version name
+    const versionName = `${companyPart} - ${jobTitlePart}`;
+
+    console.log('Creating optimized version:', { versionName, cvData: cv });
 
     try {
-      const versionName = `${analysis.company} - ${analysis.jobTitle}`;
-      const response = await cvDataService.createCVVersion(cv, cv.templateId, versionName);
+        // Ensure we have a template ID
+        const templateId = cv.templateId || 'modern';
+
+        const response = await cvDataService.createCVVersion(cv, templateId, versionName);
 
       if (response.success) {
         const optimizedCV = {
           ...cv,
           jobSpecific: {
-            jobTitle: analysis.jobTitle,
-            company: analysis.company,
+            jobTitle: jobTitlePart,
+            company: companyPart,
             appliedOptimizations: Array.from(appliedSuggestions),
             createdAt: new Date().toISOString()
           }
@@ -122,11 +144,14 @@ const EnhancedJobOptimizer: React.FC = () => {
         updateCV(optimizedCV);
         showSuccess('CV Version Created!', `Successfully created optimized CV version: "${versionName}"`);
       } else {
+          console.error('Failed to create CV version:', response.error);
         showError('Failed to Save Version', response.error || 'An error occurred while saving your CV version');
       }
     } catch (error) {
       console.error('Error creating optimized version:', error);
       showError('Save Failed', 'Failed to create optimized CV version. Please try again.');
+    } finally {
+      setIsCreatingVersion(false);
     }
   };
 
@@ -569,10 +594,20 @@ const EnhancedJobOptimizer: React.FC = () => {
               onClick={createOptimizedVersion}
               variant="primary"
               className="flex items-center"
+              disabled={isCreatingVersion}
             >
-              <FileEdit className="w-4 h-4 mr-2" />
-              Create Optimized CV Version
-              <ChevronRight className="w-4 h-4 ml-2" />
+              {isCreatingVersion ? (
+                <>
+                  <Loader className="w-4 h-4 mr-2 animate-spin" />
+                  Creating Version...
+                </>
+              ) : (
+                <>
+                  <FileEdit className="w-4 h-4 mr-2" />
+                  Create Optimized CV Version
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </>
+              )}
             </Button>
           </div>
         </div>

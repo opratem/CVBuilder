@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -6,9 +7,9 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
+  type DragEndEvent,
   DragOverlay,
-  DragStartEvent,
+  type DragStartEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -72,9 +73,9 @@ const SortableItem: React.FC<SortableItemProps> = ({ section, onToggleEnabled })
       ref={setNodeRef}
       style={style}
       className={`
-        flex items-center space-x-3 p-4 bg-white border rounded-lg shadow-sm
-        ${isDragging ? 'shadow-lg ring-2 ring-blue-500 scale-105 rotate-1' : 'hover:shadow-md hover:border-gray-300'}
-        ${!section.enabled ? 'opacity-60 bg-gray-50' : ''}
+        flex items-center space-x-3 p-4 glass-surface border border-border rounded-lg
+        ${isDragging ? 'shadow-glow ring-2 ring-accent scale-105 rotate-1' : 'hover:shadow-md hover:border-border-light'}
+        ${!section.enabled ? 'opacity-60 bg-secondary-dark' : ''}
         transition-all duration-200 ease-in-out
         ${isDragging ? 'z-50' : 'z-0'}
       `}
@@ -83,28 +84,28 @@ const SortableItem: React.FC<SortableItemProps> = ({ section, onToggleEnabled })
       <div
         {...attributes}
         {...listeners}
-        className="cursor-grab hover:cursor-grabbing p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+        className="cursor-grab hover:cursor-grabbing p-1 text-text-muted hover:text-accent hover:bg-surface-hover rounded transition-colors"
         title="Drag to reorder"
       >
         <GripVertical className="w-5 h-5" />
       </div>
 
       {/* Section Icon */}
-      <div className="text-gray-600 flex items-center justify-center w-8 h-8">
+      <div className="text-text-muted flex items-center justify-center w-8 h-8">
         {sectionInfo.icon}
       </div>
 
       {/* Section Details */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center space-x-2">
-          <h3 className={`font-medium ${section.enabled ? 'text-gray-900' : 'text-gray-500'}`}>
+          <h3 className={`font-medium ${section.enabled ? 'text-text-primary' : 'text-text-muted'}`}>
             {section.name}
           </h3>
-          <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
+          <span className="text-xs text-text-muted bg-secondary-light px-2 py-1 rounded">
             {section.order + 1}
           </span>
         </div>
-        <p className="text-sm text-gray-500 mt-1">{sectionInfo.description}</p>
+        <p className="text-sm text-text-muted mt-1">{sectionInfo.description}</p>
       </div>
 
       {/* Toggle Button */}
@@ -113,8 +114,8 @@ const SortableItem: React.FC<SortableItemProps> = ({ section, onToggleEnabled })
         className={`
           p-2 rounded-lg transition-colors
           ${section.enabled
-            ? 'text-green-600 hover:bg-green-50'
-            : 'text-gray-400 hover:bg-gray-50'
+            ? 'text-accent hover:bg-surface-hover'
+            : 'text-text-muted hover:bg-surface-hover'
           }
         `}
         title={section.enabled ? 'Hide section' : 'Show section'}
@@ -210,11 +211,11 @@ const SectionReorder: React.FC<SectionReorderProps> = ({ onClose }) => {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-gray-900 flex items-center">
-              <Settings className="w-6 h-6 mr-2 text-blue-600" />
+            <h2 className="text-xl font-bold text-text-primary flex items-center">
+              <Settings className="w-6 h-6 mr-2 text-accent" />
               Customize CV Layout
             </h2>
-            <p className="text-gray-600 text-sm mt-1">
+            <p className="text-text-secondary text-sm mt-1">
               Drag sections to reorder them or toggle visibility.
               {enabledSections} of {totalSections} sections enabled.
             </p>
@@ -234,14 +235,14 @@ const SectionReorder: React.FC<SectionReorderProps> = ({ onClose }) => {
         {/* Instructions */}
         <div className={`border rounded-lg p-4 mb-6 transition-all duration-200 ${
           activeId
-            ? 'bg-blue-100 border-blue-300 shadow-md'
-            : 'bg-blue-50 border-blue-200'
+            ? 'bg-accent-light border-accent shadow-md'
+            : 'bg-secondary-light border-accent'
         }`}>
-          <h3 className="font-medium text-blue-900 mb-2">
+          <h3 className="font-medium text-accent mb-2">
             {activeId ? 'Drop to reorder section' : 'How to customize your CV layout:'}
           </h3>
           {!activeId && (
-            <ul className="text-blue-800 text-sm space-y-1">
+            <ul className="text-accent-dark text-sm space-y-1">
               <li>• <strong>Drag sections</strong> using the grip handle to reorder them</li>
               <li>• <strong>Click the eye icon</strong> to show or hide sections</li>
               <li>• <strong>Personal Information</strong> will always appear first</li>
@@ -282,15 +283,15 @@ const SectionReorder: React.FC<SectionReorderProps> = ({ onClose }) => {
         </div>
 
         {/* Section Statistics */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <div className="bg-secondary-light rounded-lg p-4 mb-6">
           <div className="grid grid-cols-2 gap-4 text-center">
             <div>
-              <div className="text-2xl font-bold text-green-600">{enabledSections}</div>
-              <div className="text-sm text-gray-600">Visible Sections</div>
+              <div className="text-2xl font-bold text-accent">{enabledSections}</div>
+              <div className="text-sm text-text-secondary">Visible Sections</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-400">{totalSections - enabledSections}</div>
-              <div className="text-sm text-gray-600">Hidden Sections</div>
+              <div className="text-2xl font-bold text-text-muted">{totalSections - enabledSections}</div>
+              <div className="text-sm text-text-secondary">Hidden Sections</div>
             </div>
           </div>
         </div>
