@@ -29,29 +29,48 @@ const withTimeout = async <T>(promise: Promise<T> | PromiseLike<T>, timeoutMs = 
 
 class CVDataService {
   // Check if user is authenticated and provide better error messages
+  // Uses cached session first (fast) before falling back to network call
   private async ensureAuthenticated() {
     try {
-      // Add timeout to authentication check
-      const { data: { user }, error } = await withTimeout(
-        supabase.auth.getUser(),
-        5000 // 5 second timeout for auth check
-      )
+      // First, try to get the cached session (no network call, instant)
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
 
-      if (error) {
-        console.error('Authentication error:', error)
+      if (sessionError) {
+        console.error('Session error:', sessionError)
         return { user: null, error: 'Authentication failed. Please log in again.' }
       }
 
-      if (!user) {
-        return { user: null, error: 'You must be logged in to perform this action.' }
+      // If we have a cached session with a user, use it
+      if (session?.user) {
+        return { user: session.user, error: null }
       }
 
-      return { user, error: null }
+      // No cached session - try to get user with a longer timeout as fallback
+      try {
+        const { data: { user }, error } = await withTimeout(
+          supabase.auth.getUser(),
+          8000 // 8 second timeout for auth check (increased from 5s)
+        )
+
+        if (error) {
+          console.error('Authentication error:', error)
+          return { user: null, error: 'Authentication failed. Please log in again.' }
+        }
+
+        if (!user) {
+          return { user: null, error: 'You must be logged in to perform this action.' }
+        }
+
+        return { user, error: null }
+      } catch (innerError) {
+        console.error('Error getting user:', innerError)
+        if (innerError instanceof Error && innerError.message === 'Operation timed out') {
+          return { user: null, error: 'Connection timeout. Please try again.' }
+        }
+        return { user: null, error: 'Unable to verify authentication. Check your connection.' }
+      }
     } catch (error) {
       console.error('Error checking authentication:', error)
-      if (error instanceof Error && error.message === 'Operation timed out') {
-        return { user: null, error: 'Connection timeout. Saving locally only.' }
-      }
       return { user: null, error: 'Unable to verify authentication. Check your connection.' }
     }
   }

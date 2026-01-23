@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { useCVStore } from '../../store/cvStore';
 import Input from '../ui/Input';
 import DatePicker from '../ui/DatePicker';
@@ -52,7 +52,7 @@ const ExtracurricularForm: React.FC = () => {
       </div>
 
       {extracurricular.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">
+        <div className="text-center py-4 text-text-muted">
           <p>No extracurricular activities added yet. Click the button above to add your activities.</p>
         </div>
       ) : (

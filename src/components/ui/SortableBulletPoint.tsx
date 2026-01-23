@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, X } from 'lucide-react';
@@ -35,23 +35,23 @@ export const SortableBulletPoint: React.FC<SortableBulletPointProps> = ({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-start gap-2 p-2 bg-white rounded-lg border ${
-        isDragging ? 'border-blue-400 shadow-lg' : 'border-gray-200'
+      className={`flex items-start gap-2 p-2 glass-input rounded-lg border ${
+        isDragging ? 'border-accent shadow-glow' : 'border-border'
       }`}
     >
       <button
         type="button"
-        className="mt-2 cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
+        className="mt-2 cursor-grab active:cursor-grabbing text-text-muted hover:text-accent transition-colors"
         {...attributes}
         {...listeners}
       >
         <GripVertical className="w-4 h-4" />
       </button>
-      
+
       <textarea
         value={text}
         onChange={(e) => onChange(e.target.value)}
-        className="flex-1 resize-none border-0 bg-transparent p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+        className="flex-1 resize-none border-0 bg-transparent p-0 text-text-primary placeholder:text-text-muted focus:ring-0 focus:outline-none sm:text-sm sm:leading-6"
         placeholder="Enter bullet point..."
         rows={1}
         onInput={(e) => {
@@ -60,11 +60,11 @@ export const SortableBulletPoint: React.FC<SortableBulletPointProps> = ({
           target.style.height = target.scrollHeight + 'px';
         }}
       />
-      
+
       <button
         type="button"
         onClick={onRemove}
-        className="mt-2 text-gray-400 hover:text-red-600"
+        className="mt-2 text-text-muted hover:text-red-500 transition-colors"
       >
         <X className="w-4 h-4" />
       </button>

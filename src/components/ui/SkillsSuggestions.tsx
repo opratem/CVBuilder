@@ -111,7 +111,7 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
             className={`text-xs px-2 py-1 rounded ${
               activeTab === 'role'
                 ? 'bg-teal-600 text-white'
-                : 'bg-gray-700 text-gray-200 border border-gray-600 hover:bg-gray-600'
+                : 'bg-secondary text-text-secondary border border-border hover:bg-secondary-light'
             }`}
           >
             For Your Role
@@ -122,7 +122,7 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
             className={`text-xs px-2 py-1 rounded ${
               activeTab === 'trending'
                 ? 'bg-teal-600 text-white'
-                : 'bg-gray-700 text-gray-200 border border-gray-600 hover:bg-gray-600'
+                : 'bg-secondary text-text-secondary border border-border hover:bg-secondary-light'
             }`}
           >
             Trending
@@ -134,7 +134,7 @@ const SkillsSuggestions: React.FC<SkillsSuggestionsProps> = ({
               className={`text-xs px-2 py-1 rounded ${
                 activeTab === 'analysis'
                   ? 'bg-teal-600 text-white'
-                  : 'bg-gray-700 text-gray-200 border border-gray-600 hover:bg-gray-600'
+                  : 'bg-secondary text-text-secondary border border-border hover:bg-secondary-light'
               }`}
             >
               Smart Suggestions
