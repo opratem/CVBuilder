@@ -1,5 +1,5 @@
-import React from 'react';
-import { Check, Save, AlertCircle, Loader2 } from 'lucide-react';
+import type React from 'react';
+import { Check, Loader2, AlertCircle, Cloud, CloudOff } from 'lucide-react';
 
 interface SaveStatusProps {
   status: 'idle' | 'saving' | 'saved' | 'error';
@@ -17,25 +17,22 @@ const SaveStatus: React.FC<SaveStatusProps> = ({ status, className = '' }) => {
         return {
           icon: <Loader2 className="w-4 h-4 animate-spin" />,
           text: 'Saving...',
-          bgColor: 'bg-blue-50',
-          textColor: 'text-blue-700',
-          borderColor: 'border-blue-200'
+          glassClass: 'glass-info',
+          textColor: 'text-blue-400'
         };
       case 'saved':
         return {
           icon: <Check className="w-4 h-4" />,
           text: 'Saved',
-          bgColor: 'bg-green-50',
-          textColor: 'text-green-700',
-          borderColor: 'border-green-200'
+          glassClass: 'glass-success',
+          textColor: 'text-emerald-400'
         };
       case 'error':
         return {
           icon: <AlertCircle className="w-4 h-4" />,
           text: 'Save failed',
-          bgColor: 'bg-red-50',
-          textColor: 'text-red-700',
-          borderColor: 'border-red-200'
+          glassClass: 'glass-error',
+          textColor: 'text-red-400'
         };
       default:
         return null;
@@ -47,10 +44,10 @@ const SaveStatus: React.FC<SaveStatusProps> = ({ status, className = '' }) => {
 
   return (
     <div
-      className={`flex items-center px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-300 animate-fadeIn ${config.bgColor} ${config.textColor} ${config.borderColor} ${className}`}
+      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 animate-fadeIn ${config.glassClass} ${config.textColor} ${className}`}
     >
       {config.icon}
-      <span className="ml-2">{config.text}</span>
+      <span>{config.text}</span>
     </div>
   );
 };
