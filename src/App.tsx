@@ -129,7 +129,7 @@ const CVBuilderApp: React.FC = () => {
       // Check for /auth/callback path or hash-based auth tokens
       const isCallback = path === '/auth/callback' ||
         path.includes('/auth/callback') ||
-        (hash && hash.includes('access_token'));
+        (hash !=== '' && hash.includes('access_token'));
       setIsAuthCallback(isCallback);
     }
   }, []);
