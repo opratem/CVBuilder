@@ -26,7 +26,7 @@ const TechTemplate: React.FC<TechTemplateProps> = ({ cv }) => {
             <span className="text-white">whoami</span>
           </div>
           <h1 className="text-3xl font-bold mb-2 text-white">
-            {personalInfo.fullName || 'developer@localhost'}
+            {personalInfo.fullName || 'Your Name'}
           </h1>
           <h2 className="text-lg text-green-300 mb-4">
             // {personalInfo.jobTitle || 'Full Stack Developer'}
