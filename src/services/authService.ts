@@ -41,6 +41,9 @@ interface ParsedError {
 }
 
 class AuthService {
+  // Production site URL - used for email redirects
+  private readonly siteUrl = import.meta.env.VITE_SITE_URL || 'https://cvbuildercv.vercel.app';
+
   // Parse and categorize errors for better user feedback
   private parseError(error: unknown): ParsedError {
     const errorMessage = error instanceof Error ? error.message : String(error)
@@ -187,7 +190,8 @@ class AuthService {
             data: {
               full_name: data.fullName,
               phone: data.phone || null
-            }
+            },
+            emailRedirectTo: `${this.siteUrl}/auth/callback`
           }
         }),
         15000
@@ -351,7 +355,7 @@ class AuthService {
     try {
       const { error } = await this.withTimeout(
         supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`
+          redirectTo: `${this.siteUrl}/reset-password`
         }),
         10000
       );
@@ -415,7 +419,10 @@ class AuthService {
       const { error } = await this.withTimeout(
         supabase.auth.resend({
           type: 'signup',
-          email: email
+          email: email,
+          options: {
+            emailRedirectTo: `${this.siteUrl}/auth/callback`
+          }
         }),
         10000
       );

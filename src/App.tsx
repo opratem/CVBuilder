@@ -7,6 +7,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import AuthPage from './components/auth/AuthPage';
+import AuthCallback from './components/auth/AuthCallback';
 import Header from './components/layout/Header';
 import PersonalInfoForm from './components/form/PersonalInfoForm';
 import EducationForm from './components/form/EducationForm';
@@ -106,6 +107,7 @@ const CVBuilderApp: React.FC = () => {
   const [previewZoom, setPreviewZoom] = useState(100);
   const [isPreviewFullscreen, setIsPreviewFullscreen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isAuthCallback, setIsAuthCallback] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   // Refs for scrolling to sections
@@ -118,6 +120,31 @@ const CVBuilderApp: React.FC = () => {
     certifications: useRef<HTMLDivElement>(null),
     extracurricular: useRef<HTMLDivElement>(null),
   };
+
+  // Detect if we're on the /auth/callback route or have auth hash params
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      const hash = window.location.hash;
+      // Check for /auth/callback path or hash-based auth tokens
+      const isCallback = path === '/auth/callback' ||
+        path.includes('/auth/callback') ||
+        (hash && hash.includes('access_token'));
+      setIsAuthCallback(isCallback);
+    }
+  }, []);
+
+  // Handle auth callback completion
+  const handleAuthCallbackComplete = () => {
+    setIsAuthCallback(false);
+    // Force a page reload to the root to ensure clean state
+    window.location.href = '/';
+  };
+
+  // If on /auth/callback, render AuthCallback only
+  if (isAuthCallback) {
+    return <AuthCallback onComplete={handleAuthCallbackComplete} />;
+  }
 
   // Drag and drop sensors
   const sensors = useSensors(

@@ -24,11 +24,21 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ onComplete }) => {
   const [isValidSession, setIsValidSession] = useState(false);
 
   useEffect(() => {
-    // Check URL for password reset parameters
+    // Check URL for password reset parameters (both query params and hash-based)
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get('access_token');
-    const refreshToken = urlParams.get('refresh_token');
-    const type = urlParams.get('type');
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+
+    // Check query params first
+    let accessToken = urlParams.get('access_token');
+    let refreshToken = urlParams.get('refresh_token');
+    let type = urlParams.get('type');
+
+    // If not in query params, check hash
+    if (!accessToken) {
+      accessToken = hashParams.get('access_token');
+      refreshToken = hashParams.get('refresh_token');
+      type = hashParams.get('type');
+    }
 
     if (type === 'recovery' && accessToken && refreshToken) {
       setIsValidSession(true);
@@ -103,9 +113,9 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ onComplete }) => {
     return (
       <Card className="max-w-md mx-auto">
         <div className="text-center">
-          <Lock className="w-16 h-16 text-red-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Invalid Reset Link</h2>
-          <p className="text-gray-600 mb-4">
+          <Lock className="w-16 h-16 text-error mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-text-primary mb-2">Invalid Reset Link</h2>
+          <p className="text-text-muted mb-4">
             This password reset link is invalid or has expired. Please request a new password reset.
           </p>
           <Button
@@ -124,13 +134,13 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ onComplete }) => {
     return (
       <Card className="max-w-md mx-auto">
         <div className="text-center">
-          <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Password Updated!</h2>
-          <p className="text-gray-600 mb-4">
+          <CheckCircle className="w-16 h-16 text-accent mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-text-primary mb-2">Password Updated!</h2>
+          <p className="text-text-muted mb-4">
             Your password has been successfully updated. You can now sign in with your new password.
           </p>
-          <div className="bg-green-50 border border-green-200 rounded-md p-3">
-            <p className="text-sm text-green-700">
+          <div className="glass-success rounded-lg p-3">
+            <p className="text-sm text-accent">
               Redirecting you to the login page...
             </p>
           </div>
@@ -142,9 +152,9 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ onComplete }) => {
   return (
     <Card className="max-w-md mx-auto">
       <div className="text-center mb-6">
-        <Lock className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Reset Your Password</h2>
-        <p className="text-gray-600">Enter your new password below</p>
+        <Lock className="w-16 h-16 text-accent mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-text-primary mb-2">Reset Your Password</h2>
+        <p className="text-text-muted">Enter your new password below</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -161,7 +171,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ onComplete }) => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 mt-3 -translate-y-1/2 text-gray-400 hover:text-gray-300"
+            className="absolute right-3 top-1/2 mt-3 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors"
           >
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
@@ -180,16 +190,16 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ onComplete }) => {
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute right-3 top-1/2 mt-3 -translate-y-1/2 text-gray-400 hover:text-gray-300"
+            className="absolute right-3 top-1/2 mt-3 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors"
           >
             {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
 
         {/* Password Requirements */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-          <h3 className="text-sm font-medium text-blue-800 mb-2">Password Requirements:</h3>
-          <ul className="text-xs text-blue-700 space-y-1">
+        <div className="glass-accent rounded-lg p-4">
+          <h3 className="text-sm font-medium text-text-primary mb-2">Password Requirements:</h3>
+          <ul className="text-xs text-text-muted space-y-1">
             <li>• At least 8 characters long</li>
             <li>• Contains uppercase and lowercase letters</li>
             <li>• Contains at least one number</li>
@@ -198,8 +208,8 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ onComplete }) => {
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="p-3 glass-error rounded-lg">
+            <p className="text-sm text-red-400">{error}</p>
           </div>
         )}
 
