@@ -15,14 +15,9 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onComplete }) => {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Get the hash fragment from the URL
-        const hashParams = new URLSearchParams(window.location.hash.substring(1));
-        const accessToken = hashParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token');
-        const type = hashParams.get('type');
-
-        // Also check query params for some auth flows
+        // Check query params for code-based PKCE flow (newer Supabase default)
         const queryParams = new URLSearchParams(window.location.search);
+        const code = queryParams.get('code');
         const errorDescription = queryParams.get('error_description');
 
         if (errorDescription) {
@@ -30,6 +25,35 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onComplete }) => {
           setMessage(errorDescription);
           return;
         }
+
+        // Handle code-based PKCE flow
+        if (code) {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+          if (error) {
+            setStatus('error');
+            setMessage(error.message || 'Failed to verify your email. Please try again.');
+            return;
+          }
+
+          if (data.session) {
+            setStatus('success');
+            setMessage('Your email has been verified successfully! Redirecting...');
+
+            // Clear the URL params and redirect after a short delay
+            setTimeout(() => {
+              window.history.replaceState({}, document.title, '/');
+              onComplete();
+            }, 2000);
+            return;
+          }
+        }
+
+        // Fallback: Check hash fragment for token-based flow (older flow)
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+        const type = hashParams.get('type');
 
         if (accessToken && refreshToken) {
           // Set the session using the tokens from the URL
@@ -58,11 +82,11 @@ const AuthCallback: React.FC<AuthCallbackProps> = ({ onComplete }) => {
 
           // Clear the URL hash/params and redirect after a short delay
           setTimeout(() => {
-            window.history.replaceState({}, document.title, window.location.pathname.replace('/auth/callback', '/'));
+            window.history.replaceState({}, document.title, '/');
             onComplete();
           }, 2000);
         } else {
-          // No tokens found - might be an error or invalid link
+          // No tokens or code found - might be an error or invalid link
           setStatus('error');
           setMessage('Invalid or expired verification link. Please request a new one.');
         }
