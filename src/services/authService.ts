@@ -266,6 +266,19 @@ class AuthService {
       }
 
       if (authData.user) {
+        // SECURITY: Check if email is verified before allowing login
+        if (!authData.user.email_confirmed_at) {
+          console.warn('Login attempt with unverified email:', authData.user.email);
+          // Sign out the unverified user to prevent session persistence
+          await supabase.auth.signOut();
+          return {
+            success: false,
+            error: 'Please verify your email address before signing in. Check your inbox (and spam folder) for the verification link.',
+            errorType: 'validation',
+            needsVerification: true
+          }
+        }
+
         console.log('Sign in successful for:', authData.user.email);
         const authUser = await this.mapToAuthUser(authData.user)
         return { success: true, user: authUser }
