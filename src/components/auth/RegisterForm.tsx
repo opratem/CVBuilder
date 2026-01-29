@@ -111,6 +111,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
   const [success, setSuccess] = useState('');
   const [needsVerification, setNeedsVerification] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [isResending, setIsResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   // Real-time validation
   const validateField = (fieldName: string, value: string) => {
@@ -200,13 +203,32 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
   };
 
   const handleResendVerification = async () => {
-    if (email) {
-      const result = await resendVerification(email);
-      if (result.success) {
-        setSuccess('Verification email sent! Please check your inbox and spam folder.');
-      } else {
-        setError(result.error || 'Failed to resend verification email');
-        setErrorType((result as any).errorType || 'unknown');
+    if (email && !isResending && resendCooldown === 0) {
+      setIsResending(true);
+      setError('');
+      setResendSuccess(false);
+      try {
+        const result = await resendVerification(email);
+        if (result.success) {
+          setResendSuccess(true);
+          setSuccess('Verification email sent successfully!');
+          // Start 60 second cooldown
+          setResendCooldown(60);
+          const interval = setInterval(() => {
+            setResendCooldown((prev) => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        } else {
+          setError(result.error || 'Failed to resend verification email');
+          setErrorType((result as any).errorType || 'unknown');
+        }
+      } finally {
+        setIsResending(false);
       }
     }
   };
@@ -419,12 +441,48 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin }) => {
                   </div>
                 </div>
 
+                {/* Resend Success Confirmation */}
+                {resendSuccess && (
+                  <div className="glass-success rounded-md p-3 mb-3 animate-slideIn">
+                    <div className="flex items-center">
+                      <Check className="w-4 h-4 text-accent mr-2 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm text-accent font-medium">Email sent successfully!</p>
+                        <p className="text-xs text-accent/80 mt-0.5">
+                          A new verification email has been sent to {email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Resend Button with Cooldown */}
                 <button
                   type="button"
                   onClick={handleResendVerification}
-                  className="text-sm text-accent underline hover:text-accent-light font-medium"
+                  className={`w-full p-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center ${
+                    isResending || resendCooldown > 0
+                      ? 'glass-surface text-text-muted cursor-not-allowed'
+                      : 'glass-accent text-accent hover:bg-accent/20 btn-hover'
+                  }`}
+                  disabled={isResending || resendCooldown > 0}
                 >
-                  Didn't receive the email? Resend verification
+                  {isResending ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin mr-2" />
+                      Sending verification email...
+                    </>
+                  ) : resendCooldown > 0 ? (
+                    <>
+                      <Clock className="w-4 h-4 mr-2" />
+                      Resend available in {resendCooldown}s
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-4 h-4 mr-2" />
+                      Resend verification email
+                    </>
+                  )}
                 </button>
               </div>
             </div>

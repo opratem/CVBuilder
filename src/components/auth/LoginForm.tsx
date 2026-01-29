@@ -15,7 +15,10 @@ const ErrorDisplay: React.FC<{
   error: string | React.ReactNode;
   errorType?: string;
   onResendVerification?: () => void;
-}> = ({ error, errorType, onResendVerification }) => {
+  needsVerification?: boolean;
+  isResending?: boolean;
+  resendCooldown?: number;
+}> = ({ error, errorType, onResendVerification, needsVerification, isResending, resendCooldown = 0 }) => {
   const getErrorIcon = () => {
     switch (errorType) {
       case 'network':
@@ -93,14 +96,42 @@ const ErrorDisplay: React.FC<{
           )}
 
           {/* Show verification resend option */}
-          {errorType === 'validation' && onResendVerification && (
-            <button
-              type="button"
-              onClick={onResendVerification}
-              className="mt-2 text-sm underline hover:text-red-300 font-medium text-red-400"
-            >
-              Resend verification email
-            </button>
+          {(needsVerification || (errorType === 'validation' && onResendVerification)) && (
+            <div className="mt-3 pt-3 border-t border-red-500/20">
+              <div className="flex items-start text-sm text-red-300 mb-3">
+                <Mail className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+                <span>
+                  Your email address needs to be verified before you can sign in. Please check your inbox (and spam folder) for the verification email.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={onResendVerification}
+                disabled={isResending || resendCooldown > 0}
+                className={`w-full p-2.5 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center ${
+                  isResending || resendCooldown > 0
+                    ? 'bg-red-900/20 text-red-400/60 cursor-not-allowed'
+                    : 'bg-red-900/30 text-red-300 hover:bg-red-900/40 hover:text-red-200'
+                }`}
+              >
+                {isResending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin mr-2" />
+                    Sending verification email...
+                  </>
+                ) : resendCooldown > 0 ? (
+                  <>
+                    <Clock className="w-4 h-4 mr-2" />
+                    Resend available in {resendCooldown}s
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-4 h-4 mr-2" />
+                    Resend verification email
+                  </>
+                )}
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -126,9 +157,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   const [rememberDevice, setRememberDevice] = useState(isDeviceRemembered());
   const [error, setError] = useState<string | React.ReactNode>('');
   const [errorType, setErrorType] = useState<string>('');
+  const [needsVerification, setNeedsVerification] = useState(false);
   const [success, setSuccess] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [isResending, setIsResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   // Real-time validation
   const validateField = (fieldName: string, value: string) => {
@@ -164,6 +198,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     setError('');
     setErrorType('');
     setSuccess('');
+    setNeedsVerification(false);
 
     // Validate fields
     validateField('email', email);
@@ -179,6 +214,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
     if (!result.success) {
       setError(result.error || 'Invalid email or password');
       setErrorType((result as any).errorType || 'unknown');
+      setNeedsVerification(!!(result as any).needsVerification);
     }
   };
 
@@ -205,15 +241,32 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   };
 
   const handleResendVerification = async () => {
-    if (email) {
-      const result = await resendVerification(email);
-      if (result.success) {
-        setError('');
-        setErrorType('');
-        setSuccess('Verification email sent! Please check your inbox and spam folder.');
-      } else {
-        setError(result.error || 'Failed to resend verification email');
-        setErrorType((result as any).errorType || 'unknown');
+    if (email && !isResending && resendCooldown === 0) {
+      setIsResending(true);
+      try {
+        const result = await resendVerification(email);
+        if (result.success) {
+          setError('');
+          setErrorType('');
+          setNeedsVerification(false);
+          setSuccess('Verification email sent successfully! Please check your inbox and spam folder.');
+          // Start 60 second cooldown
+          setResendCooldown(60);
+          const interval = setInterval(() => {
+            setResendCooldown((prev) => {
+              if (prev <= 1) {
+                clearInterval(interval);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        } else {
+          setError(result.error || 'Failed to resend verification email');
+          setErrorType((result as any).errorType || 'unknown');
+        }
+      } finally {
+        setIsResending(false);
       }
     }
   };
@@ -381,7 +434,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSwitchToRegister }) => {
           <ErrorDisplay
             error={error}
             errorType={errorType}
-            onResendVerification={errorType === 'validation' ? handleResendVerification : undefined}
+            onResendVerification={needsVerification ? handleResendVerification : (errorType === 'validation' ? handleResendVerification : undefined)}
+            needsVerification={needsVerification}
+            isResending={isResending}
+            resendCooldown={resendCooldown}
           />
         )}
 

@@ -84,6 +84,7 @@ const AuthPage: React.FC = () => {
               </div>
 
               <button
+                type="button"
                 onClick={continueAsGuest}
                 className="mt-4 w-full flex items-center justify-center px-6 py-3 border border-border rounded-lg text-text-secondary glass-card hover:bg-secondary-light transition-all duration-200 group"
               >

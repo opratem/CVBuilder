@@ -35,6 +35,22 @@ import { cvDataService, type CVRecord } from './services/cvDataService';
 type ActiveTab = 'builder' | 'optimizer' | 'versions' | 'support';
 type SectionId = 'personal' | 'work' | 'education' | 'skills' | 'projects' | 'certifications' | 'extracurricular';
 
+// Helper function to check if we're on the auth callback route
+// This is called BEFORE any React component renders
+const isAuthCallbackRoute = (): boolean => {
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    const search = window.location.search;
+    // Check for /auth/callback path, hash-based auth tokens, or code parameter
+    return path === '/auth/callback' ||
+      path.includes('/auth/callback') ||
+      (hash !== '' && hash.includes('access_token')) ||
+      search.includes('code=');
+  }
+  return false;
+};
+
 // Sortable Section Component
 interface SortableSectionProps {
   id: string;
@@ -92,6 +108,18 @@ const SortableSection: React.FC<SortableSectionProps> = ({ id, children, section
   );
 };
 
+// Auth Callback Wrapper Component - handles auth callback route
+// This component renders AuthCallback without calling CVBuilderApp hooks
+const AuthCallbackWrapper: React.FC = () => {
+  const handleAuthCallbackComplete = () => {
+    // Force a page reload to the root to ensure clean state
+    window.location.href = '/';
+  };
+
+  return <AuthCallback onComplete={handleAuthCallbackComplete} />;
+};
+
+// Main CV Builder Component - only renders when NOT on auth callback route
 const CVBuilderApp: React.FC = () => {
   const { isAuthenticated, isInitializing, user, isGuestMode } = useAuth();
   const { resetCV, saveCV, loadCV, saveStatus, updateCV, updateSectionOrder, cv } = useCVStore();
@@ -107,7 +135,6 @@ const CVBuilderApp: React.FC = () => {
   const [previewZoom, setPreviewZoom] = useState(100);
   const [isPreviewFullscreen, setIsPreviewFullscreen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [isAuthCallback, setIsAuthCallback] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   // Refs for scrolling to sections
@@ -120,31 +147,6 @@ const CVBuilderApp: React.FC = () => {
     certifications: useRef<HTMLDivElement>(null),
     extracurricular: useRef<HTMLDivElement>(null),
   };
-
-  // Detect if we're on the /auth/callback route or have auth hash params
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const path = window.location.pathname;
-      const hash = window.location.hash;
-      // Check for /auth/callback path or hash-based auth tokens
-      const isCallback = path === '/auth/callback' ||
-        path.includes('/auth/callback') ||
-        (hash !== '' && hash.includes('access_token'));
-      setIsAuthCallback(isCallback);
-    }
-  }, []);
-
-  // Handle auth callback completion
-  const handleAuthCallbackComplete = () => {
-    setIsAuthCallback(false);
-    // Force a page reload to the root to ensure clean state
-    window.location.href = '/';
-  };
-
-  // If on /auth/callback, render AuthCallback only
-  if (isAuthCallback) {
-    return <AuthCallback onComplete={handleAuthCallbackComplete} />;
-  }
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -1322,11 +1324,24 @@ const CVBuilderApp: React.FC = () => {
   );
 };
 
+// Router component that decides which component to render before any hooks are called
+// This ensures CVBuilderApp only renders when NOT on auth callback, fixing the hooks violation
+const AppRouter: React.FC = () => {
+  // Check route before rendering - this is safe because it's synchronous and happens before hooks
+  const [isCallback] = useState(() => isAuthCallbackRoute());
+
+  if (isCallback) {
+    return <AuthCallbackWrapper />;
+  }
+
+  return <CVBuilderApp />;
+};
+
 function App() {
   return (
     <AuthProvider>
       <ToastProvider>
-        <CVBuilderApp />
+        <AppRouter />
       </ToastProvider>
     </AuthProvider>
   );
